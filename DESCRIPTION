@@ -3,7 +3,7 @@ Version: 1.2.3
 Date: 2022-06-06
 Author: Andreas Bertsatos
 Maintainer: Andreas Bertsatos <abertsatos@biol.uoa.gr>
-Title: long-bone-diaphyseal-CSG-Toolkit
+Title: CSG Toolkit
 Description: A GNU Octave package for analyzing the long bone diaphyseal
  cross-sectional geometry of Humerus, Ulna, Femur, and Tibia bones from
  3D triangular meshes stored in Wavefront OBJ file format.
