@@ -19,14 +19,11 @@ https://doi.org/10.1016/j.forsciint.2019.01.041
 ## Installation
 
 The CSG Toolkit is compatible with later versions of Octave >= v5.2.0 and depends
-on the 'io >= 2.4.12' package. Download and run
+on the 'io >= 2.4.12' package.
 
- `pkg install csg-toolkit-1.2.2.tar.gz`
+To download and install the latest version issue the following command from Octave:
 
-to install from a locally downloaded archive, or issue the following command to
-install the 'csg-toolkit' package automatically from this repository
-
- `pkg install "https://raw.githubusercontent.com/pr0m1th3as/csg-toolkit//v1.2.2.tar.gz"`
+ `pkg install "https://github.com/pr0m1th3as/csg-toolkit/archive/refs/tags/v1.2.3.tar.gz"`
 
 The package can be loaded on demand in Octave with the following commmand:
 
