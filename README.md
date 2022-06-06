@@ -21,7 +21,7 @@ https://doi.org/10.1016/j.forsciint.2019.01.041
 The CSG Toolkit is compatible with later versions of Octave >= v5.2.0 and depends
 on the 'io >= 2.4.12' package.
 
-To download and install the latest version issue the following command from Octave:
+To download and install the latest version issue the following command in Octave:
 
  `pkg install "https://github.com/pr0m1th3as/csg-toolkit/archive/refs/tags/v1.2.3.tar.gz"`
 
