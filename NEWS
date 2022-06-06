@@ -33,6 +33,7 @@ Type 'help visualize_CrossSections' for more info.
 CSG-Toolkit-1.2.3  Release Date: 2022-06-06  Release Manager: Andreas Bertsatos
 ===============================================================================
 
-* Added 'Kabsch' function.
+* Moved the package sources to a new separate repository from the original
+  'long-bone-diaphyseal-CSG-Toolkit', which is maintained for reference only.
 
 ===============================================================================
