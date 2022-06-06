@@ -1,0 +1,38 @@
+Summary of important user-visible changes for releases of the csg-toolkit package
+===============================================================================
+CSG-Toolkit-1.2.1  Release Date: 2021-04-18  Release Manager: Andreas Bertsatos
+===============================================================================
+
+** First official resease.
+
+A GNU Octave package for analyzing diaphyseal cross sectional geometry.
+
+The present package is based on the long-bone-diaphyseal-CSG-Toolkit and has
+been created to simplify its installation and usage from within GNU Octave.
+
+===============================================================================
+CSG-Toolkit-1.2.2  Release Date: 2022-06-05  Release Manager: Andreas Bertsatos
+===============================================================================
+
+* Removed dependency of matgeom and statistics packages.
+* longbone_maxDistance has been ported to C++ to speed up processing time.
+* Renamed function: slice_Mesh_plane -> meshSection.
+* Added functions for 3D meshes: writeObj, renameObj, meshArea, meshBarycenter.
+* An additional function 'longbone_Scaling' has been added to facilitate batch
+scaling of long bone models produced with 3D photogrammetry that lack real
+world scale.  Type 'help longbone_Scaling' for more info.
+* Additional core functionality with the new longbone_CustomGeometry function, 
+which allows an arbitrary number of user defined cross section to be analyzed.
+Type 'help longbone_CustomGeometry' for more info.
+* Updated functionality in visualize_CrossSections function to include the new
+capabilities of the 'longbone_CustomGeometry' function.
+Type 'help visualize_CrossSections' for more info.
+* Updated help files to texinfo format.
+
+===============================================================================
+CSG-Toolkit-1.2.3  Release Date: 2022-06-06  Release Manager: Andreas Bertsatos
+===============================================================================
+
+* Added 'Kabsch' function.
+
+===============================================================================
