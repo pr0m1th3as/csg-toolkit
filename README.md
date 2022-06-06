@@ -1,6 +1,6 @@
 # csg-toolkit
 
-## A GNU Octave package for analyzing diaphyseal cross sectional geometry
+## A GNU Octave package for analyzing long bone diaphyseal cross sectional geometry
 
 The present package is based on the long-bone-diaphyseal-CSG-Toolkit and has
 been created to simplify its installation and usage from within GNU Octave. It
