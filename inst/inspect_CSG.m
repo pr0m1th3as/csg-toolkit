@@ -105,7 +105,7 @@ function inspect_CSG (varargin)
     fout = varargin{2};
   endif
 
-  ## list the filenames with $geometry-*.csv pattern in the working folder
+  ## Llist the filenames with $geometry-*.csv pattern in the working folder
   switch (lower (type))
     case "default"
       filenames = dir ("Dgeometry-*.csv");
@@ -342,6 +342,3 @@ function inspect_CSG (varargin)
   endswitch
 
 endfunction
-
-
-
