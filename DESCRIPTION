@@ -8,6 +8,6 @@ Description: A GNU Octave package for analyzing the long bone diaphyseal
  cross-sectional geometry of Humerus, Ulna, Femur, and Tibia bones from
  3D triangular meshes stored in Wavefront OBJ file format.
 Categories: mesh3D
-Depends: octave (>= 7.2.0), io (>=2.6.3)
+Depends: octave (>= 7.2.0), io (>=2.6.4)
 License: GPLv3+
 Url: https://github.com/pr0m1th3as/csg-toolkit
