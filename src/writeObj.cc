@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2018-2022 Andreas Bertsatos <abertsatos@biol.uoa.gr>
+Copyright (C) 2018-2023 Andreas Bertsatos <abertsatos@biol.uoa.gr>
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -31,46 +31,55 @@ struct VCoord
 struct Faces
 {
       int a, b, c;
-};  
+};
 struct TCoord
 {
       double u, v  ;
 };
-      
 
-DEFUN_DLD (writeObj, args, nargout, 
+
+DEFUN_DLD (writeObj, args, nargout,
           "-*- texinfo -*-\n\
-@deftypefn{Function} writeObj (@var{input_arguments})\n\
+ @deftypefn  {csg-toolkit} {} writeObj (@var{v}, @var{f}, @var{filename})\n\
+ @deftypefnx {csg-toolkit} {} writeObj (@var{v}, @var{f}, @var{vt}, @var{ft}, @var{filename})\n\
+ @deftypefnx {csg-toolkit} {} writeObj (@var{v}, @var{f}, @var{vn}, @var{fn}, @var{filename})\n\
+ @deftypefnx {csg-toolkit} {} writeObj (@var{v}, @var{f}, @var{vt}, @var{ft}, @var{vn}, @var{fn}, @var{filename})\n\
 \n\
 \n\
-Example: writeObj (V, F, \"3DMesh.obj\")\n\
+This function saves a triangular 3D Mesh in a Wavefront OBJ file format \
+according to its elements provided as input arguments.\n\
+\n\
+The function will only take 3, 5 or 7 input arguments.  The last argument \
+should be a char string referring to the filename of the OBJ file, whereas the \
+first 2, 4, or 6 input arguments should be 2-dimensional matrices containing \
+the elements of the triangular mesh in the following order:\n\
+\n\
+@var{v} can be either an @math{Nx3} matrix with @var{x},@var{y},@var{z} vertex \
+coordinates or an @math{Nx6} matrix containing the vertex coordinates and the \
+@var{r},@var{g},@var{b} color information for each vertex in the range \
+@math{[0,1]}.\n\
+\n\
+@var{f} must be an @math{Mx3} matrix with the indices of each corresponding \
+vertex, where @math{M} is the number of faces.\n\
+\n\
+@var{vt} must be an @math{Nx2} matrix, where @math{N} is the number of texture \
+coordinates.\n\
+\n\
+@var{ft} must be an @math{Mx3} matrix with the indices of each corresponding \
+texture coordinates.\n\
+\n\
+@var{vn} must be an @math{Nx3} matrix with @var{x},@var{y},@var{z} normal \
+coordinates, where @math{N} is the number of normals.\n\
+\n\
+@var{fn} must be an @math{Nx3} matrix with the indices of each corresponding \
+face normal.\n\
+\n\
+If 5 input arguments are provided, the function will determine whether there \
+is a texture coordinates matrix or a vertex normals matrix by the size of the \
+second dimension of the matrix provided as the third input argument. \
 \n\
 \n\
-This function saves a triangular 3D Mesh to a Wavefront Obj file according to \
-its elements provided as input arguments.\n\
-\n\
-The function will only take 3, 5 or 7 input arguments. The last argument should \
-be a string referring to the filename of the OBJ file, whereas the first 2, 4 or \
-6 input arguments should be 2-dimensional matrices containing the elements of \
-the triangular mesh in the following order:\n\
-\n\
-@var{Vertices} can be either an Nx3 matrix with x, y, z coordinates in R3 or an \
-Nx6 matrix containing x, y, z, coordinates and r, g, b values in the range [0,1] \
-containing color information.\n\
-\n\
-@var{Faces} should be an Nx3 matrix with integer values.\n\
-\n\
-@var{Texture Coordinates} should be an Nx2 matrix with floating point values.\n\
-\n\
-@var{Texture Faces} should be an Nx3 matrix with integer values.\n\
-\n\
-@var{Vertex Normals} should be an Nx3 matrix with floating point values.\n\
-\n\
-@var{Face Normals} should be an Nx3 matrix with integer values.\n\
-\n\
-If 5 input arguments are provided, the function will determine whether there is\n\
-a texture coordinates matrix or a vertex normals matrix by the dimensions of the\n\
-matrix provided as the third input argument.\
+@seealso{readObj, renameObj} \n\
 @end deftypefn")
 {
 
@@ -181,7 +190,7 @@ matrix provided as the third input argument.\
       outputFile << "# Vertices: " << V_rows << "\n";
       outputFile << "# Faces: " << F_rows << "\n#\n#\n\n";
       cout << "Writing to file... ";
-      // write vertices to file 
+      // write vertices to file
       if (V_columns == 3) // coordinates only
       {
         float tmpx, tmpy, tmpz;
@@ -245,7 +254,7 @@ matrix provided as the third input argument.\
     return octave_value_list();
   }
   // check for first four arguments being real matrices
-  if (!args(0).is_matrix_type() || !args(1).is_matrix_type() || 
+  if (!args(0).is_matrix_type() || !args(1).is_matrix_type() ||
       !args(2).is_matrix_type() || !args(3).is_matrix_type())
   {
     cout << "The first four arguments should be real matrices.\n";
@@ -256,7 +265,7 @@ matrix provided as the third input argument.\
   // texture coordinates and texture faces or for vertex normals and face normals.
   // This will depend on the number of coordinates present in third input argument.
   // The last input argument should again be a string
-  // 
+  //
   // check for 5 input arguments with the third argument having two coordinates
   // present, namely u, v, and the last argument being a string
   if (args.length() == 5 && args(2).columns() == 2 && args(4).is_string())
@@ -358,7 +367,7 @@ matrix provided as the third input argument.\
       string mtlfilename = filename.c_str();
       outputFile << "mtllib ./" << mtlfilename.replace(i,3, "mtl") << "\n\n";
       cout << "Writing to file... ";
-      // write vertices to file 
+      // write vertices to file
       if (V_columns == 3) // coordinates only
       {
         float tmpx, tmpy, tmpz;
@@ -420,7 +429,7 @@ matrix provided as the third input argument.\
     }
     return octave_value_list();
   }
-  // 
+  //
   // check for 5 input arguments with the third argument having three coordinates
   // present, namely x, y, z, and the last argument being a string
   if (args.length() == 5 && args(2).columns() == 3 && args(4).is_string())
@@ -519,7 +528,7 @@ matrix provided as the third input argument.\
       outputFile << "# Vertices: " << V_rows << "\n";
       outputFile << "# Faces: " << F_rows << "\n#\n#\n\n";
       cout << "Writing to file... ";
-      // write vertices to file 
+      // write vertices to file
       if (V_columns == 3) // coordinates only
       {
         float tmpx, tmpy, tmpz;
@@ -596,7 +605,7 @@ matrix provided as the third input argument.\
     return octave_value_list();
   }
   // check for first six arguments being real matrices
-  if (!args(0).is_matrix_type() || !args(1).is_matrix_type() || 
+  if (!args(0).is_matrix_type() || !args(1).is_matrix_type() ||
       !args(2).is_matrix_type() || !args(3).is_matrix_type() ||
       !args(4).is_matrix_type() || !args(5).is_matrix_type())
   {
@@ -729,7 +738,7 @@ matrix provided as the third input argument.\
     string mtlfilename = filename.c_str();
     outputFile << "mtllib ./" << mtlfilename.replace(i,3, "mtl") << "\n\n";
     cout << "Writing to file... ";
-    // write vertices to file 
+    // write vertices to file
     if (V_columns == 3) // coordinates only
     {
       float tmpx, tmpy, tmpz;
@@ -786,7 +795,7 @@ matrix provided as the third input argument.\
       tmpf = FT(i,2);
       tmpg = FN(i,0);
       tmph = FN(i,1);
-      tmpi = FN(i,2);      
+      tmpi = FN(i,2);
       outputFile << "f " << tmpa << "/" << tmpd << "/" << tmpg << " "
                          << tmpb << "/" << tmpe << "/" << tmph << " "
                          << tmpc << "/" << tmpf << "/" << tmpi << "\n";

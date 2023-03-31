@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2018-2022 Andreas Bertsatos <abertsatos@biol.uoa.gr>
+Copyright (C) 2018-2023 Andreas Bertsatos <abertsatos@biol.uoa.gr>
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -41,46 +41,63 @@ struct TCoord
 };
 
 
-DEFUN_DLD (readObj, args, nargout, 
+DEFUN_DLD (readObj, args, nargout,
           "-*- texinfo -*-\n\
-@deftypefn{Function} @var{output_arguments} = readObj(@var{filename}, opt)\
-\n\n\
-Example: [@var{v}, @var{f}] = readObj(\"3DMesh.obj\")\n\n\
-Example: [@var{v}, @var{f}] = readObj(\"3DMesh.obj\", \"info\")\n\n\
-Example: [@var{v}, @var{f}, @var{mtl}] = readObj(\"3DMesh.obj\", \"info\")\n\n\
-Example: [@var{v}, @var{f}, @var{tc}, @var{tf}] = readObj(\"3DMesh.obj\")\n\n\
+ @deftypefn  {csg-toolkit} {[@var{varargout}] =} readObj (@var{filename})\n\
+ @deftypefnx {csg-toolkit} {[@var{varargout}] =} readObj (@var{filename}, @qcode{\"info\"})\n\
+ @deftypefnx {csg-toolkit} {@var{v} =} readObj (@dots{})\n\
+ @deftypefnx {csg-toolkit} {[@var{v}, @var{f}] =} readObj (@dots{})\n\
+ @deftypefnx {csg-toolkit} {[@var{v}, @var{f}, @var{mtl}] =} readObj (@dots{})\n\
+ @deftypefnx {csg-toolkit} {[@var{v}, @var{f}, @var{vt}, @var{ft}] =} readObj (@dots{})\n\
+ @deftypefnx {csg-toolkit} {[@var{v}, @var{f}, @var{vt}, @var{ft}, @var{mtl}] =} readObj (@dots{})\n\
+ @deftypefnx {csg-toolkit} {[@var{v}, @var{f}, @var{vn}, @var{fn}] =} readObj (@dots{})\n\
+ @deftypefnx {csg-toolkit} {[@var{v}, @var{f}, @var{vn}, @var{fn}, @var{mtl}] =} readObj (@dots{})\n\
+ @deftypefnx {csg-toolkit} {[@var{v}, @var{f}, @var{vt}, @var{ft}, @var{vn}, @var{fn}] =} readObj (@dots{})\n\
+ @deftypefnx {csg-toolkit} {[@var{v}, @var{f}, @var{vt}, @var{ft}, @var{vn}, @var{fn}, @var{mtl}] =} readObj (@dots{})\n\
 \n\
 \n\
-This function loads a triangular 3D Mesh from Wavefront Obj file and stores \
-its elements into the appropriately defined output arguments.\n\
+This function reads a triangular 3D Mesh from Wavefront OBJ file and returns \
+its elements into a variable number of output arguments. \
+\n\
 \n\
 When called with no output arguments @code{readObj} displays info of the mesh. \
 If called with a single output argument then only the vertices are returned. \
 If only two output arguments are given then only the vertices and the faces of \
-the mesh are returned. If four arguments are given, then vertex normals and \
+the mesh are returned.  If four arguments are given, then vertex normals and \
 face normals or texture coordinates and texture faces are returned, depending \
-on which are present. If both sets are present then @code{readObj} returns only \
-the texture coordinates and their corresponding faces. If six output arguments are \
-given then all elements are returned as numerical array in the following order:\n\
+on which are present.  If both sets are present, then @code{readObj} returns \
+only the texture coordinates and their corresponding faces.  If six output \
+arguments are given then all elements are returned as numerical array in the \
+following order:\n\
 \n\
-@var{Vertices} as an Nx3 matrix [x,y,z] with floating point values. If RGB color \
-information is available then an Nx6 matrix [x,y,z,r,g,b] is returned.\n\
+@var{v} is an @math{Nx3} matrix with @var{x},@var{y},@var{z} point \
+coordinates, where @math{N} is the number of vertices.  If RGB color \
+information is available, then it is an @math{Nx6} matrix including \
+@var{r},@var{g},@var{b} values for each vertex.\n\
 \n\
-@var{Faces} as an Nx3 matrix with integer values.\n\
+@var{f} is an @math{Mx3} matrix with the indices of each corresponding \
+vertex, where @math{M} is the number of faces.\n\
 \n\
-@var{Texture Coordinates} as an Nx2 matrix with floating point values.\n\
+@var{vt} is an @math{Nx2} matrix, where @math{N} is the number of texture \
+coordinates.\n\
 \n\
-@var{Texture Faces} as an Nx3 matrix with integer values.\n\
+@var{ft} is an @math{Mx3} matrix with the indices of each corresponding \
+texture coordinates.\n\
 \n\
-@var{Vertex Normals} as an Nx3 matrix with floating point values.\n\
+@var{vn} is an @math{Nx3} matrix with @var{x},@var{y},@var{z} normal \
+coordinates, where @math{N} is the number of normals.\n\
 \n\
-@var{Face Normals} as an Nx3 matrix with integer values.\n\
+@var{fn} is an @math{Nx3} matrix with the indices of each corresponding \
+face normal.\n\
 \n\
-If odd number of output arguments are provided, except for the case of a single \
-argument, then the last output argument is used for returning the .mtl filename, \
-where material parameters are stored. Note that @code{readObj} handles explicitly \
-triangular mesh objects. If OBJ file does not contain a proper triangular mesh, \
-then an error message is returned.\
+If odd number of output arguments are provided, except for the case of a \
+single argument, then the last output argument is used for returning the \
+@qcode{.mtl} filename, where material parameters are stored.  Note that \
+@code{readObj} handles explicitly triangular mesh objects.  If the OBJ file \
+does not contain a proper triangular mesh, then an error message is returned. \
+\n\
+\n\
+@seealso{writeObj, renameObj} \n\
 @end deftypefn")
 {
   // Check if there is a valid number of input arguments
@@ -126,7 +143,7 @@ then an error message is returned.\
   // define matrices for storing face normals and face texture
   vector<Faces> face_normals;
   vector<Faces> face_texture;
-  
+
   // initiate counters for mtl, vertices, normals, texture and faces
   octave_idx_type mtl_counter = 0;
   octave_idx_type vertex_counter = 0;
@@ -136,7 +153,7 @@ then an error message is returned.\
   octave_idx_type face_counter = 0;
   octave_idx_type faceT_counter = 0;
   octave_idx_type faceN_counter = 0;
-  
+
   // check that file exists
   if (inputFile)
   {
@@ -176,8 +193,8 @@ then an error message is returned.\
         sscanf(line.c_str(), "vt %f %f" ,&tmpu,&tmpv);
         TCoord tempTexture = {tmpu, tmpv};
         texture.push_back(tempTexture);
-        texture_counter++;  
-      }  
+        texture_counter++;
+      }
       else if (line[0] == 'f' && line[1] == ' ')
       {
         // check for non triangular mesh
@@ -185,31 +202,31 @@ then an error message is returned.\
         int vt3=0, vt4=0, vn1=0, vn2=0, vn3=0, vn4=0;
         sscanf(line.c_str(), "f %d %d %d %d" ,&v1,&v2,&v3,&v4);
         if (v1 > 0 && v2 > 0 && v3 > 0 && v4 > 0)
-        {    
+        {
           cout << "Mesh is not triangular.\n";
           return octave_value_list();
         }
-        sscanf(line.c_str(), "f %d/%d %d/%d %d/%d %d/%d", 
+        sscanf(line.c_str(), "f %d/%d %d/%d %d/%d %d/%d",
                &v1,&vt1,&v2,&vt2,&v3,&vt3,&v4,&vt4);
-        if (v1 > 0 && v2 > 0 && v3 > 0 && v4 > 0 
+        if (v1 > 0 && v2 > 0 && v3 > 0 && v4 > 0
             && vt1 > 0 && vt2 > 0 && vt3 > 0 && vt4 > 0)
-        {    
+        {
           cout << "Mesh is not triangular.\n";
           return octave_value_list();
         }
-        sscanf(line.c_str(), "f %d/%d/%d %d/%d/%d %d/%d/%d %d/%d/%d", 
+        sscanf(line.c_str(), "f %d/%d/%d %d/%d/%d %d/%d/%d %d/%d/%d",
                &v1,&vt1,&vn1,&v2,&vt2,&vn2,&v3,&vt3,&vn3,&v4,&vt4,&vn4);
-        if (v1 > 0 && v2 > 0 && v3 > 0 && v4 > 0 && vt1 > 0 && vt2 > 0 
+        if (v1 > 0 && v2 > 0 && v3 > 0 && v4 > 0 && vt1 > 0 && vt2 > 0
             && vt3 > 0 && vt4 > 0 && vn1 > 0 && vn2 > 0 && vn3 > 0 && vn4 > 0)
-        {    
+        {
           cout << "Mesh is not triangular.\n";
           return octave_value_list();
         }
         sscanf(line.c_str(), "f %d//%d %d//%d %d//%d %d//%d",
                &v1,&vn1,&v2,&vn2,&v3,&vn3,&v4,&vn4);
-        if (v1 > 0 && v2 > 0 && v3 > 0 && v4 > 0 && vn1 > 0 
+        if (v1 > 0 && v2 > 0 && v3 > 0 && v4 > 0 && vn1 > 0
             && vn2 > 0 && vn3 > 0 && vn4 > 0)
-        {    
+        {
           cout << "Mesh is not triangular.\n";
           return octave_value_list();
         }
@@ -220,7 +237,7 @@ then an error message is returned.\
         // scan for faces only
         sscanf(line.c_str(), "f %d %d %d" ,&v1,&v2,&v3);
         if (v1 > 0 && v2 > 0 && v3 > 0)
-        {    
+        {
           Faces temp_face_v = {v1, v2, v3};
           face.push_back(temp_face_v);
         }
@@ -230,7 +247,7 @@ then an error message is returned.\
           sscanf(line.c_str(), "f %d/%d %d/%d %d/%d",
                  &v1,&vt1,&v2,&vt2,&v3,&vt3);
           if (v1 > 0 && v2 > 0 && v3 > 0 && vt1 > 0 && vt2 > 0 && vt3 > 0)
-          {    
+          {
             Faces temp_face_v = {v1, v2, v3};
             Faces temp_face_vt = {vt1, vt2, vt3};
             face.push_back(temp_face_v);
@@ -242,9 +259,9 @@ then an error message is returned.\
             // scan for faces with texture and normals
             sscanf(line.c_str(), "f %d/%d/%d %d/%d/%d %d/%d/%d",
                    &v1,&vt1,&vn1,&v2,&vt2,&vn2,&v3,&vt3,&vn3);
-            if (v1 > 0 && v2 > 0 && v3 > 0 && vt1 > 0 && vt2 > 0 
+            if (v1 > 0 && v2 > 0 && v3 > 0 && vt1 > 0 && vt2 > 0
                 && vt3 > 0 && vn1 > 0 && vn2 > 0 && vn3 > 0)
-            {    
+            {
               Faces temp_face_v = {v1, v2, v3};
               Faces temp_face_vt = {vt1, vt2, vt3};
               Faces temp_face_vn = {vn1, vn2, vn3};
@@ -260,7 +277,7 @@ then an error message is returned.\
               sscanf(line.c_str(), "f %d//%d %d//%d %d//%d",
                      &v1,&vn1,&v2,&vn2,&v3,&vn3);
               if (v1 > 0 && v2 > 0 && v3 > 0 && vn1 > 0 && vn2 > 0 && vn3 > 0)
-              {    
+              {
                 Faces temp_face_v = {v1, v2, v3};
                 Faces temp_face_vn = {vn1, vn2, vn3};
                 face.push_back(temp_face_v);
@@ -297,7 +314,7 @@ then an error message is returned.\
     cout << "Failure opening file.\n";
     return octave_value_list();
   }
-  
+
   // check if vertex coordinates exist and store them in Octave array Nx3
   // if vertex colors are present store them in the same Octave array Nx6
   int dim = 3;
@@ -419,11 +436,11 @@ then an error message is returned.\
   }
   // report if material library file is referenced in the model
   if (info) { cout << "Material library file is present\n"; }
-  
+
   // check the number of output arguments and store the appropriate matrices
   // to the octave_value_list variable. If only two output arguments are given
   // then store only the vertices and the faces of the mesh. If four arguments
-  // are given, then additionally store vertex normals and face normals or 
+  // are given, then additionally store vertex normals and face normals or
   // texture coordinates and texture faces depending on which are present. If
   // both sets are present then store texture coordinates and their faces.
   //
@@ -432,7 +449,7 @@ then an error message is returned.\
   //
   // If odd number of output arguments is present, then the last output
   // argument is used for storing the filename with the material parameters.
-  
+
   // define return value list
   octave_value_list retval;
   if (nargout == 1)
@@ -457,7 +474,7 @@ then an error message is returned.\
     retval(2) = VT;
     retval(3) = FT;
   }
-  else if (nargout == 4 && faceT_counter == 0 && texture_counter == 0 
+  else if (nargout == 4 && faceT_counter == 0 && texture_counter == 0
       && faceN_counter > 0 && normals_counter > 0)
   {
     retval(0) = V;
@@ -473,7 +490,7 @@ then an error message is returned.\
     retval(3) = FT;
     retval(4) = mtl_filename.c_str();
   }
-  else if (nargout == 5 && faceT_counter == 0 && texture_counter == 0 
+  else if (nargout == 5 && faceT_counter == 0 && texture_counter == 0
       && faceN_counter > 0 && normals_counter > 0)
   {
     retval(0) = V;

@@ -1261,7 +1261,7 @@ vector<Vector3> register3DepCloud(vector<Vector3> epCloud, vector<Vector2> regPo
 
 DEFUN_DLD (longbone_Registration, args, nargout,
           "-*- texinfo -*-\n\
- @deftypefn{Function} [@var{bone}, @var{Points}] = longbone_Registration (@var{v}, @var{f})\n\
+ @deftypefn  {csg-toolkit} {[@var{bone}, @var{Points}] =} longbone_Registration (@var{v}, @var{f})\n\
 \n\
 \n\
 Determine long bone type and register initial alignment points. \
@@ -1272,7 +1272,10 @@ represented in the input mesh defined by its vertices @var{v} and faces @var{f} 
 and it also registers the two points on the bone's surface required by the \
 CSG-Toolkit for anatomical alignment of the bone. The function returns the long \
 bone's name in @var{bone} and if a second argument is present it returms the \
-3D coordinates of the registered points.\n\
+3D coordinates of the registered points. \
+\n\
+\n\
+@seealso{longbone_maxDistance, longbone_Geometry} \n\
 @end deftypefn")
 {
   // check number of input and output arguments

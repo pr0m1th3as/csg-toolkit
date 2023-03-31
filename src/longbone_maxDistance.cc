@@ -86,7 +86,9 @@ maxDpoints longbone_maxDistance(vector<Vector3> Cloud3D)
 
 DEFUN_DLD (longbone_maxDistance, args, nargout,
           "-*- texinfo -*-\n\
- @deftypefn{Function} [@var{maxDistance}, @var{maxD_v1}, @var{maxD_v1}] = longbone_maxDistance (@var{v})\n\
+ @deftypefn  {csg-toolkit} {@var{maxDistance} =} longbone_maxDistance (@var{v})\n\
+ @deftypefnx {csg-toolkit} {[@var{maxD_v1}, @var{maxD_v1}] =} longbone_maxDistance (@var{v})\n\
+ @deftypefnx {csg-toolkit} {[@var{maxDistance}, @var{maxD_v1}, @var{maxD_v1}] =} longbone_maxDistance (@var{v})\n\
 \n\
 \n\
 Calculate the maximum distance of a long bone 3D model. \
@@ -100,19 +102,20 @@ also returns the point coordinates that correspond to the maximum distance.\n\
 \n\
 @code{longbone_maxDistance} may be called with varying number of \
 output arguments.\n\
+@itemize \
+@item \
 If one output argument is defined, then maximum distance is returned.\n\
 \n\
-@var{maxDistance} = longbone_maxDistance(@var{v})\n\
-\n\
+@item \
 If two output arguments are defined, then the corresponding points of maximum \
 distance are returned.\n\
 \n\
-[@var{maxD_v1}, @var{maxD_v2}] = longbone_maxDistance(@var{v})\n\
-\n\
+@item \
 If 3 output arguments are defined, then the maximum distance along with \
-its corresponding points are returned.\n\
+its corresponding points are returned. \
 \n\
-[@var{maxDistance}, @var{maxD_v1}, @var{maxD_v1}] = longbone_maxDistance(@var{v})\n\
+\n\
+@seealso{longbone_Registration, longbone_Geometry} \n\
 @end deftypefn")
 {
   // check number of input and output arguments

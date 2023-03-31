@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2018-2022 Andreas Bertsatos <abertsatos@biol.uoa.gr>
+Copyright (C) 2018-2023 Andreas Bertsatos <abertsatos@biol.uoa.gr>
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -32,7 +32,7 @@ struct Faces
 {
   int a, b, c;
 };
-struct V2F             //for vertices of adjacent faces
+struct V2F              //for vertices of adjacent faces
 {
   int V1, V2;
 };
@@ -75,7 +75,7 @@ vector<Vector3> sliceMesh(vector<Vector3> V3D, vector<Faces> Face3V, Vector3 poi
     dotV2 = dotProduct3D(V2, normal);
     dotV3 = dotProduct3D(V3, normal);
     // true if intersecting
-    if(!((dotV1 < 0 && dotV2 < 0 && dotV3 < 0) || 
+    if(!((dotV1 < 0 && dotV2 < 0 && dotV3 < 0) ||
          (dotV1 > 0 && dotV2 > 0 && dotV3 > 0)))
 		{
 			if(dotV1 * dotV2 < 0)       // vertices 1 and 2 lie on opposite sides
@@ -168,22 +168,32 @@ vector<Vector3> sliceMesh(vector<Vector3> V3D, vector<Faces> Face3V, Vector3 poi
 }
 
 
-DEFUN_DLD(meshSection, args, nargout, 
+DEFUN_DLD(meshSection, args, nargout,
           "-*- texinfo -*-\n\
-@deftypefn {Function} @var{cross_section} = meshSection (@var{v}, @var{f}, @var{point}, @var{normal})\n\
+ @deftypefn  {csg-toolkit} {@var{cross_section} =} meshSection (@var{v}, @var{f}, @var{point}, @var{normal})\n\
 \n\
 \n\
-This function loads the vertices @var{v} and faces @var{f} of a triangular 3D\
-Mesh along with a slicing plane defined by its @var{normal} and a @var{point}\
-that lies on the slicing plane and it returns the intersection points of the\
-face edges between the vertices that lie on opposite sides of the sectioning\
-plane.  Duplicate points due to adjacent faces are removed and the points are\
-sorted according to the οrder of the faces.\n\n\
-@var{v} and @var{f} must be (Nx3) matrices containing 3D coordinates and vertex\
-indices respectively.  @var{normal} and @var{point} must be defined as row\
-vectors containing x, y, z coordinates in R3.  @var{cross_section} is the\
-return variable Nx3 in size, where N is the number of unique intersection\
-points of the 3D mesh represented by 'v' and 'f' input arguments.\n\
+Compute the sectioning points of triangular 3D mesh. \
+\n\
+\n\
+This function loads the vertices @var{v} and faces @var{f} of a triangular 3D \
+Mesh along with a slicing plane defined by its @var{normal} and a @var{point} \
+that lies on the slicing plane and it returns the intersection points of the \
+face edges between the vertices that lie on opposite sides of the sectioning \
+plane.  Duplicate points due to adjacent faces are removed and the points are \
+sorted according to the οrder of the faces. \
+\n\
+\n\
+@var{v} and @var{f} must be @math{Nx3} matrices containing the 3D coordinates \
+and the vertex indices, respectively.  @var{normal} and @var{point} must be \
+defined as row vectors containing @var{x},@var{y},@var{z} coordinates in R3. \
+\n\
+\n\
+@var{cross_section} is an @math{Nx3} matrix, where @math{N} is the number of \
+unique intersection points of the 3D mesh represented in @var{v} and @var{f}. \
+\n\
+\n\
+@seealso{meshArea, meshBarycenter, readObj} \n\
 @end deftypefn")
 {
   // count the number of input arguments and store their values

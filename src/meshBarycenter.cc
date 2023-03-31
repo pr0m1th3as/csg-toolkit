@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2018-2022 Andreas Bertsatos <abertsatos@biol.uoa.gr>
+Copyright (C) 2018-2023 Andreas Bertsatos <abertsatos@biol.uoa.gr>
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -31,23 +31,26 @@ struct VCoord
 struct Area
 {
       double a;
-};  
+};
 
 
-DEFUN_DLD (meshBarycenter, args, nargout, 
+DEFUN_DLD (meshBarycenter, args, nargout,
           "-*- texinfo -*-\n\
-@deftypefn{Function} @var{centroid} = meshBarycenter (@var{v},@var{f})\n\
+ @deftypefn  {csg-toolkit} {@var{centroid} =} meshBarycenter (@var{v}, @var{f})\n\
 \n\
 \n\
-This function computes the 3D coordinates of the polygon barycenter of a\
-triangular 3D Mesh based on its vertices and faces provided as input arguments.\
+Compute the 3D coordinates of the polygon barycenter of a triangular 3D Mesh \
+based on its vertices and faces provided as input arguments. \n\
 \n\
-The function will only take two input arguments. The first argument should\
-be an Nx3 matrix containing the 3-dimensional coordinates of each vertex and\
-the second argument should be an Nx3 matrix with each row containing the three\
-vertices that form each face of the triangular mesh. The face matrix should\
-contain explicitly non-zero integers referring to the existing vertices present\
-in the first input argument.\
+The function will only take two input arguments.  The first argument should \
+be an @math{Nx3} matrix containing the 3D coordinates of each vertex and \
+the second argument should be an @math{Nx3} matrix with each row containing \
+the three vertices that form each face of the triangular mesh.  The face \
+matrix should contain explicitly non-zero integers referring to the existing \
+vertices present in the first input argument. \
+\n\
+\n\
+@seealso{meshArea, meshSection, readObj} \n\
 @end deftypefn")
 {
   // count the number of input arguments and store their values
@@ -186,8 +189,8 @@ in the first input argument.\
   }
   else
   {
-      cout << "Mesh barycentric coordinates are: x=" << mesh_barycenter(0,0) 
-           << "  y=" << mesh_barycenter(0,1) << "  z=" << mesh_barycenter(0,2) 
+      cout << "Mesh barycentric coordinates are: x=" << mesh_barycenter(0,0)
+           << "  y=" << mesh_barycenter(0,1) << "  z=" << mesh_barycenter(0,2)
            << "\n";
       return octave_value_list();
   }
