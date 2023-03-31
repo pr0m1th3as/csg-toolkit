@@ -17,6 +17,8 @@
 ## @deftypefn  {csg-toolkit} {} write_MeshlabPoints (@var{filename}, @var{meshname}, @var{MLPP})
 ## @deftypefnx {csg-toolkit} {} write_MeshlabPoints (@var{filename}, @var{meshname}, @var{MLPP}, @var{pnames})
 ##
+## Write 3D coordinates in a MeshLab PickedPoints file.
+##
 ## This function writes the 3D coordinates of points along with their associated
 ## names in a @qcode{.pp} MeshLab PickedPoints file. The function requires at
 ## least three input arguments.  When three arguments are provided, the first
@@ -38,40 +40,48 @@
 ## @end deftypefn
 
 function write_MeshlabPoints (varargin)
-  ## check the number of input variables
-  if length (varargin) < 3 || length (varargin) > 4
-    error 'wrong number of input arguments';
+
+  ## Check the number of input variables
+  if (length (varargin) < 3 || length (varargin) > 4)
+    error ("write_MeshlabPoints: wrong number of input arguments.");
   endif
-  ## check first two arguments are strings
+  ## Check first two arguments are strings
   if ! ischar (varargin{1}(:)') || ! ischar (varargin{2}(:)')
-    error 'first two input arguments should be char strings';
+    error (strcat (["write_MeshlabPoints: first two input arguments"], ...
+                   [" must be char strings."]));
   else
     filename = varargin{1}(:)';
     meshname = varargin{2}(:)';
   endif
-  ## chech third input argument
-  if length (varargin) == 3 && size (varargin{3},2) == 4
+
+  ## Check third input argument
+  if (length (varargin) == 3 && size (varargin{3},2) == 4)
     MLPP = varargin{3}(:,[2:4]);
     pointindex = varargin{3}(:,1);
-  elseif length (varargin) == 3 && size (varargin{3},2) == 3
+
+  elseif (length (varargin) == 3 && size (varargin{3},2) == 3)
     pointindex = [1:size(varargin{3},1)];
     MLPP = varargin{3};
-  elseif length (varargin) == 4 && size (varargin{3},2) == 3
+
+  elseif (length (varargin) == 4 && size (varargin{3},2) == 3)
     namelist = varargin{4};
     MLPP = varargin{3};
-  elseif length (varargin) == 4 && size (varargin{3},2) == 4
+
+  elseif (length (varargin) == 4 && size (varargin{3},2) == 4)
     namelist = varargin{4};
     MLPP = varargin{3}(:,[2:4]);
+
   else
     error 'Invalid arguments';
   endif
 
-  ## open .pp file in writing mode and append the required headers
+  ## Open .pp file in writing mode and append the required headers
   fid = fopen (filename,'wt');
   fprintf (fid, "<!DOCTYPE PickedPoints>\n<PickedPoints>\n <DocumentData>\n");
-  ## get time, date and user from the system to use it for DocumentData section
+
+  ## Get time, date and user from the system to use it for DocumentData section
   [a, user] = system ("users");
-  user = user(1:end-1);     % remove trailing newline char from user string
+  user = user(1:end-1);     # remove trailing newline char from user string
   a = clock;
   a(6) = ceil (a(6));
   fprintf (fid, "  <DateTime time=""%02d:%02d:%02d"" date=""%d-%02d-%02d""/>\n",...
@@ -79,20 +89,25 @@ function write_MeshlabPoints (varargin)
   fprintf (fid, "  <User name=""%s""/>\n", user);
   fprintf (fid, "  <DataFileName name=""%s""/>\n", meshname);
   fprintf (fid, "  <templateName name=""""/>\n </DocumentData>\n");
-  ## check for three input arguments and add the points to the file
+
+  ## Check for three input arguments and add the points to the file
   if exist ('pointindex')
     for i = 1:length (pointindex)
       fprintf (fid, " <point active=""1"" name=""%d"" x=""%0.4f"" y=""%0.4f"" z=""%0.4f""/>\n",...
                pointindex(i), MLPP(i,1), MLPP(i,2), MLPP(i,3));
     endfor
   endif
-  ## check for three input arguments and add the points to the file
+
+  ## Check for three input arguments and add the points to the file
   if exist('namelist')
     for i = 1:length (namelist)
       fprintf (fid, " <point active=""1"" name=""%s"" x=""%0.4f"" y=""%0.4f"" z=""%0.4f""/>\n",...
                namelist{i}, MLPP(i,1), MLPP(i,2), MLPP(i,3));
     endfor
   endif
+
+  ## Close file
   fprintf (fid, "</PickedPoints>");
   fclose (fid);
+
 endfunction
