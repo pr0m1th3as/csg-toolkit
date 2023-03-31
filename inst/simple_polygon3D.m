@@ -110,7 +110,7 @@ function [varargout] = simple_polygon3D (varargin)
 
   ## Check the number of input variables
   if (nargin < 2 || length (varargin) > 3)
-    error 'wrong number of input arguments';
+    error ("simple_polygon3D: wrong number of input arguments.");
   endif
 
   ## For 2 input arguments define matrix of planar section point coordinates and
