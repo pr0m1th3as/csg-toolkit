@@ -14,25 +14,25 @@
 ## this program; if not, see <http://www.gnu.org/licenses/>.
 
 ## -*- texinfo -*-
-## @deftypefn  {csg-toolkit} {} write_MeshlabPoints (@var{filename}, @var{meshname}, @var{MLP})
-## @deftypefnx {csg-toolkit} {} write_MeshlabPoints (@var{filename}, @var{meshname}, @var{MLP}, @var{point_id})
+## @deftypefn  {csg-toolkit} {} write_MeshlabPoints (@var{filename}, @var{meshname}, @var{MLPP})
+## @deftypefnx {csg-toolkit} {} write_MeshlabPoints (@var{filename}, @var{meshname}, @var{MLPP}, @var{pnames})
 ##
 ## This function writes the 3D coordinates of points along with their associated
 ## names in a @qcode{.pp} MeshLab PickedPoints file. The function requires at
-## least three input arguments.  If three arguments are provided, the first two
-## must be character strings with the filename under which the points will be
-## saved and the filename of the associated 3D mesh. The third input argument
-## must be an @math{Nx4} matrix containing the index (only numeric values) and
-## the @var{x},@var{y},@var{z} coordinates of each point.
+## least three input arguments.  When three arguments are provided, the first
+## two must be character strings with the filename under which the points will
+## be saved, @var{filename} and the filename of the associated 3D mesh,
+## @var{meshname}.  The third input argument must be an @math{Nx4} matrix with
+## each row containing the point index (only numeric values) along with the
+## @var{x},@var{y},@var{z} coordinates of each point.
 ##
-## If the point index is required to be alphanumeric, then an additional
-## variable may be parsed into the function, which should be a cell array of
-## strings. The points' names parsed as a fourth variable must correspond to
-## the points provided in the second input argument, in which case it can be an
-## @math{Nx3} matrix containing only the 3D coordinates of the points.
-## In case of four input arguments, where the third argument is an Nx4 matrix,
-## the first column (arithmetic names) is ignored and the name list in the
-## fourth argument is used.
+## If the point index is required to be alphanumeric, then an additional input
+## ardument may be parsed, @var{pnames}, which must be a cell array of
+## strings.  @var{pnames} must correspond to the points provided in the second
+## input argument, in which case it can be an @math{Nx3} matrix containing only
+## the 3D coordinates of the points.  In case of four input arguments, where the
+## third argument is an Nx4 matrix, the first column (point index) is ignored
+## and the point names in @var{pnames} is used.
 ##
 ## @seealso{write_MeshlabPoints}
 ## @end deftypefn
@@ -51,17 +51,17 @@ function write_MeshlabPoints (varargin)
   endif
   ## chech third input argument
   if length (varargin) == 3 && size (varargin{3},2) == 4
-    MLP = varargin{3}(:,[2:4]);
+    MLPP = varargin{3}(:,[2:4]);
     pointindex = varargin{3}(:,1);
   elseif length (varargin) == 3 && size (varargin{3},2) == 3
     pointindex = [1:size(varargin{3},1)];
-    MLP = varargin{3};
+    MLPP = varargin{3};
   elseif length (varargin) == 4 && size (varargin{3},2) == 3
     namelist = varargin{4};
-    MLP = varargin{3};
+    MLPP = varargin{3};
   elseif length (varargin) == 4 && size (varargin{3},2) == 4
     namelist = varargin{4};
-    MLP = varargin{3}(:,[2:4]);
+    MLPP = varargin{3}(:,[2:4]);
   else
     error 'Invalid arguments';
   endif
@@ -83,14 +83,14 @@ function write_MeshlabPoints (varargin)
   if exist ('pointindex')
     for i = 1:length (pointindex)
       fprintf (fid, " <point active=""1"" name=""%d"" x=""%0.4f"" y=""%0.4f"" z=""%0.4f""/>\n",...
-               pointindex(i), MLP(i,1), MLP(i,2), MLP(i,3));
+               pointindex(i), MLPP(i,1), MLPP(i,2), MLPP(i,3));
     endfor
   endif
   ## check for three input arguments and add the points to the file
   if exist('namelist')
     for i = 1:length (namelist)
       fprintf (fid, " <point active=""1"" name=""%s"" x=""%0.4f"" y=""%0.4f"" z=""%0.4f""/>\n",...
-               namelist{i}, MLP(i,1), MLP(i,2), MLP(i,3));
+               namelist{i}, MLPP(i,1), MLPP(i,2), MLPP(i,3));
     endfor
   endif
   fprintf (fid, "</PickedPoints>");
