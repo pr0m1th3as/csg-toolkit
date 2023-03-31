@@ -14,23 +14,26 @@
 ## this program; if not, see <http://www.gnu.org/licenses/>.
 
 ## -*- texinfo -*-
-## @deftypefn{Function} write_MeshlabPoints (@var{filename}, @var{meshname}, @var{MLP})
-## @deftypefnx{Function} write_MeshlabPoints (@var{filename}, @var{meshname}, @var{MLP}, @var{point_id})
+## @deftypefn  {csg-toolkit} {} write_MeshlabPoints (@var{filename}, @var{meshname}, @var{MLP})
+## @deftypefnx {csg-toolkit} {} write_MeshlabPoints (@var{filename}, @var{meshname}, @var{MLP}, @var{point_id})
 ##
 ## This function writes the 3D coordinates of points along with their associated
-## names in a .pp MeshLab Point file. The function requires at leat three input
-## arguments. If three arguments are provided, the first two should be character
-## strings with the filename under which the points will be saved and the filename
-## of the associated mesh. The third input argument should be an Nx4 matrix
-## containing name only numeric values) and x,y,z coordinates for each point.
+## names in a @qcode{.pp} MeshLab PickedPoints file. The function requires at
+## least three input arguments.  If three arguments are provided, the first two
+## must be character strings with the filename under which the points will be
+## saved and the filename of the associated 3D mesh. The third input argument
+## must be an @math{Nx4} matrix containing the index (only numeric values) and
+## the @var{x},@var{y},@var{z} coordinates of each point.
 ##
-## If the point names need be alphanumeric, then an additional variable may be
-## parsed into the function, which should be a cell array of strings. The point
-## names parsed as a fourth variable should correspond to the points provided in
-## the second input argument, which should be an Nx3 matrix containing only the
-## 3D coordinates of the points. In case of four input arguments where the third
-## argument is an Nx4 matrix, the first column (arithmetic names) is ignored and
-## the name list in the fourth argument is used.
+## If the point index is required to be alphanumeric, then an additional
+## variable may be parsed into the function, which should be a cell array of
+## strings. The points' names parsed as a fourth variable must correspond to
+## the points provided in the second input argument, in which case it can be an
+## @math{Nx3} matrix containing only the 3D coordinates of the points.
+## In case of four input arguments, where the third argument is an Nx4 matrix,
+## the first column (arithmetic names) is ignored and the name list in the
+## fourth argument is used.
+##
 ## @seealso{write_MeshlabPoints}
 ## @end deftypefn
 
@@ -62,7 +65,7 @@ function write_MeshlabPoints (varargin)
   else
     error 'Invalid arguments';
   endif
-  
+
   ## open .pp file in writing mode and append the required headers
   fid = fopen (filename,'wt');
   fprintf (fid, "<!DOCTYPE PickedPoints>\n<PickedPoints>\n <DocumentData>\n");
