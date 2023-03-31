@@ -1,4 +1,4 @@
-## Copyright (C) 2020-2022 Andreas Bertsatos <abertsatos@biol.uoa.gr>
+## Copyright (C) 2020-2023 Andreas Bertsatos <abertsatos@biol.uoa.gr>
 ##
 ## This program is free software; you can redistribute it and/or modify it under
 ## the terms of the GNU General Public License as published by the Free Software
@@ -14,42 +14,25 @@
 ## this program; if not, see <http://www.gnu.org/licenses/>.
 
 ## -*- texinfo -*-
-## @deftypefn{Function} @var{MLP} = read_MeshlabPoints (@var{filename})
-## @deftypefnx{Function} [@var{MLP}, @var{point_id}] = read_MeshlabPoints (@var{filename})
+## @deftypefn  {csg-toolkit} {@var{MLPP} =} read_MeshlabPoints (@var{filename})
+## @deftypefnx {csg-toolkit} {[@var{MLPP}, @var{pnames}] =} read_MeshlabPoints (@var{filename})
 ##
-## This function reads a .pp MeshLab Point file and returns and Nx4 matrix
-## containing the name for each point along with the corresponding x y z 
-## coordinates in each row. If name is given as a numerical value then it is
-## stored as numerical value. If the name of a point is alpharithmetic or 0
-## then NaN is stored in the relevant row of the MPL array and the name is
-## stored in a separate cell array as a character string.
-## 
-## If one output argument is provided then the function returns the Nx4 matrix,
-## if two output arguments are defined then an Nx3 matrix containing only the
-## x, y, z coordinates and a cell array containing the names of each point are
-## returned.
+## This function reads a @qcode{.pp} MeshLab PickedPoints file and returns an
+## @math{Nx4} matrix containing the index for each point along with the
+## corresponding @var{x},@var{y},@var{z} coordinates in each row.  The point
+## name must be numerical, otherwise @qcode{NaN} is returned.  If the point
+## names are stored as alpharithmetic strings, then these can be retrieved in
+## a second output argument, @var(pnames}, as a cell array of strings.  In such
+## case, @var{MLPP} is an @math{Nx3} matrix containing the
+## @var{x},@var{y},@var{z} point coordinates, where @math{N} is the number of
+## points.
 ##
-## @itemize
-## @item
-## @var{filename} is char string of the filename of Meshlab's Point filename.
-##
-## @item @var{MLP} contains the Picked Points in an Nx4 array following the format
-## [name, x, y, z].
-## @end itemize
-## 
-## If the names of the Picked Points are alphanumeric strings, then they can be
-## retrieved in a separate variable:
-##
-## @itemize
-## @item @var{MLP}(1,:) = [x, y, z]
-## @item @var{point_id}(1) = "name of first point"
-## @end itemize
 ## @seealso{read_MeshlabPoints}
 ## @end deftypefn
 
 function [varargout] = read_MeshlabPoints (filename)
   ## declare output variables
-  MLP = zeros (1,4);
+  MLPP = zeros (1,4);
   name_list = {''};
   ## scan file and identify line containing points
   point_index = 1;
@@ -80,7 +63,7 @@ function [varargout] = read_MeshlabPoints (filename)
         name = NaN;
         name_list(point_index) = line(name_start:name_end);
       endif
-      MLP(point_index,:) = [name x y z];
+      MLPP(point_index,:) = [name x y z];
       point_index += 1;
     endif
     line = fgets (fid);
@@ -88,9 +71,9 @@ function [varargout] = read_MeshlabPoints (filename)
   fclose (fid);
   ## return variables
   if (nargout==1)
-    varargout{1} = MLP;
+    varargout{1} = MLPP;
   elseif (nargout==2)
-    varargout{1} = MLP(:,[2:4]);
+    varargout{1} = MLPP(:,[2:4]);
     varargout{2} = name_list;
   endif
 endfunction
