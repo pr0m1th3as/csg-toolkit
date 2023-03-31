@@ -1,4 +1,4 @@
-## Copyright (C) 2022 Andreas Bertsatos <abertsatos@biol.uoa.gr>
+## Copyright (C) 2022-2023 Andreas Bertsatos <abertsatos@biol.uoa.gr>
 ##
 ## This program is free software; you can redistribute it and/or modify it under
 ## the terms of the GNU General Public License as published by the Free Software
@@ -14,7 +14,7 @@
 ## this program; if not, see <http://www.gnu.org/licenses/>.
 
 ## -*- texinfo -*-
-## @deftypefn{Private Function} @var{dist} = distancePoints (@var{p1}, @var{p2})
+## @deftypefn  {csg-toolkit} {@var{dist} =} distancePoints (@var{p1}, @var{p2})
 ##
 ## This function returns the Euclidean distance between points P1 and P2.
 ## @end deftypefn

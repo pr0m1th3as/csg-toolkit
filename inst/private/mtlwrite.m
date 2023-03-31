@@ -1,4 +1,4 @@
-## Copyright (C) 2020-2022 Andreas Bertsatos <abertsatos@biol.uoa.gr>
+## Copyright (C) 2020-2023 Andreas Bertsatos <abertsatos@biol.uoa.gr>
 ##
 ## This program is free software; you can redistribute it and/or modify it under
 ## the terms of the GNU General Public License as published by the Free Software
@@ -14,18 +14,21 @@
 ## this program; if not, see <http://www.gnu.org/licenses/>.
 
 ## -*- texinfo -*-
-## @deftypefn{Private Function} mtlwrite (@var{filename}, @var{MTL})
+## @deftypefn  {csg-toolkit} {} mtlwrite (@var{filename}, @var{MTL})
 ##
 ## This function stores the material definition elements according to the
-## Wavefront file format. All material elements are defined in the data structure
-## @var{mtl}, whereas @var{filename} is the char string of the target .mtl file.
+## Wavefront file format.  All material elements are defined in the data
+## structure @var{mtl}, whereas @var{filename} is the char string of the target
+## .mtl file.
 ##
 ## The function recognizes only material name statements, i.e. newmtl; material
 ## color and illumination statements, i.e. Ka, Kd, Ks, Tr, d, illum and Ns; as
 ## well as texture map statements, i.e. map_Kd, map_Kd and map_Ks.
 ## All other fields that may be present in the data structure used as input
-## argument are ignored. If the data structure contains more than one material
-## then they are stored in consecutive order as defined by the structure's index.
+## argument are ignored.  If the data structure contains more than one material
+## then they are stored in consecutive order as defined by the structure's
+## index.
+##
 ## @seealso{mtlread}
 ## @end deftypefn
 
