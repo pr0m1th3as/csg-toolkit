@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2021-2022 Andreas Bertsatos <abertsatos@biol.uoa.gr>
+Copyright (C) 2021-2023 Andreas Bertsatos <abertsatos@biol.uoa.gr>
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -29,21 +29,21 @@ this program; if not, see <http://www.gnu.org/licenses/>.
 
 using namespace std;
 
-struct Vector2           //for 2D points
+struct Vector2            //for 2D points
 {
   double x, y;
 };
-struct Vector3           //for 3D points
+struct Vector3            //for 3D points
 {
   double x, y, z;
 };
-struct Mesh             //for triangular mesh object data
+struct Mesh               //for triangular mesh object data
 {
   double V1x, V1y, V1z;
   double V2x, V2y, V2z;
   double V3x, V3y, V3z;
 };
-struct maxDpoints       //for max distance 3D points
+struct maxDpoints         //for max distance 3D points
 {
   Vector3 V1, V2;
 };
@@ -371,7 +371,7 @@ Vector3 centroidPolygon3D(vector<Vector3> cloud, Vector3 normal)
   Vector3 centroid = {x, y, z};
   return centroid;
 }
-// function for calculating the centroid and 2nd moments of area of a simple 
+// function for calculating the centroid and 2nd moments of area of a simple
 // polygon. The polygon should be closed, i.e. the first and last points of
 // the vector are the same.
 Polygon simplePolygon2D(vector<Vector2> poly2D)
@@ -407,7 +407,7 @@ Polygon simplePolygon2D(vector<Vector2> poly2D)
   {
     double tmp = (poly2D[i].x * poly2D[i+1].y) - (poly2D[i+1].x * poly2D[i].y);
     Ix += ((poly2D[i].y * poly2D[i].y) + (poly2D[i].y * poly2D[i+1].y) +
-          (poly2D[i+1].y * poly2D[i+1].y)) * tmp; 
+          (poly2D[i+1].y * poly2D[i+1].y)) * tmp;
     Iy += ((poly2D[i].x * poly2D[i].x) + (poly2D[i].x * poly2D[i+1].x) +
           (poly2D[i+1].x * poly2D[i+1].x)) * tmp;
     Ixy += ((poly2D[i].x * poly2D[i+1].y) + (2 * poly2D[i].x * poly2D[i].y) +
@@ -496,7 +496,7 @@ vector<Vector3> sliceMesh(vector<Mesh> Mesh3D, Vector3 point, Vector3 normal)
 		dotV2 = dotProduct3D(V2, normal);
 		dotV3 = dotProduct3D(V3, normal);
     // true if intersecting
-		if(! ((dotV1 < 0 && dotV2 < 0 && dotV3 < 0) || 
+		if(! ((dotV1 < 0 && dotV2 < 0 && dotV3 < 0) ||
           (dotV1 > 0 && dotV2 > 0 && dotV3 > 0)))
 		{
 			if(dotV1 * dotV2 < 0)       // vertices 1 and 2 lie on opposite sides
@@ -731,23 +731,23 @@ vector<Contour> calculateMooreNeighbor(vector<vector<Raster>> rasterMatrix)
     {
       int row_0 = boundaryPixels[0].row;
       int col_0 = boundaryPixels[0].col;
-      
+
       int row_1 = boundaryPixels[1].row;
       int col_1 = boundaryPixels[1].col;
       int dir_1 = boundaryPixels[1].direction;
-      
+
       int size = boundaryPixels.size() - 1;
       int row_l = boundaryPixels[size].row;
       int col_l = boundaryPixels[size].col;
       int dir_l = boundaryPixels[size].direction;
-      
+
       int row_bl = boundaryPixels[size - 1].row;
       int col_bl = boundaryPixels[size - 1].col;
       int dir_bl = boundaryPixels[size - 1].direction;
       // the contour is closed if current pixel (last found) matches the second
       // pixel in the vector (position and direction) and the previously found
       // pixel's position matches that of the initial pixel
-      if(row_0 == row_bl && col_0 == col_bl && row_1 == row_l && 
+      if(row_0 == row_bl && col_0 == col_bl && row_1 == row_l &&
                             col_1 == col_l && dir_1 == dir_l)
       {
         // in such case copy the direction of the previously found pixel
@@ -791,7 +791,7 @@ vector<Vector2> extract2Dpolyline(vector<Contour> boundaryPixels, vector<Vector2
 // function for extracting Freeman chain code from contour vectors.
 // Since the chain coding in Moore's Neighbor algorithm does not use the
 // standard direction pattern (0 points upwards instead towards the right),
-// the present function makes the necessary shift so that the final chain 
+// the present function makes the necessary shift so that the final chain
 // code follows the standard implementation of Freeman chain coding (0 points to
 // the positive side of x axis and coding follows a counter clockwise direction)
 // Furthermore, the respective displacement along the x and y axes are calculated
@@ -841,7 +841,7 @@ vector<FCCode> extractFreemanChainCode(vector<Contour> boundaryPixels)
       x = 1; y = -1; displacement = diagonal;
     }
     chaincode.push_back({FCCode, x, y, displacement});
-  }    
+  }
   return chaincode;
 }
 // function for calculating Elliptic Fourier Descriptors
@@ -864,7 +864,7 @@ vector<EFDcoef> calculaleEFD(vector<FCCode> FreemanChainCode)
     int delta_x = FreemanChainCode[p].delta_x;
     int delta_y = FreemanChainCode[p].delta_y;
     double delta_t = FreemanChainCode[p].delta_t;
-    t_c += delta_t; 
+    t_c += delta_t;
     A_0 += (delta_x / (2 * delta_t)) * (t_c * t_c - t_prev * t_prev);
     A_0 += (zeta_A - (delta_x / delta_t) * zeta_B) * (t_c - t_prev);
     C_0 += (delta_y / (2 * delta_t)) * (t_c * t_c - t_prev * t_prev);
@@ -1261,14 +1261,17 @@ vector<Vector3> register3DepCloud(vector<Vector3> epCloud, vector<Vector2> regPo
 
 DEFUN_DLD (longbone_Registration, args, nargout,
           "-*- texinfo -*-\n\
-@deftypefn{Function} [@var{bone}, @var{Points}] = longbone_Registration (@var{v},@var{f})\n\
+ @deftypefn{Function} [@var{bone}, @var{Points}] = longbone_Registration (@var{v}, @var{f})\n\
 \n\
 \n\
-This function finds the long bone (i.e. Femur, Ulna, Tibia, or Humerus)\
-represented in the input mesh defined by its vertices @var{v} and faces @var{f}\
-and it also registers the two points on the bone's surface required by the\
-CSG-Toolkit for anatomical alignment of the bone. The function returns the long\
-bone's name in @var{bone} and if a second argument is present it returms the\
+Determine long bone type and register initial alignment points. \
+\n\
+\n\
+This function finds the long bone (i.e. Femur, Ulna, Tibia, or Humerus) \
+represented in the input mesh defined by its vertices @var{v} and faces @var{f} \
+and it also registers the two points on the bone's surface required by the \
+CSG-Toolkit for anatomical alignment of the bone. The function returns the long \
+bone's name in @var{bone} and if a second argument is present it returms the \
 3D coordinates of the registered points.\n\
 @end deftypefn")
 {
@@ -1419,7 +1422,7 @@ bone's name in @var{bone} and if a second argument is present it returms the\
     double y2D = dotProduct3D(epCloud_2[i], Y2D_vector);
     ZYproj_2.push_back({x2D, y2D});
   }
-  // process 2D projections to get the respective polylines and normalized EFDs 
+  // process 2D projections to get the respective polylines and normalized EFDs
   vector<vector<Raster>> rasterMatrix1 = rasterizeCloud2D(ZYproj_1);
   vector<Contour> boundaryPixels1 = calculateMooreNeighbor(rasterMatrix1);
   vector<Vector2> polyline2D_1 = extract2Dpolyline(boundaryPixels1, ZYproj_1);

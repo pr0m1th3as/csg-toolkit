@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2022 Andreas Bertsatos <abertsatos@biol.uoa.gr>
+Copyright (C) 2022-2023 Andreas Bertsatos <abertsatos@biol.uoa.gr>
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -22,12 +22,12 @@ this program; if not, see <http://www.gnu.org/licenses/>.
 
 using namespace std;
 
-struct Vector3           //for 3D points
+struct Vector3            //for 3D points
 {
   double x, y, z;
 };
 
-struct maxDpoints       //for max distance 3D points
+struct maxDpoints         //for max distance 3D points
 {
 	Vector3 V1, V2;
 };
@@ -86,16 +86,19 @@ maxDpoints longbone_maxDistance(vector<Vector3> Cloud3D)
 
 DEFUN_DLD (longbone_maxDistance, args, nargout,
           "-*- texinfo -*-\n\
-@deftypefn{Function} [@var{maxDistance}, @var{maxD_v1}, @var{maxD_v1}] = longbone_maxDistance (@var{v})\n\
+ @deftypefn{Function} [@var{maxDistance}, @var{maxD_v1}, @var{maxD_v1}] = longbone_maxDistance (@var{v})\n\
+\n\
+\n\
+Calculate the maximum distance of a long bone 3D model. \
 \n\
 \n\
 This function calculates the maximum distance of a long bone as represented \
-by its mesh vertices.  It requires an Nx3 matrix as input argument, which \
-contains the (x,y,z) coordinates in R3.  The function also returns the point \
-coordinates that correspond to the maximum distance.\n\
+by its mesh vertices.  It requires an @math{Nx3} matrix as input argument, \
+which contains the @var{x},@var{y},@var{z} coordinates in R3.  The function \
+also returns the point coordinates that correspond to the maximum distance.\n\
 \n\
 \n\
-The function 'longbone_maxDistance.m' may be called with varying number of \
+@code{longbone_maxDistance} may be called with varying number of \
 output arguments.\n\
 If one output argument is defined, then maximum distance is returned.\n\
 \n\
