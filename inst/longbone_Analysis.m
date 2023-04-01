@@ -60,7 +60,7 @@
 ##
 ## Under all batch processing schemes except for the @qcode{"fragment"} option,
 ## the initial alignment points for each 3D model are either read from the
-## corresponding Meshlab PickedPoints file (e.g. @qcode{"bone_ID.pp"), if
+## corresponding Meshlab PickedPoints file (e.g. @qcode{"bone_ID.pp"}), if
 ## present in the same folder with the OBJ file, or they are automatically
 ## registered with the @code{longbone_Registration} function.  In either case,
 ## the opitimized alignment points are saved in the corresponding Meshlab

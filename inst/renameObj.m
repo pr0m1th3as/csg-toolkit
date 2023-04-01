@@ -15,7 +15,7 @@
 
 ## -*- texinfo -*-
 ## @deftypefn  {csg-toolkit} {} renameObj (@var{source}, @var{target})
-## @deftypefn  {csg-toolkit} {@var{target} =} renameObj (@var{source}, @var{target})
+## @deftypefnx {csg-toolkit} {@var{target} =} renameObj (@var{source}, @var{target})
 ##
 ## Rename an OBJ file containing a pure triangular mesh in Wavefront 3D model
 ## file format and its associated material library and texture map files.
