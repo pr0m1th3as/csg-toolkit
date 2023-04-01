@@ -1,4 +1,4 @@
-## Copyright (C) 2018-2022 Andreas Bertsatos <abertsatos@biol.uoa.gr>
+## Copyright (C) 2018-2023 Andreas Bertsatos <abertsatos@biol.uoa.gr>
 ##
 ## This program is free software; you can redistribute it and/or modify it under
 ## the terms of the GNU General Public License as published by the Free Software
@@ -14,127 +14,191 @@
 ## this program; if not, see <http://www.gnu.org/licenses/>.
 
 ## -*- texinfo -*-
-## @deftypefn{Script} longbone_Analysis
+## @deftypefn  {csg-toolkit} {} longbone_Analysis
+## @deftypefnx {csg-toolkit} {} longbone_Analysis (@qcode{"custom"})
+## @deftypefnx {csg-toolkit} {} longbone_Analysis (@var{points})
+## @deftypefnx {csg-toolkit} {} longbone_Analysis (@qcode{"fragment"})
 ##
-## This script reads the available bone models stored in OBJ file format that
-## are present in some folder and utilizes the 'longbone_Geometry' function to
-## analyze their geometric properties. The user is prompted to select which
-## long bone(s) should be analyzed and the folder which contains the OBJ files.
-## All available OBJ files are evaluated but only the explicitly selected bones
-## are fully processed and their corresponding geometric properties stored in the
-## current working directory as .csv files named following the name convention
-## of their initial mesh filename.
+## A wrapper for batch processing with @qcode{longbone_*Geometry} functions.
 ##
-## For example, for a triangular mesh named as 'bone_ID.obj', the following
-## files are produced:
+## @code{longbone_Analysis} reads the available 3D models stored in Wavefront
+## OBJ file format present in some folder and calls the @code{longbone_Geometry}
+## function to analyze their geometric properties in a serial manner.  The user
+## is prompted for the directory to read from and subsequently the type of bones
+## that should be analyzed.  All available 3D bone models are evaluated but only
+## those that explicitly match the user selection are fully processed and their
+## corresponding geometric properties stored in the corresponding CSV files in
+## the current working directory.  The generated CSV files follow the naming
+## conventions used by the @code{longbone_Geometry} function.
 ##
-## @multitable {Filename} {Description} @columnfractions .35 .65
-## @item geometry-bone_ID.csv @tab containing the properties of area, perimeter,
-## centroid, slicing and orientation normals for each cross section stored as a
-## row vector in the order (:,[1],[2],[3:5],[6:8],[9:11]) from proximal to distal
-## cross sections ([1:5],:).
+## @code{longbone_Analysis (@qcode{"custom"})} will accordingly utilize the
+## @code{longbone_CustomGeometry} function and, besides the folder containing
+## the 3D models and the user selected types of bones for processing, it will
+## also pass the respective Meshlab PickedPoints filename with the custom
+## sectioning points.  These files must reside in the same folder with the 3D
+## models and their base filename must be appended with @qcode{"-custom"} with
+## respect to the OBJ filename.  For example, assuming a 3D model named
+## @qcode{"bone_ID.obj"}, the corresponding custom sectioning points file must
+## be named @qcode{"bone_ID-custom.pp"}.
 ##
-## @item inertia-bone_ID.csv @tab containing the properties of Ix, Iy, Ixy,
-## Imin, Imax and theta angle for each cross section as a row vector (:,[1:6])
-## from proximal to distal cross sections ([1:5],:).
+## @code{longbone_Analysis (@var{points})} will optionally utilize the
+## @code{longbone_CustomGeometry} by parsing a preset numerical vector for
+## custom sectioning points as ratios along the long bone's maximum distance.
+## Similarly to using the @qcode{"custom"} optional argument, the generated CSV
+## files will follow the naming conventions used by the
+## @code{longbone_CustomGeometry} function.
 ##
-## @item polyline2D-bone_ID.csv @tab containing the 2D coordinates for each
-## cross section as an Nx2 matrix, where N is the number of points for each
-## polygon. The polygons are ordered as (:,[1:2],[3:4],[5:6],[7:8],[9:10]) from
-## proximal to distal cross sections.
+## @code{longbone_Analysis (@qcode{"fragment"})} will utilize the
+## @code{longbone_FragmentGeometry} function, which only requires the folder
+## containing the 3D models, but ignores their bone type since it is not
+## required for the relevant CSG computations.  The user is only prompted for
+## this folder, which must also contain the corresponding Meshlab PickedPoints
+## files whose base filename must be appended with @qcode{"-fragment"} with
+## respect to the OBJ filename.  For example, assuming a 3D model named
+## @qcode{"bone_ID.obj"}, the corresponding custom sectioning points file must
+## be named @qcode{"bone_ID-fragment.pp"}.
 ##
-## @item polyline3D-bone_ID.csv @tab containing the 3D coordinates for each
-## cross section as an Nx3 matrix, where N is the number of points for each
-## polygon. The polygons are ordered as (:,[1:3],[4:6],[7:9],[10:12],[13:15])
-## from proximal to distal cross sections.
-## @end multitable
+## Under all batch processing schemes except for the @qcode{"fragment"} option,
+## the initial alignment points for each 3D model are either read from the
+## corresponding Meshlab PickedPoints file (e.g. @qcode{"bone_ID.pp"), if
+## present in the same folder with the OBJ file, or they are automatically
+## registered with the @code{longbone_Registration} function.  In either case,
+## the opitimized alignment points are saved in the corresponding Meshlab
+## PickedPoints file with the same base filename.  For example, assuming a 3D
+## model named @qcode{"bone_ID.obj"}, the corresponding initial alignment points
+## file must be named @qcode{"bone_ID.pp"}.  Note that existing files will be
+## overwritten, hence apart from the required initial alignment points,
+## other points will be lost.  Type @code{help longbone_Geometry} for more
+## information about initial alignment points.
 ##
-## For each selected OBJ file, the initial alignment points are either
-## read from the corresponding Meshlab Point file (e.g. 'bone_ID.pp'), if
-## present in the same folder with the OBJ, or they are automatically registered
-## with the 'longbone_Registration' function and they are saved in newly created
-## Meshlab Point files. Both sides of the each bone can be analyzed together,
-## but each OBJ file must explicitly contain a single bone.
-##
-## All bone models stored as OBJ files must be strictly triangular meshes and
-## their coordinate umits are assumed to be in mm. Only intact femur, tibia,
-## humerus, and ulna bones can be processed.
-## @seealso{inspect_CSG, visualize_CrossSections, longbone_Geometry}
+## @seealso{inspect_CSG, longbone_CustomGeometry, longbone_FragmentGeometry,
+## longbone_Geometry}
 ## @end deftypefn
 
-## define the bone(s) to be analyzed from the available 3D model files
-options = {"Humerus", "Ulna", "Femur", "Tibia", "All"};
-pstring = "Select desired bones for analysis";
-[bones, OK] = listdlg ("ListString", options, "SelectionMode", "multiple", ...
-                      "ListSize", [222, 150], "InitialValue", 4, "Name", ...
-                      "longbone_Analysis", "PromptString", pstring);
-## define folder containing the available .obj files
-dialog = "Select folder containing 3D models for analysis";
-folder = uigetdir (dialog);
+function longbone_Analysis (varargin)
 
-## list the filenames with .obj extension in the working folder
-filenames = dir (fullfile (folder, "*.obj"));
-## calculate the geometric properties for each 
-for i = 1:length (filenames)
-  filename = strcat (filenames(i).name);
-  [CS_Geometry, SMoA, polyline] = longbone_Geometry (folder, filename, bones);
-  ## check for non empty structures
-  if (isstruct(CS_Geometry) && isstruct(SMoA) && isstruct(polyline))
-    
-    geometry(:,1) = [CS_Geometry(1).Area; CS_Geometry(2).Area; ...
-                     CS_Geometry(3).Area; CS_Geometry(4).Area; ...
-                     CS_Geometry(5).Area];
-    geometry(:,2) = [CS_Geometry(1).Perimeter; CS_Geometry(2).Perimeter; ...
-                     CS_Geometry(3).Perimeter; CS_Geometry(4).Perimeter; ...
-                     CS_Geometry(5).Perimeter];
-    geometry(:,[3:5]) = [CS_Geometry(1).Centroid; CS_Geometry(2).Centroid; ...
-                         CS_Geometry(3).Centroid; CS_Geometry(4).Centroid; ...
-                         CS_Geometry(5).Centroid];
-    geometry(:,[6:8]) = [CS_Geometry(1).Section_n; CS_Geometry(2).Section_n; ...
-                         CS_Geometry(3).Section_n; CS_Geometry(4).Section_n; ...
-                         CS_Geometry(5).Section_n];
-    geometry(:,[9:11]) = [CS_Geometry(1).Coronal_n; CS_Geometry(2).Coronal_n;...
-                          CS_Geometry(3).Coronal_n; CS_Geometry(4).Coronal_n;...
-                          CS_Geometry(5).Coronal_n];
-
-    inertia(1,:) = [SMoA(1).Ix, SMoA(1).Iy, SMoA(1).Ixy, ...
-                    SMoA(1).Imin, SMoA(1).Imax, SMoA(1).theta];
-    inertia(2,:) = [SMoA(2).Ix, SMoA(2).Iy, SMoA(2).Ixy, ...
-                    SMoA(2).Imin, SMoA(2).Imax, SMoA(2).theta];
-    inertia(3,:) = [SMoA(3).Ix, SMoA(3).Iy, SMoA(3).Ixy, ...
-                    SMoA(3).Imin, SMoA(3).Imax, SMoA(3).theta];
-    inertia(4,:) = [SMoA(4).Ix, SMoA(4).Iy, SMoA(4).Ixy, ...
-                    SMoA(4).Imin, SMoA(4).Imax, SMoA(4).theta];
-    inertia(5,:) = [SMoA(5).Ix, SMoA(5).Iy, SMoA(5).Ixy, ...
-                    SMoA(5).Imin, SMoA(5).Imax, SMoA(5).theta];
-
-    polygon2D([1:length(polyline(1).poly2D)],[1:2]) = polyline(1).poly2D;
-    polygon2D([1:length(polyline(2).poly2D)],[3:4]) = polyline(2).poly2D;
-    polygon2D([1:length(polyline(3).poly2D)],[5:6]) = polyline(3).poly2D;
-    polygon2D([1:length(polyline(4).poly2D)],[7:8]) = polyline(4).poly2D;
-    polygon2D([1:length(polyline(5).poly2D)],[9:10]) = polyline(5).poly2D;
-
-    polygon3D([1:length(polyline(1).poly3D)],[1:3]) = polyline(1).poly3D;
-    polygon3D([1:length(polyline(2).poly3D)],[4:6]) = polyline(2).poly3D;
-    polygon3D([1:length(polyline(3).poly3D)],[7:9]) = polyline(3).poly3D;
-    polygon3D([1:length(polyline(4).poly3D)],[10:12]) = polyline(4).poly3D;
-    polygon3D([1:length(polyline(5).poly3D)],[13:15]) = polyline(5).poly3D;
-
-    starting = "geometry-";
-    name = filename([1:length(filename)-4]);
-    endfile = ".csv";
-    filename = strcat (starting, name, endfile);
-    csvwrite (filename, geometry);
-    starting = "inertia-";
-    filename = strcat( starting, name, endfile);
-    csvwrite (filename, inertia);
-    starting = "polyline2D-";
-    filename = strcat (starting, name, endfile);
-    csvwrite (filename, polygon2D);
-    starting = "polyline3D-";
-    filename = strcat (starting, name, endfile);
-    csvwrite (filename, polygon3D);
+  ## Check input
+  if (nargin > 1)
+    print_usage;
   endif
-  clear geometry; clear inertia; clear polygon2D; clear polygon3D; 
-  clear CS_Geometry; clear SMoA; clear polyline;
-endfor
+
+  ## Check for default or custom geometry according to input argument (if any)
+  if (nargin == 0)        # default slicing
+    mode = "default";
+  else                    # parse input argument
+    argin = varargin{1};
+    if (strcmpi (argin, "custom"))                  # custom points file
+      mode = "custom";
+    elseif (isnumeric (argin) && isvector (argin))  # custom sectioning vector
+      mode = "points";
+    elseif (strcmpi (argin, "fragment"))            # fragment
+      mode = "fragment";
+    else
+      error ("longbone_Analysis: invalid input argument.");
+    endif
+  endif
+
+  ## Get user selection for the folder containing the 3D models
+  dialog = "Select folder containing 3D models for analysis";
+  folder = uigetdir (dialog);
+
+  ## List the filenames with .obj extension in the selected folder
+  filenames = dir (fullfile (folder, "*.obj"));
+
+  ## For options other than "fragment"
+  if (! strcmpi (mode, "fragment"))
+
+    ## Get user selection for the bone(s) to be analyzed
+    options = {"Humerus", "Ulna", "Femur", "Tibia", "All"};
+    pstring = "Select desired bones for analysis";
+    [bones, OK] = listdlg ("ListString", options, ...
+                           "SelectionMode", "multiple", ...
+                           "ListSize", [222, 150], ...
+                           "InitialValue", 4, ...
+                           "Name", "longbone_Analysis", ...
+                           "PromptString", pstring);
+
+    ## Process bone selection
+    if (isempty (bones))
+      bone = "All";
+    elseif (numel (bones) == 1)
+      switch (bones)
+        case 1
+          bone = {"Humerus"};
+        case 2
+          bone = {"Ulna"};
+        case 3
+          bone = {"Femur"};
+        case 4
+          bone = {"Tibia"};
+        case 5
+          bone = {"All"};
+       endswitch
+    elseif (length (bones) > 1)
+      i = 0;
+      if (any (bones == 1))
+        i++;
+        bone(i) = {"Humerus"};
+      endif
+      if (any (bones == 2))
+        i++;
+        bone(i) = {"Ulna"};
+      endif
+      if (any (bones == 3))
+        i++;
+        bone(i) = {"Femur"};
+      endif
+      if (any (bones == 4))
+        i++;
+        bone(i) = {"Tibia"};
+      endif
+      if (i == 4 || any (bones == 5))
+        bone = {"All"};
+      endif
+    endif
+
+  endif
+
+
+  switch (lower (mode))
+    case "default"      # default
+      for i = 1:length (filenames)
+        filename = strcat (filenames(i).name);
+        longbone_Geometry (folder, filename, bone);
+      endfor
+
+    case "custom"       # custom points file
+      for i = 1:length (filenames)
+        ## Parse Meshlab PP filename for each bone
+        filename = strcat (filenames(i).name);
+        MLPPfile = strcat (filename([1:end-4]), "-custom.pp");
+        if (exist (fullfile (folder, MLPPfile)) == 2)
+          longbone_CustomGeometry (folder, filename, bone, MLPPfile);
+        else
+          printf (strcat (["Model %s does not have an associated %s"], ...
+                          [" custom points file\n"]), filename, bone);
+        endif
+      endfor
+
+    case "points"       # custom sectioning vector
+      for i = 1:length (filenames)
+        filename = strcat (filenames(i).name);
+        longbone_CustomGeometry (folder, filename, bone, argin);
+      endfor
+
+    case "fragment"     # fragment
+      for i = 1:length (filenames)
+        ## Parse Meshlab PP filename for each bone
+        filename = strcat (filenames(i).name);
+        MLPPfile = strcat (filename([1:end-4]), "-fragment.pp");
+        if (exist (fullfile (folder, MLPPfile)) == 2)
+          longbone_FragmentGeometry (folder, filename, bone, MLPPfile);
+        else
+          printf (strcat (["Model %s does not have an associated %s"], ...
+                          [" fragment points file\n"]), filename, bone);
+        endif
+      endfor
+
+  endswitch
+
+endfunction
