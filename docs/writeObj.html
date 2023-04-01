@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>CSG Toolkit: writeObj</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+    </script>
+    <style>
+    var {
+      font-style: italics;
+      font-weight: bold;
+    }
+    td {
+      vertical-align: top;
+    }
+    </style>
+  </head>
+  <body>
+    <div class="bg-dark">
+      <div class="container-xl">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+          <div class="container-fluid">
+            <a class="navbar-brand" href=index.html>
+              <img src="assets/csg-toolkit.png" alt="csg-toolkit" class="d-inline-block align-top" width="25" height="25">
+              CSG Toolkit
+            </a>
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <a class="nav-link" href="index.html#mesh3D">
+                    <i class="fas fa-list-alt"></i>
+                    mesh3D
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="https://gnu-octave.github.io/packages/">
+                  <img src="assets/octave-logo.svg" alt="GNU Octave logo" class="d-inline-block align-top" width="25" height="25">
+                    Octave Packages
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="https://www.octave.org">
+                    <i class="fas fa-home"></i>
+                    GNU Octave website
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </div>
+    <div class="container-xl my-4">
+      <div class="card rounded">
+        <div class="card-header card-header-mod">
+          <div class="row d-flex flex-wrap align-items-center">
+            <div class="col-sm-3 col-md-5 mb-2 mb-sm-0">
+              <h3 class="d-inline-block mr-2">
+              Function&nbsp;Reference: <b><code>writeObj</code></b>
+              </h3>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+<dl>
+<dt><u>csg-toolkit:</u> <b>writeObj</b><i> (<var>v</var>, <var>f</var>, <var>filename</var>)</i></dt>
+<dt><u>csg-toolkit:</u> <b>writeObj</b><i> (<var>v</var>, <var>f</var>, <var>vt</var>, <var>ft</var>, <var>filename</var>)</i></dt>
+<dt><u>csg-toolkit:</u> <b>writeObj</b><i> (<var>v</var>, <var>f</var>, <var>vn</var>, <var>fn</var>, <var>filename</var>)</i></dt>
+<dt><u>csg-toolkit:</u> <b>writeObj</b><i> (<var>v</var>, <var>f</var>, <var>vt</var>, <var>ft</var>, <var>vn</var>, <var>fn</var>, <var>filename</var>)</i></dt>
+</dl>
+
+
+<p>This function saves a triangular 3D Mesh in a Wavefront OBJ file format according to its elements provided as input arguments.
+</p>
+<div class="ms-5">
+<p>The function will only take 3, 5 or 7 input arguments.  The last argument should be a char string referring to the filename of the OBJ file, whereas the first 2, 4, or 6 input arguments should be 2-dimensional matrices containing the elements of the triangular mesh in the following order:
+</p>
+<p><var>v</var> can be either an <math>N&times;3</math> matrix with <var>x</var>,<var>y</var>,<var>z</var> vertex coordinates or an <math>N&times;6</math> matrix containing the vertex coordinates and the <var>r</var>,<var>g</var>,<var>b</var> color information for each vertex in the range <math>[0,1]</math>.
+</p>
+<p><var>f</var> must be an <math>M&times;3</math> matrix with the indices of each corresponding vertex, where <math>M</math> is the number of faces.
+</p>
+<p><var>vt</var> must be an <math>N&times;2</math> matrix, where <math>N</math> is the number of texture coordinates.
+</p>
+<p><var>ft</var> must be an <math>M&times;3</math> matrix with the indices of each corresponding texture coordinates.
+</p>
+<p><var>vn</var> must be an <math>N&times;3</math> matrix with <var>x</var>,<var>y</var>,<var>z</var> normal coordinates, where <math>N</math> is the number of normals.
+</p>
+<p><var>fn</var> must be an <math>N&times;3</math> matrix with the indices of each corresponding face normal.
+</p>
+<p>If 5 input arguments are provided, the function will determine whether there is a texture coordinates matrix or a vertex normals matrix by the size of the second dimension of the matrix provided as the third input argument. 
+</p>
+<p><strong>See also: </strong>
+  <a href="readObj.html">readObj</a>, 
+  <a href="renameObj.html">renameObj</a>
+</p>
+<p><strong>Source Code: </strong>
+  <a href="https://github.com/pr0m1th3as/csg-toolkit/tree/main/src/writeObj.cc">writeObj</a>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>

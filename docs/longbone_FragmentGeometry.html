@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>CSG Toolkit: longbone_FragmentGeometry</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+    </script>
+    <style>
+    var {
+      font-style: italics;
+      font-weight: bold;
+    }
+    td {
+      vertical-align: top;
+    }
+    </style>
+  </head>
+  <body>
+    <div class="bg-dark">
+      <div class="container-xl">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+          <div class="container-fluid">
+            <a class="navbar-brand" href=index.html>
+              <img src="assets/csg-toolkit.png" alt="csg-toolkit" class="d-inline-block align-top" width="25" height="25">
+              CSG Toolkit
+            </a>
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <a class="nav-link" href="index.html#CSG">
+                    <i class="fas fa-list-alt"></i>
+                    CSG
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="https://gnu-octave.github.io/packages/">
+                  <img src="assets/octave-logo.svg" alt="GNU Octave logo" class="d-inline-block align-top" width="25" height="25">
+                    Octave Packages
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="https://www.octave.org">
+                    <i class="fas fa-home"></i>
+                    GNU Octave website
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </div>
+    <div class="container-xl my-4">
+      <div class="card rounded">
+        <div class="card-header card-header-mod">
+          <div class="row d-flex flex-wrap align-items-center">
+            <div class="col-sm-3 col-md-5 mb-2 mb-sm-0">
+              <h3 class="d-inline-block mr-2">
+              Function&nbsp;Reference: <b><code>longbone_FragmentGeometry</code></b>
+              </h3>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+<dl>
+<dt><u>csg-toolkit:</u> <b>longbone_FragmentGeometry</b><i> (<var>filename</var>, <var>points</var>)</i></dt>
+<dt><u>csg-toolkit:</u> <b>longbone_FragmentGeometry</b><i> (<var>folder</var>, <var>filename</var>, <var>points</var>)</i></dt>
+</dl>
+
+<p> This function analyzes the cross-sectional geometry of any diaphyseal long
+ bone fragment at custom intervals defined by user defined points on the
+ bone&rsquo;s surface.
+</p>
+<div class="ms-5">
+<p> The fragment must be saved in Wavefront OBJ 3D model format, specified in
+ <var>filename</var>, and the user defined points saved in a Meshlab PickedPoints
+ file format, specified in <var>points</var>.  Optionally, the folder containing
+ the 3D model can be defined in <var>folder</var>, if the function is invoked from
+ a different working directory.  All thre input arguments must be strings.
+</p>
+<p> <code>longbone_FragmentGeometry</code> will process an arbitrary number of cross
+ sections, according to the user defined points, as specified in <var>points</var>,
+ as long as they lie between 10% and 90% of the fragment&rsquo;s maximum length.
+ Points beyond this range are ignored.
+</p>
+<p> <code>longbone_FragmentGeometry</code> does not return any output arguments, but it
+ saves all geometric properties in CSV files as described in the following
+ section.  3D models must be pure triangular meshes and their coordinate units
+ are assumed to be in <math>mm</math>.  Each OBJ file must explicitly contain a
+ single 3D model of any long bone fragment.
+</p>
+<p> Assuming a 3D model named <code>&quot;bone_ID.obj&quot;</code>, the following files are
+ generated:
+</p>
+ <table>
+<thead><tr><th width="33%">Filename</th><th width="2%"></th><th width="65%">Description</th></tr></thead>
+<tr><td width="33%"><code>Fgeometry-bone_ID.csv</code></td><td width="2%"></td><td width="65%">It contains the properties of
+ <code>area</code> (measured in <math>mm^2</math>), <code>perimeter</code> (measured in
+ <math>mm</math>), <code>centroid</code> (returned as [<var>x</var>,<var>y</var>,<var>z</var>]
+ coordinates in <math>mm</math> units), and the sectioning <code>normal</code> (returned
+ as an [<var>x</var>,<var>y</var>,<var>z</var>] vector). Each row of the CSV file corresponds
+ to the user defined points at the same order as they appear in the relevant
+ Meshlab PickedPoints file.  The aforementioned properties for each cross
+ section are stored as a row vector with the respective order in columns
+ [[2],[3],[4:6],[7:9]].  The first column contains the index of the
+ corresponding cross-sectioning point in increasing order.</td></tr>
+<tr><td width="33%"><code>Finertia-bone_ID.csv</code></td><td width="2%"></td><td width="65%">It contains the properties of
+ <code>Ixy</code>, <code>Imin</code>, and <code>Imax</code>, all measured in <math>mm^4</math>.
+ Accordingly, they are saved in a row vector [2:4] with the first column
+ containing the index of each cross section.</td></tr>
+<tr><td width="33%"><code>Fpolyline2D-bone_ID.csv</code></td><td width="2%"></td><td width="65%">It contains the 2D
+ coordinates (on an arbitrary <var>x</var>,<var>y</var> local axis) for each cross
+ section as an <math>N&times;2</math> matrix, where <math>N</math> is the number of points for
+ each cross-sectional polygon.  These polygons are ordered as column duplets,
+ i.e. [[1:2],...,[end-1:end]], in the same order their corresponding points
+ are stored in the Meshlab PickedPoints file.  Polygon coordinates start from
+ the second row ([2:end],:), while the first row (1,[1,3,...,end-1])
+ contains the index of the corresponding cross-sectioning points.</td></tr>
+<tr><td width="33%"><code>Fpolyline3D-bone_ID.csv</code></td><td width="2%"></td><td width="65%">It contains the 3D model
+ coordinates for each cross section as an <math>N&times;3</math> matrix, where <math>N</math> is
+ the number of points for each cross-sectional polygon.  These polygons are
+ ordered as column triplets, i.e. [[1:3],...,[end-2:end]], in the same order
+ their corresponding points are stored in the Meshlab PickedPoints file.
+ Polygon coordinates start from starting from the second row ([2:end],:),
+ while the first row (1,[1,4,...,end-2]) contains the index of the
+ corresponding cross-sectioning points.</td></tr>
+</table>
+
+<p> <strong>See also: </strong>
+  <a href="longbone_Geometry.html">longbone_Geometry</a>, 
+  <a href="longbone_CustomGeometry.html">longbone_CustomGeometry</a>, 
+  <a href="visualize_CrossSections.html">visualize_CrossSections</a>
+</p>
+<p><strong>Source Code: </strong>
+  <a href="https://github.com/pr0m1th3as/csg-toolkit/tree/main/inst/longbone_FragmentGeometry.m">longbone_FragmentGeometry</a>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>

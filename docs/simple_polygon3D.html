@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>CSG Toolkit: simple_polygon3D</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+    </script>
+    <style>
+    var {
+      font-style: italics;
+      font-weight: bold;
+    }
+    td {
+      vertical-align: top;
+    }
+    </style>
+  </head>
+  <body>
+    <div class="bg-dark">
+      <div class="container-xl">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+          <div class="container-fluid">
+            <a class="navbar-brand" href=index.html>
+              <img src="assets/csg-toolkit.png" alt="csg-toolkit" class="d-inline-block align-top" width="25" height="25">
+              CSG Toolkit
+            </a>
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <a class="nav-link" href="index.html#CSG">
+                    <i class="fas fa-list-alt"></i>
+                    CSG
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="https://gnu-octave.github.io/packages/">
+                  <img src="assets/octave-logo.svg" alt="GNU Octave logo" class="d-inline-block align-top" width="25" height="25">
+                    Octave Packages
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="https://www.octave.org">
+                    <i class="fas fa-home"></i>
+                    GNU Octave website
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </div>
+    <div class="container-xl my-4">
+      <div class="card rounded">
+        <div class="card-header card-header-mod">
+          <div class="row d-flex flex-wrap align-items-center">
+            <div class="col-sm-3 col-md-5 mb-2 mb-sm-0">
+              <h3 class="d-inline-block mr-2">
+              Function&nbsp;Reference: <b><code>simple_polygon3D</code></b>
+              </h3>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+<dl>
+<dt><u>csg-toolkit:</u> <var>GEOM</var> = <b>polygon3D</b><i> (<var>section</var>, <var>normal</var>)</i></dt>
+<dt><u>csg-toolkit:</u> <var>GEOM</var> = <b>polygon3D</b><i> (<var>section</var>, <var>normal</var>, <var>direction</var>)</i></dt>
+<dt><u>csg-toolkit:</u> [<var>GEOM</var>, <var>SMoA</var>] = <b>polygon3D</b><i> (<var>...</var>)</i></dt>
+<dt><u>csg-toolkit:</u> [<var>GEOM</var>, <var>SMoA</var>, <var>polyline</var>] = <b>polygon3D</b><i> (<var>...</var>)</i></dt>
+</dl>
+
+<p> This function takes the 3D coordinates of a planar cross section along with
+ with its normal and calculates some of its geometric properties such as cross
+ sectional area, perimeter and principal second moments of area.  The points
+ of the planar section may be unsorted, since the function will sort them in
+ counter-clockwise order automatically, but need to constitute a simple
+ polygon (a flat shape consisting of straight, non-intersecting line segments
+ or &quot;sides&quot; that are joined pair-wise to form a closed path).
+</p>
+<div class="ms-5">
+<p> If called with only 2 input arguments as in the following example
+</p>
+<p> <code>[<var>GEOM</var>, <var>SMoA</var>, <var>polyline]</var> = simple_polygon3D
+ (<var>section</var>, <var>normal</var>)</code>
+</p>
+<p> Then,
+</p>
+ <table>
+<tr><td width="25%"><var>section</var></td><td width="75%">is an <math>N&times;3</math> matrix containing the
+ <var>x</var>,<var>y</var>,<var>z</var> point coordinates of a planar cross section.</td></tr>
+<tr><td width="25%"><var>normal</var></td><td width="75%">is a <math>1&times;3</math> vector defining the unit normal of
+ the sectioning plane.</td></tr>
+</table>
+
+<p> and,
+</p>
+ <table>
+<tr><td width="25%"><var>GEOM</var></td><td width="75%">is a scalar structure containing the fields:</td></tr>
+</table>
+
+ <table>
+<tr><td width="5%"></td><td width="28%"><var>GEOM</var>.<code>Area</code></td><td width="2%"></td><td width="65%">calculated in <math>mm^2</math>.</td></tr>
+<tr><td width="5%"></td><td width="28%"><var>GEOM</var>.<code>Perimeter</code></td><td width="2%"></td><td width="65%">calculated in <math>mm</math>.</td></tr>
+<tr><td width="5%"></td><td width="28%"><var>GEOM</var>.<code>Centroid</code></td><td width="2%"></td><td width="65%"><var>x</var>,<var>y</var>,<var>z</var>
+ centroid coordinates of the cross section.</td></tr>
+</table>
+
+ <table>
+<tr><td width="25%"><var>SMoA</var></td><td width="75%">is a scalar structure containing the fields:</td></tr>
+</table>
+
+ <table>
+<tr><td width="5%"></td><td width="28%"><var>SMoA</var>.<code>Ixy</code></td><td width="2%"></td><td width="65%">product of 2nd moments of area in <math>mm^4</math>.</td></tr>
+<tr><td width="5%"></td><td width="28%"><var>SMoA</var>.<code>Imin</code></td><td width="2%"></td><td width="65%">minimum 2nd moment of area in <math>mm^4</math>.</td></tr>
+<tr><td width="5%"></td><td width="28%"><var>SMoA</var>.<code>Imax</code></td><td width="2%"></td><td width="65%">maximum 2nd moment of area in <math>mm^4</math>.</td></tr>
+</table>
+
+ <table>
+<tr><td width="25%"><var>polyline</var></td><td width="75%">is a scalar structure containing the fields:</td></tr>
+</table>
+
+ <table>
+<tr><td width="5%"></td><td width="28%"><var>polyline</var>.<code>poly2D</code></td><td width="2%"></td><td width="65%"><math>N&times;2</math> matrix
+ containing the <var>x</var>,<var>y</var> coordinates of the cross section on the 2D
+ local axes of the sectioning plane ordered counter.</td></tr>
+<tr><td width="5%"></td><td width="28%"><var>polyline</var>.<code>poly3D</code></td><td width="2%"></td><td width="65%"><math>N&times;3</math> matrix
+ containing the original 3D coordinates of the cross section ordered counter
+ clockwise.</td></tr>
+</table>
+
+<p> If called with 3 input arguments as in the following example
+</p>
+<p> <code>[<var>GEOM</var>, <var>SMoA</var>, <var>polyline</var>] = simple_polygon3D
+ (<var>section</var>, <var>normal</var>, <var>direction</var>)</code>
+</p>
+<p> Then, <var>direction</var> is an <math>1&times;3</math> vector defining the unit normal of the
+ coronal plane that provides alignment of the bone to anatomical position,
+ while <var>normal</var> is assumed to point upwards.  The <var>SMoA</var> structure
+ contains the additional fields, as follows:
+</p>
+ <table>
+<tr><td width="5%"></td><td width="28%"><var>SMoA</var>.<code>Ix</code></td><td width="2%"></td><td width="65%">2nd moment of area with respect to
+ x axis, which is collinear with the intersection of the coronal plane and the
+ sectioning plane.  Calculated in <math>mm^4</math>.</td></tr>
+<tr><td width="5%"></td><td width="28%"><var>SMoA</var>.<code>Iy</code></td><td width="2%"></td><td width="65%">2nd moment of area with respect to
+ y axis, which is collinear with the intersection of the sagital plane and the
+ sectioning plane.  Calculated in <math>mm^4</math>.</td></tr>
+<tr><td width="5%"></td><td width="28%"><var>SMoA</var>.<code>theta</code></td><td width="2%"></td><td width="65%">angle of rotation of the
+ principal axis Imax of 2nd moment of area with respect to x axis expressed in
+ degrees in the range <math>(-90, 90]</math>.</td></tr>
+</table>
+
+<p> <strong>See also: </strong>
+  <a href="meshArea.html">meshArea</a>, 
+  <a href="meshBarycenter.html">meshBarycenter</a>, 
+  <a href="meshSection.html">meshSection</a>, 
+  <a href="longbone_CustomGeometry.html">longbone_CustomGeometry</a>, 
+  <a href="longbone_FragmentGeometry.html">longbone_FragmentGeometry</a>, 
+  <a href="longbone_Geometry.html">longbone_Geometry</a>
+</p>
+<p><strong>Source Code: </strong>
+  <a href="https://github.com/pr0m1th3as/csg-toolkit/tree/main/inst/simple_polygon3D.m">simple_polygon3D</a>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>

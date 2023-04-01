@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>CSG Toolkit: inspect_CSG</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+    </script>
+    <style>
+    var {
+      font-style: italics;
+      font-weight: bold;
+    }
+    td {
+      vertical-align: top;
+    }
+    </style>
+  </head>
+  <body>
+    <div class="bg-dark">
+      <div class="container-xl">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+          <div class="container-fluid">
+            <a class="navbar-brand" href=index.html>
+              <img src="assets/csg-toolkit.png" alt="csg-toolkit" class="d-inline-block align-top" width="25" height="25">
+              CSG Toolkit
+            </a>
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <a class="nav-link" href="index.html#Plot">
+                    <i class="fas fa-list-alt"></i>
+                    Plot
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="https://gnu-octave.github.io/packages/">
+                  <img src="assets/octave-logo.svg" alt="GNU Octave logo" class="d-inline-block align-top" width="25" height="25">
+                    Octave Packages
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="https://www.octave.org">
+                    <i class="fas fa-home"></i>
+                    GNU Octave website
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </div>
+    <div class="container-xl my-4">
+      <div class="card rounded">
+        <div class="card-header card-header-mod">
+          <div class="row d-flex flex-wrap align-items-center">
+            <div class="col-sm-3 col-md-5 mb-2 mb-sm-0">
+              <h3 class="d-inline-block mr-2">
+              Function&nbsp;Reference: <b><code>inspect_CSG</code></b>
+              </h3>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+<dl>
+<dt><u>csg-toolkit:</u> <b>inspect_CSG</b></dt>
+<dt><u>csg-toolkit:</u> <b>inspect_CSG</b><i> (<code>&quot;default&quot;</code>)</i></dt>
+<dt><u>csg-toolkit:</u> <b>inspect_CSG</b><i> (<code>&quot;custom&quot;</code>)</i></dt>
+<dt><u>csg-toolkit:</u> <b>inspect_CSG</b><i> (<code>&quot;fragment&quot;</code>)</i></dt>
+<dt><u>csg-toolkit:</u> <b>inspect_CSG</b><i> (&hellip;, <var>filename</var>)</i></dt>
+<dt><u>csg-toolkit:</u> <b>inspect_CSG</b><i> (<var>filename</var>)</i></dt>
+</dl>
+
+<p> Batch inspect the CSG properties of previously analyzed long bones.
+</p><div class="ms-5">
+
+<p> <code>inspect_CSG</code> reads all available <code>$geometry-$$.csv</code> files in the
+ working folder, utilizes <code>visualize_CrossSections</code> to retrieve the data
+ in the corresponding CSV files for each associated 3D model and plot the
+ cross sectional contours, and upon user confirmation, it aggregates the
+ CSG properties in a tabular format and save it under <var>filename</var>.
+ If <var>filename</var> is not provided, <code>&quot;CSG Data.csv&quot;</code> is used by default.
+</p>
+<p> The rationale behind the visual inspection of the cross sectional contours is
+ to avoid any erroneous values due to badly shaped long bone models that might
+ be processed succesfully by the respective <code>Geometry</code> function.  For
+ any given sample, if the contours of are shown as a simple polygon, then the
+ computed CSG properties can be safely assumed as accurate and the user can
+ confirm by pressing the &quot;yes&quot; button in order to append the CSG properties
+ into tabular form. If not, press &quot;no&quot; to ignore the particular sample and
+ proceed the inspection to the next available sample. If the user cancels, the
+ process is terminated and the already appended values are saved in the CSV
+ file.
+</p>
+<p> Prior to batch processing, the user is prompted for the folder containing the
+ 3D models of the associated bones and, if available, <code>inspect_CSG</code>
+ measures their maximum length (max Distance) and includes it in the
+ aggregated results, otherwise it adds NaN, as a missing value in the stored
+ CSV file.
+</p>
+<p> By default, <code>inspect_CSG</code> processes the available <code>Dgeometry-</code>,
+ <code>Dinertia-</code>, <code>Dpolyline2D-</code>, and <code>Dpolyline3D-</code> CSV files
+ generated with the <code>longbone_Geometry</code> function.  This is identical to
+ calling <code>inspect_CSG</code> with the optional argument <code>&quot;default&quot;</code>.  In
+ this batch prossecing mode, 5 plots are rendered, one for each cross section
+ at 20%, 35%, 50%, 65%, and 80%, respectively.
+</p>
+<p> <code>inspect_CSG (<code>&quot;custom&quot;</code>)</code> will process all available
+ <code>Cgeometry-</code>, <code>Cinertia-</code>, <code>Cpolyline2D-</code>, and
+ <code>Cpolyline3D-</code> CSV files generated with the
+ <code>longbone_CustomGeometry</code> function.  In this batch prossecing mode, an
+ arbitrary number of plots is rendered, one for each associated cross section
+ according to the contents of the respective CSV files.  Note that all files
+ included in the same batch MUST contain the same number of cross sections.
+ However, it is not mandatory that they conform to the same points along the
+ diaphysis.  This is especially important for 3D modes analyzed with custom PP
+ point files, where the ratio used for indexing each cross section might vary
+ between samples.  The ratio IDs used in the resulting <code>&quot;CSG Data.csv&quot;</code>
+ are taken from the ultimate processed sample.  Also note that the first and
+ last plots always refer to the cross sections at 20% and 80%, respectively.
+</p>
+<p> <code>inspect_CSG (<code>&quot;fragment&quot;</code>)</code> will process all available
+ <code>Fgeometry-</code>, <code>Finertia-</code>, <code>Fpolyline2D-</code>, and
+ <code>Fpolyline3D-</code> CSV files generated with the
+ <code>longbone_FragmentGeometry</code> function.  In this batch prossecing mode, an
+ arbitrary number of plots is rendered, one for each associated cross section
+ according to the contents of the respective CSV files.  Note that all files
+ included in the same batch MUST contain the same number of cross sections.
+ However, it is not mandatory that they conform to the same points along the
+ diaphysis.
+</p>
+<p> <strong>See also: </strong>
+  <a href="visualize_CrossSections.html">visualize_CrossSections</a>, 
+  <a href="longbone_Analysis.html">longbone_Analysis</a>
+</p>
+<p><strong>Source Code: </strong>
+  <a href="https://github.com/pr0m1th3as/csg-toolkit/tree/main/inst/inspect_CSG.m">inspect_CSG</a>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>CSG Toolkit: longbone_Analysis</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+    </script>
+    <style>
+    var {
+      font-style: italics;
+      font-weight: bold;
+    }
+    td {
+      vertical-align: top;
+    }
+    </style>
+  </head>
+  <body>
+    <div class="bg-dark">
+      <div class="container-xl">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+          <div class="container-fluid">
+            <a class="navbar-brand" href=index.html>
+              <img src="assets/csg-toolkit.png" alt="csg-toolkit" class="d-inline-block align-top" width="25" height="25">
+              CSG Toolkit
+            </a>
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <a class="nav-link" href="index.html#CSG">
+                    <i class="fas fa-list-alt"></i>
+                    CSG
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="https://gnu-octave.github.io/packages/">
+                  <img src="assets/octave-logo.svg" alt="GNU Octave logo" class="d-inline-block align-top" width="25" height="25">
+                    Octave Packages
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="https://www.octave.org">
+                    <i class="fas fa-home"></i>
+                    GNU Octave website
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </div>
+    <div class="container-xl my-4">
+      <div class="card rounded">
+        <div class="card-header card-header-mod">
+          <div class="row d-flex flex-wrap align-items-center">
+            <div class="col-sm-3 col-md-5 mb-2 mb-sm-0">
+              <h3 class="d-inline-block mr-2">
+              Function&nbsp;Reference: <b><code>longbone_Analysis</code></b>
+              </h3>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+<dl>
+<dt><u>csg-toolkit:</u> <b>longbone_Analysis</b></dt>
+<dt><u>csg-toolkit:</u> <b>longbone_Analysis</b><i> (<code>&quot;custom&quot;</code>)</i></dt>
+<dt><u>csg-toolkit:</u> <b>longbone_Analysis</b><i> (<var>points</var>)</i></dt>
+<dt><u>csg-toolkit:</u> <b>longbone_Analysis</b><i> (<code>&quot;fragment&quot;</code>)</i></dt>
+</dl>
+
+<p> A wrapper for batch processing with <code>longbone_*Geometry</code> functions.
+</p>
+<div class="ms-5">
+<p> <code>longbone_Analysis</code> reads the available 3D models stored in Wavefront
+ OBJ file format present in some folder and calls the <code>longbone_Geometry</code>
+ function to analyze their geometric properties in a serial manner.  The user
+ is prompted for the directory to read from and subsequently the type of bones
+ that should be analyzed.  All available 3D bone models are evaluated but only
+ those that explicitly match the user selection are fully processed and their
+ corresponding geometric properties stored in the corresponding CSV files in
+ the current working directory.  The generated CSV files follow the naming
+ conventions used by the <code>longbone_Geometry</code> function.
+</p>
+<p> <code>longbone_Analysis (<code>&quot;custom&quot;</code>)</code> will accordingly utilize the
+ <code>longbone_CustomGeometry</code> function and, besides the folder containing
+ the 3D models and the user selected types of bones for processing, it will
+ also pass the respective Meshlab PickedPoints filename with the custom
+ sectioning points.  These files must reside in the same folder with the 3D
+ models and their base filename must be appended with <code>&quot;-custom&quot;</code> with
+ respect to the OBJ filename.  For example, assuming a 3D model named
+ <code>&quot;bone_ID.obj&quot;</code>, the corresponding custom sectioning points file must
+ be named <code>&quot;bone_ID-custom.pp&quot;</code>.
+</p>
+<p> <code>longbone_Analysis (<var>points</var>)</code> will optionally utilize the
+ <code>longbone_CustomGeometry</code> by parsing a preset numerical vector for
+ custom sectioning points as ratios along the long bone&rsquo;s maximum distance.
+ Similarly to using the <code>&quot;custom&quot;</code> optional argument, the generated CSV
+ files will follow the naming conventions used by the
+ <code>longbone_CustomGeometry</code> function.
+</p>
+<p> <code>longbone_Analysis (<code>&quot;fragment&quot;</code>)</code> will utilize the
+ <code>longbone_FragmentGeometry</code> function, which only requires the folder
+ containing the 3D models, but ignores their bone type since it is not
+ required for the relevant CSG computations.  The user is only prompted for
+ this folder, which must also contain the corresponding Meshlab PickedPoints
+ files whose base filename must be appended with <code>&quot;-fragment&quot;</code> with
+ respect to the OBJ filename.  For example, assuming a 3D model named
+ <code>&quot;bone_ID.obj&quot;</code>, the corresponding custom sectioning points file must
+ be named <code>&quot;bone_ID-fragment.pp&quot;</code>.
+</p>
+<p> Under all batch processing schemes except for the <code>&quot;fragment&quot;</code> option,
+ the initial alignment points for each 3D model are either read from the
+ corresponding Meshlab PickedPoints file (e.g. <code>&quot;bone_ID.pp&quot;</code>), if
+ present in the same folder with the OBJ file, or they are automatically
+ registered with the <code>longbone_Registration</code> function.  In either case,
+ the opitimized alignment points are saved in the corresponding Meshlab
+ PickedPoints file with the same base filename.  For example, assuming a 3D
+ model named <code>&quot;bone_ID.obj&quot;</code>, the corresponding initial alignment points
+ file must be named <code>&quot;bone_ID.pp&quot;</code>.  Note that existing files will be
+ overwritten, hence apart from the required initial alignment points,
+ other points will be lost.  Type <code>help longbone_Geometry</code> for more
+ information about initial alignment points.
+</p>
+<p> <strong>See also: </strong>
+  <a href="inspect_CSG.html">inspect_CSG</a>, 
+  <a href="longbone_CustomGeometry.html">longbone_CustomGeometry</a>, 
+  <a href="longbone_FragmentGeometry.html">longbone_FragmentGeometry</a>, 
+  <a href="longbone_Geometry.html">longbone_Geometry</a>
+</p>
+<p><strong>Source Code: </strong>
+  <a href="https://github.com/pr0m1th3as/csg-toolkit/tree/main/inst/longbone_Analysis.m">longbone_Analysis</a>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>

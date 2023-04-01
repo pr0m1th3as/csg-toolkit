@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>CSG Toolkit: visualize_CrossSections</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+    </script>
+    <style>
+    var {
+      font-style: italics;
+      font-weight: bold;
+    }
+    td {
+      vertical-align: top;
+    }
+    </style>
+  </head>
+  <body>
+    <div class="bg-dark">
+      <div class="container-xl">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+          <div class="container-fluid">
+            <a class="navbar-brand" href=index.html>
+              <img src="assets/csg-toolkit.png" alt="csg-toolkit" class="d-inline-block align-top" width="25" height="25">
+              CSG Toolkit
+            </a>
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <a class="nav-link" href="index.html#Plot">
+                    <i class="fas fa-list-alt"></i>
+                    Plot
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="https://gnu-octave.github.io/packages/">
+                  <img src="assets/octave-logo.svg" alt="GNU Octave logo" class="d-inline-block align-top" width="25" height="25">
+                    Octave Packages
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="https://www.octave.org">
+                    <i class="fas fa-home"></i>
+                    GNU Octave website
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </div>
+    <div class="container-xl my-4">
+      <div class="card rounded">
+        <div class="card-header card-header-mod">
+          <div class="row d-flex flex-wrap align-items-center">
+            <div class="col-sm-3 col-md-5 mb-2 mb-sm-0">
+              <h3 class="d-inline-block mr-2">
+              Function&nbsp;Reference: <b><code>visualize_CrossSections</code></b>
+              </h3>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+<dl>
+<dt><u>csg-toolkit:</u> <b>visualize_CrossSections</b><i> (<var>bone_id</var>)</i></dt>
+<dt><u>csg-toolkit:</u> <b>visualize_CrossSections</b><i> (<var>bone_id</var>, <var>mode</var>)</i></dt>
+<dt><u>csg-toolkit:</u> <var>CS_Geometry</var> = <b>visualize_CrossSections</b><i> (<var>bone_id</var>)</i></dt>
+<dt><u>csg-toolkit:</u> <var>CS_Geometry</var> = <b>visualize_CrossSections</b><i> (<var>bone_id</var>, <var>mode</var>)</i></dt>
+<dt><u>csg-toolkit:</u> [<var>CS_Geometry</var>, <var>SMoA</var>] = <b>visualize_CrossSections</b><i> (<var>...</var>)</i></dt>
+<dt><u>csg-toolkit:</u> [<var>CS_Geometry</var>, <var>SMoA</var>, <var>polyline</var>] = <b>visualize_CrossSections</b><i> (<var>...</var>)</i></dt>
+</dl>
+
+<p> Plot cross sectional contours and their CSG properties for a given sample.
+</p>
+<div class="ms-5">
+<p> <code>visualize_CrossSections</code> reads the respective <code>$geometry-$$.csv</code>,
+ <code>$inertia-$$.csv</code>, <code>$polyline2D-$$.csv</code>, and
+ <code>$polyline3D-$$.csv</code> files available in the working directory, where
+ <code>$$</code> is the <var>bone_id</var> char string for the required bone and
+ <code>$</code> denotes the <var>mode</var> of bone analysis, and plots the 2D cross
+ sectional polygons from proximal (top) to distal (bottom) along with certain
+ information regarding cross sectional area, perimeter, and second moments of
+ area.
+</p>
+<p> When called with a single input argument, <code>visualize_CrossSections</code>
+ reads the files produced with the <code>longbone_Analysis</code> function, i.e. it
+ reads the <code>Dgeometry-bone_id.csv</code>, <code>Dinertia-bone_id.csv</code>,
+ <code>Dpolyline2D-bone_id.csv</code>, and <code>Dpolyline3D-bone_id.csv</code> files
+ associated with <var>bone_id</var>.  Optionally, if called with a second argument,
+ <var>mode</var>, then the function reads the files generated by the respective
+ function as shown below.
+</p>
+ <table>
+<thead><tr><th width="20%"><var>mode</var></th><th width="40%">Function</th><th width="40%">CSV Files</th></tr></thead>
+<tr><td width="20%"><code>&quot;default&quot;</code></td><td width="40%"><code>longbone_Geometry</code></td><td width="40%"><code>Dgeometry-bone_id.csv</code></td></tr>
+<tr><td width="20%"></td><td width="40%"></td><td width="40%"><code>Dinertia-bone_id.csv</code></td></tr>
+<tr><td width="20%"></td><td width="40%"></td><td width="40%"><code>Dpolyline2D-bone_id.csv</code></td></tr>
+<tr><td width="20%"><code>&quot;custom&quot;</code></td><td width="40%"><code>longbone_CustomGeometry</code></td><td width="40%"><code>Cgeometry-bone_id.csv</code></td></tr>
+<tr><td width="20%"></td><td width="40%"></td><td width="40%"><code>Cinertia-bone_id.csv</code></td></tr>
+<tr><td width="20%"></td><td width="40%"></td><td width="40%"><code>Cpolyline2D-bone_id.csv</code></td></tr>
+<tr><td width="20%"><code>&quot;fragment&quot;</code></td><td width="40%"><code>longbone_FragmentGeometry</code></td><td width="40%"><code>Fgeometry-bone_id.csv</code></td></tr>
+<tr><td width="20%"></td><td width="40%"></td><td width="40%"><code>Finertia-bone_id.csv</code></td></tr>
+<tr><td width="20%"></td><td width="40%"></td><td width="40%"><code>Fpolyline2D-bone_id.csv</code></td></tr>
+</table>
+
+<p> In default mode, <code>visualize_CrossSections</code> produces 5 plots with the
+ cross sections at 20%, 35%, 50%, 65%, and 80% of the longbone&rsquo;s max distance,
+ whereas in <code>&quot;custom&quot;</code> and <code>&quot;fragment&quot;</code> modes, it produces an
+ arbitrary number of plots according to the cross sections contained in the
+ associated files.  All four CSV files corresponding to <var>bone_id</var> must be
+ present in the working directory.
+</p>
+<p> The centroid of each cross section is centered at origin and the x-axis of
+ the plots represents the frontal axis of the bone from left to right side,
+ whereas the y-axis is aligned to the sagital axis with the top pointing
+ towards the front side (anterior). Both axes retain equal size so that the
+ actual shape of the cross sectional area is preserved. However, each figure
+ has a different scaling factor. Consequently, size may not be visually
+ proportional among different figures, but the axes in each figure preserve
+ the values of the actual size for the displayed cross section.
+</p>
+<p> If output arguments are defined, then <code>visualize_CrossSections</code> returns
+ up to three structures with the following fields, containing the data
+ retrieved from the CSV files.  The number of elements of each structure
+ correspond to the number of cross sections generated by the respective
+ <code>longbone_</code> function.
+</p>
+ <table>
+<thead><tr><th width="20%">Structure</th><th width="20%">Field</th><th width="60%">Data</th></tr></thead>
+<tr><td width="20%"><var>CS_Geometry</var></td><td width="20%"><code>CS</code></td><td width="60%">The ratio of the cross section&rsquo;s
+ distance from the proximal end to the bone&rsquo;s maximum length or the ordered
+ index of the sectioning point for bone fragments.</td></tr>
+<tr><td width="20%"></td><td width="20%"><code>Area</code></td><td width="60%">The cross sectional aera measured in
+ <math>mm^2</math>.</td></tr>
+<tr><td width="20%"></td><td width="20%"><code>Perimeter</code></td><td width="60%">The perimeter of the cross section
+ measured in <math>mm</math>.</td></tr>
+<tr><td width="20%"></td><td width="20%"><code>Centroid</code></td><td width="60%">The <var>x</var>, <var>y</var>, <var>z</var> coordinates of
+ the cross sectional centroid.</td></tr>
+<tr><td width="20%"></td><td width="20%"><code>Section_n</code></td><td width="60%">The <var>x</var>, <var>y</var>, <var>z</var> coordinates
+ of the cross sectional plane&rsquo;s normal.</td></tr>
+<tr><td width="20%"></td><td width="20%"><code>Coronal_n</code></td><td width="60%">The <var>x</var>, <var>y</var>, <var>z</var> coordinates
+ of the normal of the bone&rsquo;s Coronal plane.</td></tr>
+<tr><td width="20%"><var>SMoA</var></td><td width="20%"><code>Ix</code></td><td width="60%">The 2nd moment of area with respect to
+ the <var>x</var> axis, which is collinear with the intersection of the coronal
+ plane and the sectioning plane, measured in <math>mm^4</math>.</td></tr>
+<tr><td width="20%"></td><td width="20%"><code>Iy</code></td><td width="60%">The 2nd moment of area with respect to <var>y</var>
+ axis, which is collinear with the intersection of the sagital plane and the
+ sectioning plane, measured in <math>mm^4</math>.</td></tr>
+<tr><td width="20%"></td><td width="20%"><code>Ixy</code></td><td width="60%">The product of the 2nd moment of area measured in
+ <math>mm^4</math>.</td></tr>
+<tr><td width="20%"></td><td width="20%"><code>Imin</code></td><td width="60%">The minimum 2nd moment of area measured in
+ <math>mm^4</math>.</td></tr>
+<tr><td width="20%"></td><td width="20%"><code>Imax</code></td><td width="60%">The maximum 2nd moment of area measured in
+ <math>mm^4</math>.</td></tr>
+<tr><td width="20%"></td><td width="20%"><code>theta</code></td><td width="60%">The angle of rotation of the principal axis
+ of 2nd moment of area with respect to <var>x</var> axis, measured in degrees.</td></tr>
+<tr><td width="20%"><var>polyline</var></td><td width="20%"><code>poly2D</code></td><td width="60%">An <math>N&times;2</math> matrix with the
+ <var>x</var>, <var>y</var> coordinates of the cross section, ordered counter-clockwise,
+ on the 2D local axes of the sectioning plane.</td></tr>
+<tr><td width="20%"></td><td width="20%"><code>poly3D</code></td><td width="60%">An <math>N&times;3</math> matrix with the <var>x</var>,
+ <var>y</var>, <var>z</var> coordinates of the cross section, ordered counter-clockwise,
+ in the original 3D space of the bone&rsquo;s 3D model.</td></tr>
+</table>
+
+<p> If <var>mode</var> is defined as <code>&quot;fragment&quot;</code>, then <code>Coronal_n</code> field
+ is not available in <var>CS_Geometry</var> and the fields <code>Ixy</code>, <code>Iy</code>,
+ <code>theta</code> are missing from <var>SMoA</var>.
+</p>
+<p> <strong>See also: </strong>
+  <a href="inspect_CSG.html">inspect_CSG</a>, 
+  <a href="longbone_Analysis.html">longbone_Analysis</a>, 
+  <a href="longbone_CustomGeometry.html">longbone_CustomGeometry</a>, 
+  <a href="longbone_FragmentGeometry.html">longbone_FragmentGeometry</a>
+</p>
+<p><strong>Source Code: </strong>
+  <a href="https://github.com/pr0m1th3as/csg-toolkit/tree/main/inst/visualize_CrossSections.m">visualize_CrossSections</a>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>

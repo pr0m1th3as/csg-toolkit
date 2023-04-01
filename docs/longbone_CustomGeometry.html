@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>CSG Toolkit: longbone_CustomGeometry</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+    <script type="text/javascript" async
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+    </script>
+    <style>
+    var {
+      font-style: italics;
+      font-weight: bold;
+    }
+    td {
+      vertical-align: top;
+    }
+    </style>
+  </head>
+  <body>
+    <div class="bg-dark">
+      <div class="container-xl">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+          <div class="container-fluid">
+            <a class="navbar-brand" href=index.html>
+              <img src="assets/csg-toolkit.png" alt="csg-toolkit" class="d-inline-block align-top" width="25" height="25">
+              CSG Toolkit
+            </a>
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <a class="nav-link" href="index.html#CSG">
+                    <i class="fas fa-list-alt"></i>
+                    CSG
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="https://gnu-octave.github.io/packages/">
+                  <img src="assets/octave-logo.svg" alt="GNU Octave logo" class="d-inline-block align-top" width="25" height="25">
+                    Octave Packages
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="https://www.octave.org">
+                    <i class="fas fa-home"></i>
+                    GNU Octave website
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </div>
+    <div class="container-xl my-4">
+      <div class="card rounded">
+        <div class="card-header card-header-mod">
+          <div class="row d-flex flex-wrap align-items-center">
+            <div class="col-sm-3 col-md-5 mb-2 mb-sm-0">
+              <h3 class="d-inline-block mr-2">
+              Function&nbsp;Reference: <b><code>longbone_CustomGeometry</code></b>
+              </h3>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+<dl>
+<dt><u>csg-toolkit:</u> <b>longbone_CustomGeometry</b><i> (<var>filename</var>, <var>points</var>)</i></dt>
+<dt><u>csg-toolkit:</u> <b>longbone_CustomGeometry</b><i> (<var>filename</var>, <var>bones</var>, <var>points</var>)</i></dt>
+<dt><u>csg-toolkit:</u> <b>longbone_CustomGeometry</b><i> (<var>folder</var>, <var>filename</var>, <var>points</var>)</i></dt>
+<dt><u>csg-toolkit:</u> <b>longbone_CustomGeometry</b><i> (<var>folder</var>, <var>filename</var>, <var>bones</var>, <var>points</var>)</i></dt>
+</dl>
+
+<p> This function analyzes the cross-sectional geometry of an intact humerus,
+ ulna, femur, or tibia bone along its longitudinal axis at custom intervals.
+</p>
+<div class="ms-5">
+<p> <code>longbone_CustomGeometry (<var>filename</var>, <var>points</var>)</code> will analyze
+ the 3D model in <var>filename</var>, which must be a char string, at custom
+ intervals defined in<var>points</var>.  <var>points</var> can be either a char string
+ or a numerical vector.  The string must specify a Meshlab PickedPoints file
+ containing an arbitrary number of points on the bone&rsquo;s surface, each one of
+ which specify a cross-sectional plane along the bones longitudinal axis.
+ Alternatively, the numerical vector specifies an arbitrary number of
+ cross-sectional planes as the ratios of the sectioning points&rsquo; distance from
+ the proximal end to the bone&rsquo;s maximum length in the range <math>[0.1, 0.9]</math>.
+ Values beyond this range are ignored.
+</p>
+<p> <var>folder</var>, which must be a char string, defines the relative or absolute
+ path to the directory containing the 3D model in <var>filename</var>.  When
+ omitted, the current working directory is assumed.
+</p>
+<p> <var>bones</var> must be cell array of strings specifying one or more long bones
+ that should be analyzed.  <code>longbone_CustomGeometry</code> will automatically
+ determine what bone is represented in the 3D model, but it will analyze it
+ only if it matches one of the bones named in <var>bones</var>.  Valid options are:
+</p>
+ <ul>
+<li> <code>&quot;Humerus&quot;</code>
+ </li><li> <code>&quot;Ulna&quot;</code>
+ </li><li> <code>&quot;Femur&quot;</code>
+ </li><li> <code>&quot;Tibia&quot;</code>
+ </li><li> <code>&quot;All&quot;</code>
+ </li></ul>
+
+<p> <code>longbone_CustomGeometry</code> does not return any output arguments, but it
+ saves all geometric properties in CSV files as described in the following
+ section.  3D models must be pure triangular meshes and their coordinate units
+ are assumed to be in <math>mm</math>.  Each OBJ file must explicitly contain a
+ single 3D model of any long bone fragment.
+</p>
+<p> Assuming a 3D model named <code>&quot;bone_ID.obj&quot;</code>, the following files are
+ generated:
+</p>
+ <table>
+<thead><tr><th width="33%">Filename</th><th width="2%"></th><th width="65%">Description</th></tr></thead>
+<tr><td width="33%"><code>Cgeometry-bone_ID.csv</code></td><td width="2%"></td><td width="65%">It contains the properties of
+ <code>area</code> (measured in <math>mm^2</math>), <code>perimeter</code> (measured in
+ <math>mm</math>), <code>centroid</code> (returned as [<var>x</var>,<var>y</var>,<var>z</var>]
+ coordinates in <math>mm</math> units), as well as the sectioning and orientation
+ <code>normals</code> (returned as an [<var>x</var>,<var>y</var>,<var>z</var>] vectors).  Each row
+ of the CSV file corresponds to a different cross section.  The first and last
+ rows contain the default cross sections at 20% and 80% respectively.  The
+ intermediate rows follow the order of the sectioning points in the Meshlab
+ PickedPoints file or in the numerical vector parsed in <var>points</var>.
+ The aforementioned properties for each cross section are stored as a row
+ vector with the respective order in columns [[2],[3],[4:6],[7:9],[10:12]].
+ The first column contains the ratios of the sectioning points&rsquo; distance from
+ the proximal end to the bone&rsquo;s maximum length.</td></tr>
+<tr><td width="33%"><code>Cinertia-bone_ID.csv</code></td><td width="2%"></td><td width="65%">It contains the properties of
+ <code>Ix</code>, <code>Iy</code> <code>Ixy</code>, <code>Imin</code>, and <code>Imax</code>, all
+ measured in <math>mm^4</math>, as well as <code>theta</code>, measured in degrees.
+ Accordingly, they are saved as row vectors [2:7] with the first column
+ containing the ratios of the sectioning points&rsquo; distance from the proximal
+ end to the bone&rsquo;s maximum length.</td></tr>
+<tr><td width="33%"><code>Cpolyline2D-bone_ID.csv</code></td><td width="2%"></td><td width="65%">It contains the 2D
+ coordinates (on an arbitrary <var>x</var>,<var>y</var> local axis) for each cross
+ section as an <math>N&times;2</math> matrix, where <math>N</math> is the number of points for
+ each cross-sectional polygon.  These polygons are ordered as column duplets,
+ i.e. [[1:2],...,[end-1:end]].  The first and the last column duplets contain
+ the default cross sections at 20% and 80%, respectively.  The intermediate
+ column duplets follow the order of the sectioning points in the Meshlab
+ PickedPoints file or in the numerical vector parsed in <var>points</var>.
+ Polygon coordinates start from the second row ([2:end],:), while the first
+ row contains the relevant ratios at columns (1, [1,3,...,end-1]).</td></tr>
+<tr><td width="33%"><code>Cpolyline3D-bone_ID.csv</code></td><td width="2%"></td><td width="65%">It contains the 3D model
+ coordinates for each cross section as an <math>N&times;3</math> matrix, where <math>N</math> is
+ the number of points for each cross-sectional polygon.  These polygons are
+ ordered as column triplets, i.e. [[1:3],...,[end-2:end]].  The first and the
+ last column triplets contain the default cross sections at 20% and 80%,
+ respectively.  The intermediate column triplets follow the order of the
+ sectioning points in the Meshlab PickedPoints file or in the numerical vector
+ parsed in <var>points</var>.  Polygon coordinates start from the second row
+ ([2:end],:), while the first row contains the relevant ratios at columns
+ (1, [1,3,...,end-1]).</td></tr>
+</table>
+
+<p> For any analyzed 3D model, the initial alignment points are either
+ read from the corresponding Meshlab PickedPoints file (e.g. &rsquo;bone_ID.pp&rsquo;), if
+ present in the same folder with the OBJ, or they are automatically registered
+ with the <code>longbone_Registration</code> function.  The optimized alignment
+ points are appended in the existing MPP file or saved in newly created,
+ accordingly.
+</p>
+<p> <strong>See also: </strong>
+  <a href="longbone_Geometry.html">longbone_Geometry</a>, 
+  <a href="longbone_FragmentGeometry.html">longbone_FragmentGeometry</a>, 
+  <a href="visualize_CrossSections.html">visualize_CrossSections</a>
+</p>
+<p><strong>Source Code: </strong>
+  <a href="https://github.com/pr0m1th3as/csg-toolkit/tree/main/inst/longbone_CustomGeometry.m">longbone_CustomGeometry</a>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>
