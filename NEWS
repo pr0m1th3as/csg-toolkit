@@ -21,7 +21,7 @@ CSG-Toolkit-1.2.2  Release Date: 2022-06-05  Release Manager: Andreas Bertsatos
 * An additional function 'longbone_Scaling' has been added to facilitate batch
 scaling of long bone models produced with 3D photogrammetry that lack real
 world scale.  Type 'help longbone_Scaling' for more info.
-* Additional core functionality with the new longbone_CustomGeometry function, 
+* Additional core functionality with the new longbone_CustomGeometry function,
 which allows an arbitrary number of user defined cross section to be analyzed.
 Type 'help longbone_CustomGeometry' for more info.
 * Updated functionality in visualize_CrossSections function to include the new
@@ -35,5 +35,16 @@ CSG-Toolkit-1.2.3  Release Date: 2022-06-06  Release Manager: Andreas Bertsatos
 
 * Moved the package sources to a new separate repository from the original
   'long-bone-diaphyseal-CSG-Toolkit', which is maintained for reference only.
+
+===============================================================================
+CSG-Toolkit-1.3.0  Release Date: 2023-04-02  Release Manager: Andreas Bertsatos
+===============================================================================
+
+* Restructured scripts into functions: inspect_CSG, longbone_Analysis.
+* Added new function for fragments: longbone_FragmentGeometry
+* Removed output arguments from Geometry functions. They only output CSG
+properties to CSV files.
+* longbone_Analysis can handle batch processing for all Geometry functions.
+* Added GitHub Pages documentation.
 
 ===============================================================================
