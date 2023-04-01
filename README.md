@@ -8,6 +8,8 @@ is based on novel and robust algorithms for calculating the cross-sectional
 geometric properties of the diaphyses of humerus, ulna, femur, and tibia bones
 represented as a triangular mesh in a Wavefront OBJ 3D model file format.
 
+You can find its documentation at [https://pr0m1th3as.github.io/csg-toolkit/](https://pr0m1th3as.github.io/csg-toolkit/).
+
 ## Citation
 
 If you find this package usefull for your research, please include the following citations:
