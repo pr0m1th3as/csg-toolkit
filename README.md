@@ -6,28 +6,35 @@ The present package is based on the long-bone-diaphyseal-CSG-Toolkit and has
 been created to simplify its installation and usage from within GNU Octave. It
 is based on novel and robust algorithms for calculating the cross-sectional
 geometric properties of the diaphyses of humerus, ulna, femur, and tibia bones
-represented as a triangular mesh in a Wavefront OBJ file format.
+represented as a triangular mesh in a Wavefront OBJ 3D model file format.
 
 ## Citation
 
-If you use this package please include the following citation:
+If you find this package usefull for your research, please include the following citations:
 
 Bertsatos A, Chovalopoulou M-E. 2019. A novel method for analyzing long bone diaphyseal 
 cross-sectional geometry. A GNU Octave CSG Toolkit. Forensic Science International 297: 65–71. 
 https://doi.org/10.1016/j.forsciint.2019.01.041
 
+Bertsatos A, Garoufi N, Koliaraki M, Chovalopoulou M-E. 2023. Paving new ways in forensic contexts with virtual osteology applications: Csg-toolkit – a 3D osteology package for cross-sectional geometry analysis. Annals of 3D Printed Medicine, 9, 100094. https://doi.org/10.1016/j.stlm.2022.100094
+
+
 ## Installation
 
-The CSG Toolkit is compatible with later versions of Octave >= v5.2.0 and depends
-on the 'io >= 2.4.12' package.
+The CSG Toolkit is compatible with later versions of `Octave >= v7.2.0` and depends
+on the `io >= 2.6.4` package.
 
 To download and install the latest version issue the following command in Octave:
 
- `pkg install "https://github.com/pr0m1th3as/csg-toolkit/archive/refs/tags/v1.2.3.tar.gz"`
+ `pkg install -forge csg-toolkit`
 
 The package can be loaded on demand in Octave with the following commmand:
 
  `pkg load csg-toolkit`
+ 
+If you wish to install the latest development version, type:
+
+ `pkg install "https://github.com/pr0m1th3as/csg-toolkit/archive/refs/heads/main.zip"
 
 Happy long bone analysis!
 
@@ -68,6 +75,7 @@ about the function and it's usage.
 * `inspect_CSG`
 * `longbone_Analysis`
 * `longbone_CustomGeometry`
+* `longbone_FragmentGeometry`
 * `longbone_Geometry`
 * `longbone_maxDistance`
 * `longbone_Registration`
@@ -94,5 +102,8 @@ and may be used with the CSG Toolkit for demonstrating its operation.
 
 An additional dataset comprising eight bilateral bones (humerus, ulna, femur, and
 tibia) is also available at https://doi.org/10.5281/zenodo.6614647 for testing and
-demostration purposes.
+demostration purposes.  Simplified versions of this dataset, reduced to 7,500 faces
+without any color, texture and normals information, is also available within the
+package and available once loaded in Octave.  This is only available since version
+1.3.0.
 
