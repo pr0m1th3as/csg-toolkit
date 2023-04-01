@@ -101,20 +101,18 @@ also returns the point coordinates that correspond to the maximum distance.\n\
 \n\
 \n\
 @code{longbone_maxDistance} may be called with varying number of \
-output arguments.\n\
-@itemize \
+output arguments.\n\n\
+@itemize \n\
 @item \
-If one output argument is defined, then maximum distance is returned.\n\
-\n\
+If one output argument is defined, then maximum distance is returned. \n\n\
 @item \
 If two output arguments are defined, then the corresponding points of maximum \
-distance are returned.\n\
+distance are returned.\n\n\
 \n\
 @item \
 If 3 output arguments are defined, then the maximum distance along with \
-its corresponding points are returned. \
-@end itemize \
-\n\
+its corresponding points are returned. \n\n\
+@end itemize \n\n\
 \n\
 @seealso{longbone_Registration, longbone_Geometry} \n\
 @end deftypefn")
