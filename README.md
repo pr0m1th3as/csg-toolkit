@@ -16,7 +16,7 @@ Bertsatos A, Chovalopoulou M-E. 2019. A novel method for analyzing long bone dia
 cross-sectional geometry. A GNU Octave CSG Toolkit. Forensic Science International 297: 65–71. 
 https://doi.org/10.1016/j.forsciint.2019.01.041
 
-Bertsatos A, Garoufi N, Koliaraki M, Chovalopoulou M-E. 2023. Paving new ways in forensic contexts with virtual osteology applications: Csg-toolkit – a 3D osteology package for cross-sectional geometry analysis. Annals of 3D Printed Medicine, 9, 100094. https://doi.org/10.1016/j.stlm.2022.100094
+Bertsatos A, Garoufi N, Koliaraki M, Chovalopoulou M-E. 2023. Paving new ways in forensic contexts with virtual osteology applications: csg-toolkit – a 3D osteology package for cross-sectional geometry analysis. Annals of 3D Printed Medicine, 9, 100094. https://doi.org/10.1016/j.stlm.2022.100094
 
 
 ## Installation
