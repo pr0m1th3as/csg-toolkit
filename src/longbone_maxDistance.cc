@@ -113,6 +113,7 @@ distance are returned.\n\
 @item \
 If 3 output arguments are defined, then the maximum distance along with \
 its corresponding points are returned. \
+@end itemize \
 \n\
 \n\
 @seealso{longbone_Registration, longbone_Geometry} \n\
