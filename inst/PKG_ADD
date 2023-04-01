@@ -1,4 +1,4 @@
 addpath (fullfile (fileparts (canonicalize_file_name ...
-                              (mfilename ("fullpath"))), "datasets"));
+                              (mfilename ("fullpath"))), "dataset"));
 
 warning ("off", "Octave:data-file-in-path")
