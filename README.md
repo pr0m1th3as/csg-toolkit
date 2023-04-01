@@ -34,7 +34,7 @@ The package can be loaded on demand in Octave with the following commmand:
  
 If you wish to install the latest development version, type:
 
- `pkg install "https://github.com/pr0m1th3as/csg-toolkit/archive/refs/heads/main.zip"
+ `pkg install "https://github.com/pr0m1th3as/csg-toolkit/archive/refs/heads/main.zip"`
 
 Happy long bone analysis!
 
