@@ -35,8 +35,8 @@
 ## omitted, the current working directory is assumed.
 ##
 ## @var{bones} must be cell array of strings specifying one or more long bones
-## that should be analyzed.  @code{longbone_CustomGeometry} will only analyze
-## the 3D model if it matches one of the bones named in @var{bones}.
+## that should be analyzed.  @code{longbone_Geometry} will only analyze the 3D
+## model if it matches one of the bones named in @var{bones}.
 ## Valid options are:
 ##
 ## @enumerate
@@ -49,9 +49,9 @@
 ##
 ## If the user want to define the initial alignment points, this can be done
 ## with a side-car Meshlab PickedPoints file with the same base filename and in
-## same directory as the 3D model.  In such case, @code{longbone_CustomGeometry}
-## skips the automatic initial point registration and uses the first two points
-## in the side-car file for optimizing the bone's mediolateral axis.
+## same directory as the 3D model.  In such case, @code{longbone_Geometry} skips
+## the automatic initial point registration and uses the first two points in the
+## side-car file for optimizing the bone's mediolateral axis.
 ##
 ## @enumerate
 ## @item For the humerus, these points must be positioned anteriorly on the
