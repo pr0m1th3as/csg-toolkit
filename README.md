@@ -21,13 +21,9 @@ To download and install the latest version (1.3.0), type:
 
  `pkg install -forge csg-toolkit`
 
-The package can be loaded on demand in Octave with the following commmand:
+The package can be loaded on demand with the following commmand:
 
  `pkg load csg-toolkit`
- 
-If you wish to install the latest development version, type:
-
- `pkg install "https://github.com/pr0m1th3as/csg-toolkit/archive/refs/heads/main.zip"`
 
 Happy long bone analysis!
 
