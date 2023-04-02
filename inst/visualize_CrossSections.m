@@ -232,7 +232,7 @@ function [varargout] = visualize_CrossSections (bone_id, varargin)
     ## Remove the trailing zeros from each column
     last_x = find (poly_x, 1, 'last');
     last_y = find (poly_y, 1, 'last');
-    last_index = max (last_x, last_y);
+    last_index = max ([last_x, last_y]);
     polyX = poly_x([2:last_index],:);
     polyY = poly_y([2:last_index],:);
     polyline(i).poly2D = [polyX, polyY];
@@ -245,7 +245,7 @@ function [varargout] = visualize_CrossSections (bone_id, varargin)
     last_x = find (poly_x, 1, 'last');
     last_y = find (poly_y, 1, 'last');
     last_z = find (poly_z, 1, 'last');
-    last_index = max (last_x, last_y, last_z);
+    last_index = max ([last_x, last_y, last_z]);
     polyX = poly_x([2:last_index],:);
     polyY = poly_y([2:last_index],:);
     polyZ = poly_z([2:last_index],:);

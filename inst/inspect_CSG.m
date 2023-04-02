@@ -181,14 +181,14 @@ function inspect_CSG (varargin)
           endif
 
           ## Compute dihedral angles between cross sectional plane normals
-          a1_2 = rad2deg (acos (dot (CS_Geometry(1).Section_n, ...
-                                     CS_Geometry(2).Section_n)));
-          a2_3 = rad2deg (acos (dot (CS_Geometry(2).Section_n, ...
-                                     CS_Geometry(3).Section_n)));
-          a3_4 = rad2deg (acos (dot (CS_Geometry(3).Section_n, ...
-                                     CS_Geometry(4).Section_n)));
-          a4_5 = rad2deg (acos (dot (CS_Geometry(4).Section_n, ...
-                                     CS_Geometry(5).Section_n)));
+          a1_2 = rad2deg (acos (dot (geometry(1).Section_n, ...
+                                     geometry(2).Section_n)));
+          a2_3 = rad2deg (acos (dot (geometry(2).Section_n, ...
+                                     geometry(3).Section_n)));
+          a3_4 = rad2deg (acos (dot (geometry(3).Section_n, ...
+                                     geometry(4).Section_n)));
+          a4_5 = rad2deg (acos (dot (geometry(4).Section_n, ...
+                                     geometry(5).Section_n)));
           asum = a1_2 + a2_3 + a3_4 + a4_5;
 
           ## Store angles to cell array
@@ -289,7 +289,7 @@ function inspect_CSG (varargin)
       id = 0;
       for i = 1:length (filenames)
         ## Extract the OBJ model's name and call the visualization function
-        bone_id = strcat (filenames(i).name(10:end-4));
+        bone_id = strcat (filenames(i).name(11:end-4));
         [geometry, inertia] = visualize_CrossSections (bone_id, type);
         ## Get user confirmation
         btn = questdlg ("Are cross-sections shown properly?", ...
@@ -314,7 +314,7 @@ function inspect_CSG (varargin)
 
           ## Store CSG properties
           for cs = 1:numel (geometry)
-            complete(i+1,[(cs-1)*8+3:(cs-1)*8+10]) = ...
+            complete(i+1,[(cs-1)*5+3:(cs-1)*5+7]) = ...
                     {geometry(cs).Area, geometry(cs).Perimeter, ...
                      inertia(cs).Ixy, inertia(cs).Imin, inertia(cs).Imax};
           endfor

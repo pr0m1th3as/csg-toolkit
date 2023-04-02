@@ -175,8 +175,8 @@ function longbone_Analysis (varargin)
         if (exist (fullfile (folder, MLPPfile)) == 2)
           longbone_CustomGeometry (folder, filename, bone, MLPPfile);
         else
-          printf (strcat (["Model %s does not have an associated %s"], ...
-                          [" custom points file\n"]), filename, bone);
+          printf (strcat (["Model %s does not have an associated"], ...
+                          [" -custom points file\n"]), filename);
         endif
       endfor
 
@@ -192,10 +192,10 @@ function longbone_Analysis (varargin)
         filename = strcat (filenames(i).name);
         MLPPfile = strcat (filename([1:end-4]), "-fragment.pp");
         if (exist (fullfile (folder, MLPPfile)) == 2)
-          longbone_FragmentGeometry (folder, filename, bone, MLPPfile);
+          longbone_FragmentGeometry (folder, filename, MLPPfile);
         else
-          printf (strcat (["Model %s does not have an associated %s"], ...
-                          [" fragment points file\n"]), filename, bone);
+          printf (strcat (["Model %s does not have an associated"], ...
+                          [" -fragment points file\n"]), filename);
         endif
       endfor
 

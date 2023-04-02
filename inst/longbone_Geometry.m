@@ -201,9 +201,11 @@ function longbone_Geometry (varargin)
     MLA_points = read_MeshlabPoints (fullfile (folder, filenamePP));
     MLA_points(:,1) = [];
     find_bone = true;
+    register = false;
   else
     [bonesel, MLA_points] = longbone_Registration (v, f);
     find_bone = false;
+    register = true;
   endif
 
   ## Find bone if necessary
@@ -216,7 +218,7 @@ function longbone_Geometry (varargin)
     bone = bonesel;
   else
     if (numel (bone) == 1 && ! strcmpi (bone, bonesel))
-      printf ("Model %s is not a %s\n", filename, bone);
+      printf ("Model %s is not a %s\n", filename, bone{1});
       return;
     endif
     if (numel (bone) == 2 && ! (any (strcmpi (bone, bonesel))))
@@ -245,7 +247,7 @@ function longbone_Geometry (varargin)
   ## Print bone's max distance
   page_screen_output (0);
   page_output_immediately (1);
-  printf ("\n%s in %s has a maximum distance of %f mm\n\n", ...
+  printf ("\n%s in %s has a maximum distance of %0.1f mm\n", ...
           bone, filename, maxDistance);
 
   ## Calculate the normal vector of the maximum length of the bone
@@ -575,20 +577,25 @@ function longbone_Geometry (varargin)
   ns = [n1; n2; n3; n4; n5];
   for i = 1:5
     ## Print results for centroids and cross sectional areas
-    printf (strcat (["Cross section at %d%% has an area of %f mm2,"], ...
+    printf (strcat (["\nCross section at %d%% has an area of %f mm^2,"], ...
                     [" perimeter of %f mm \n and centroid coordinates"], ...
-                    [" are: x:%f y:%f z:%f\n\n"]), cs(i), ...
-            CS_Geometry(i).Area, CS_Geometry(i).Perimeter, ...
+                    [" are: x:%f y:%f z:%f\n"]), ...
+            cs(i), ...
+            CS_Geometry(i).Area, ...
+            CS_Geometry(i).Perimeter, ...
             CS_Geometry(i).Centroid);
+
     ## Arrange to matrices for csv files
     geometry(i,:) = [cs(i), CS_Geometry(i).Area, CS_Geometry(i).Perimeter, ...
                      CS_Geometry(i).Centroid, ns(i,:), CorPlane_normal];
-    inertia(i,:) = [cs(i,1), SMoA.Ix, SMoA.Iy, SMoA.Ixy, SMoA.Imin, ...
-                    SMoA.Imax, SMoA.theta];
-    polygon2D(1,i*2-1) = cs(i,1);
-    polygon2D([2:length(polyline.poly2D)+1],[i*2-1:i*2]) = polyline.poly2D;
-    polygon3D(1,i*3-2) = cs(i,1);
-    polygon3D([2:length(polyline.poly3D)+1],[i*3-2:i*3]) = polyline.poly3D;
+    inertia(i,:) = [cs(i), SMoA(i).Ix, SMoA(i).Iy, SMoA(i).Ixy, ...
+                    SMoA(i).Imin, SMoA(i).Imax, SMoA(i).theta];
+    polygon2D(1,i*2-1) = cs(i) / 100;
+    polygon2D([2:length(polyline(i).poly2D)+1],[i*2-1:i*2]) = ...
+                                                            polyline(i).poly2D;
+    polygon3D(1,i*3-2) = cs(i) / 100;
+    polygon3D([2:length(polyline(i).poly3D)+1],[i*3-2:i*3]) = ...
+                                                            polyline(i).poly3D;
   endfor
 
   ## Save to files
@@ -596,15 +603,15 @@ function longbone_Geometry (varargin)
   name = filename([1:length(filename) - 4]);
   endfile = ".csv";
   filename = strcat (starting, name, endfile);
-  csvwrite (fullfile (folder, filename), geometry);
+  csvwrite (filename, geometry);
   starting = "Dinertia-";
   filename = strcat (starting, name, endfile);
-  csvwrite (fullfile (folder, filename), inertia);
+  csvwrite (filename, inertia);
   starting = "Dpolyline2D-";
   filename = strcat (starting, name, endfile);
-  csvwrite (fullfile (folder, filename), polygon2D);
+  csvwrite (filename, polygon2D);
   starting = "Dpolyline3D-";
   filename = strcat (starting, name, endfile);
-  csvwrite (fullfile (folder, filename), polygon3D);
+  csvwrite (filename, polygon3D);
 
 endfunction

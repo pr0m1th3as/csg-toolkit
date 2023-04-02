@@ -207,17 +207,21 @@ function longbone_FragmentGeometry (varargin)
     ## Find nearest default centroid
     dist2centroid = distancePoints (Centroid_N(i,[2:4]), CENTROIDS);
     index = find (dist2centroid == min (dist2centroid));
+
     ## Calculate cross section with the normal of the nearest centroid
     section = meshSection (v, f, Centroid_N(i,[2:4]), NORMALS(index,:));
     [CS_Geometry, SMoA, polyline] = simple_polygon3D (section, NORMALS(index,:));
+
     ## Print results for centroids and cross sectional areas
-    printf (strcat (["Cross section at %d has an area of %f mm2,"], ...
+    printf (strcat (["\nCross section at point %d has an area of %f mm^2,"], ...
                     [" perimeter of %f mm \n and centroid coordinates"], ...
-                    [" are: x:%f y:%f z:%f\n\n"]), Centroid_N(i,1), ...
+                    [" are: x:%f y:%f z:%f\n"]), Centroid_N(i,1), ...
             CS_Geometry.Area, CS_Geometry.Perimeter, CS_Geometry.Centroid);
+
     ## Arrange to matrices for csv files
-    geometry(i,:) = [Centroid_N(i,1), CS_Geometry.Area, CS_Geometry.Perimeter, ...
-                     CS_Geometry.Centroid, NORMALS(index,:)];
+    geometry(i,:) = [Centroid_N(i,1), CS_Geometry.Area, ...
+                     CS_Geometry.Perimeter, CS_Geometry.Centroid, ...
+                     NORMALS(index,:)];
     inertia(i,:) = [Centroid_N(i,1), SMoA.Ixy, SMoA.Imin, SMoA.Imax];
     polygon2D(1,i*2-1) = Centroid_N(i,1);
     polygon2D([2:length(polyline.poly2D)+1],[i*2-1:i*2]) = polyline.poly2D;
@@ -230,15 +234,15 @@ function longbone_FragmentGeometry (varargin)
   name = filename([1:length(filename) - 4]);
   endfile = ".csv";
   filename = strcat (starting, name, endfile);
-  csvwrite (fullfile (folder, filename), geometry);
+  csvwrite (filename, geometry);
   starting = "Finertia-";
   filename = strcat (starting, name, endfile);
-  csvwrite (fullfile (folder, filename), inertia);
+  csvwrite (filename, inertia);
   starting = "Fpolyline2D-";
   filename = strcat (starting, name, endfile);
-  csvwrite (fullfile (folder, filename), polygon2D);
+  csvwrite (filename, polygon2D);
   starting = "Fpolyline3D-";
   filename = strcat (starting, name, endfile);
-  csvwrite (fullfile (folder, filename), polygon3D);
+  csvwrite (filename, polygon3D);
 
 endfunction
