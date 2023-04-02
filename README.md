@@ -17,7 +17,7 @@ with 3D models. You can find its documentation at
 The CSG Toolkit is compatible with later versions of `Octave >= v7.2.0` and depends
 on the `io >= 2.6.4` package.
 
-To download and install the latest version issue the following command in Octave:
+To download and install the latest version (1.3.0), type:
 
  `pkg install -forge csg-toolkit`
 
