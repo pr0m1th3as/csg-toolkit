@@ -190,7 +190,7 @@ function [varargout] = longbone_Scaling (varargin)
       if (isfield (MTL, "map_Kd") && ! isempty (getfield (MTL, "map_Kd")))
         filenameIMG = getfield (MTL, "map_Kd");
         ## Check in image exists in working directory
-        f_len = length(filenameIMG - 4);
+        f_len = length(filenameIMG) - 4;
         if (exist (filenameIMG) == 2 &&
             ! strncmp (filenameIMG, filenameOBJ, f_len))
           new_fnIMG = strcat (filenameOBJ([1:end-4]), filenameIMG([end-3:end]));
