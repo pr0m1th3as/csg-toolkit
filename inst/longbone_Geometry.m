@@ -18,6 +18,7 @@
 ## @deftypefnx {csg-toolkit} {} longbone_Geometry (@var{filename}, @var{bones})
 ## @deftypefnx {csg-toolkit} {} longbone_Geometry (@var{folder}, @var{filename})
 ## @deftypefnx {csg-toolkit} {} longbone_Geometry (@var{folder}, @var{filename}, @var{bones})
+## @deftypefnx {csg-toolkit} {[@var{GEOM}, @var{SMoA}, @var{bone}] =} longbone_Geometry (@dots{})
 ##
 ## This function analyzes the cross-sectional geometry of an intact humerus,
 ## ulna, femur, or tibia bone at 20%, 35%, 50%, 65% and 80% along the bone's
@@ -71,8 +72,8 @@
 ## optimized alignment points are appended in the existing MPP file or saved in
 ## newly created, accordingly.
 ##
-## @code{longbone_Geometry} does not return any output arguments, but it saves
-## all geometric properties in CSV files as described in the following section.
+## When @code{longbone_Geometry} is called without any output arguments, it
+## stores all geometric properties in CSV files as described in the following
 ## section.  Each OBJ file must explicitly contain a single 3D bone model.
 ##
 ## Assuming a 3D model named @qcode{"bone_ID.obj"}, the following files are
@@ -117,14 +118,23 @@
 ## contains the relevant ratios at columns (1, [1,4,7,10,13]).
 ## @end multitable
 ##
+## @qcode{[@var{GEOM}, @var{SMoA}, @var{bone}] =} longbone_Geometry (@dots{})}
+## may also return up to three output arguments.  @var{GEOM} and @var{SMoA} are
+## @math{5x1} structure arrays containing the cross-sectrional geometric
+## properties and the second moments of area, respectively.  Each element of the
+## structure arrays corresponds to 20%, 35%, 50%, 65%, and 80% cross sections.
+## For more information about the contents of the returned structure arrays, see
+## @code{simple_polygon3D}.  When @code{longbone_Geometry} is called with output
+## arguments, then no CSV files are generated.
+##
 ## @seealso{longbone_CustomGeometry, longbone_FragmentGeometry,
-## visualize_CrossSections, }
+## visualize_CrossSections, simple_polygon3D}
 ## @end deftypefn
 
-function longbone_Geometry (varargin)
+function [varargout] = longbone_Geometry (varargin)
 
-  ## Check input
-  if (nargin < 1 || nargin > 3)
+  ## Check input output
+  if (nargin < 1 || nargin > 3 || nargout > 3)
     print_usage;
   endif
 
@@ -237,7 +247,7 @@ function longbone_Geometry (varargin)
   ## Check valid bone selection
   if (! (strcmpi (bone, "Humerus") || strcmpi (bone, "Ulna") ||
          strcmpi (bone, "Femur") || strcmpi (bone, "Tibia")))
-    printf ("Bone should be a Humerus, an Ulna, a Femur or a Tibia\n");
+    printf ("Bone should be either a Humerus, an Ulna, a Femur, or a Tibia\n");
     return;
   endif
 
@@ -598,20 +608,31 @@ function longbone_Geometry (varargin)
                                                             polyline(i).poly3D;
   endfor
 
-  ## Save to files
-  starting = "Dgeometry-";
-  name = filename([1:length(filename) - 4]);
-  endfile = ".csv";
-  filename = strcat (starting, name, endfile);
-  csvwrite (filename, geometry);
-  starting = "Dinertia-";
-  filename = strcat (starting, name, endfile);
-  csvwrite (filename, inertia);
-  starting = "Dpolyline2D-";
-  filename = strcat (starting, name, endfile);
-  csvwrite (filename, polygon2D);
-  starting = "Dpolyline3D-";
-  filename = strcat (starting, name, endfile);
-  csvwrite (filename, polygon3D);
+  if (nargout == 0)
+    ## Save to files
+    starting = "Dgeometry-";
+    name = filename([1:length(filename) - 4]);
+    endfile = ".csv";
+    filename = strcat (starting, name, endfile);
+    csvwrite (filename, geometry);
+    starting = "Dinertia-";
+    filename = strcat (starting, name, endfile);
+    csvwrite (filename, inertia);
+    starting = "Dpolyline2D-";
+    filename = strcat (starting, name, endfile);
+    csvwrite (filename, polygon2D);
+    starting = "Dpolyline3D-";
+    filename = strcat (starting, name, endfile);
+    csvwrite (filename, polygon3D);
+  elseif (nargout == 1)
+    varargout{1} = CS_Geometry;
+  else (nargout == 2)
+    varargout{1} = CS_Geometry;
+    varargout{2} = SMoA;
+  else
+    varargout{1} = CS_Geometry;
+    varargout{2} = SMoA;
+    varargout{3} = bone;
+  endif
 
 endfunction
