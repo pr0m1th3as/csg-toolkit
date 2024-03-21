@@ -141,11 +141,20 @@ function h = user_interface_CSG (classifier, sample_IDs, CSGdata, bone)
                                "position", [30, 270, 200, 30], ...
                                "backgroundcolor", bg_color);
   endif
-  h.text_B = uicontrol (h.f, "style", "text", "string", "Select bone", ...
-                             "backgroundcolor", bg_color, ...
-                             "position", [280, 300, 100, 30]);
-  h.bone_type = uicontrol (h.f, "style", "popupmenu", "string", bone, ...
-                                "position", [280, 270, 100, 30]);
+  if (isempty (bone))
+    bone = {"Femur", "Tibia", "Humerus"};
+    h.text_B = uicontrol (h.f, "style", "text", "string", "Select bone", ...
+                               "backgroundcolor", bg_color, ...
+                               "position", [280, 300, 100, 30]);
+    h.bone_type = uicontrol (h.f, "style", "popupmenu", "string", bone, ...
+                                  "position", [280, 270, 100, 30]);
+  else
+    h.text_B = uicontrol (h.f, "style", "text", "string", "Identified bone", ...
+                               "backgroundcolor", bg_color, ...
+                               "position", [280, 300, 100, 30]);
+    h.bone_type = uicontrol (h.f, "style", "popupmenu", "string", bone, ...
+                                  "position", [280, 270, 100, 30]);
+  endif
   h.text_S = uicontrol (h.f, "style", "text", "string", "Select side", ...
                              "backgroundcolor", bg_color, ...
                              "position", [430, 300, 100, 30]);
@@ -199,14 +208,26 @@ function run_loaddata_CSG (loaddata, dummy1, dummy2, h, classifier)
                         ["Select a 3D model or a CSG dataset", ...
                          " created created with 'inspect_CSG'"]);
   ## 3D model filename
-  if (strcmpi (filename, ".obj"))
+  if (strcmpi (filename([end-3:end]), ".obj"))
     [sample_IDs, CSGdata, bone] = get_OBJ_data (filename);
-    set (h.bone_type, "string", bone);
+    ## Update UI
+    h.text_B = uicontrol (h.f, "style", "text", "string", "Identified bone", ...
+                               "backgroundcolor", [0.8, 0.8, 0.8], ...
+                               "position", [280, 300, 100, 30]);
+    h.bone_type = uicontrol (h.f, "style", "popupmenu", "string", bone, ...
+                                  "position", [280, 270, 100, 30]);
+    h.text_S = uicontrol (h.f, "style", "text", ...
+                               "string", "Loaded 3D model",...
+                               "backgroundcolor", [0.8, 0.8, 0.8], ...
+                               "position", [30, 300, 200, 30]);
+    set (h.sample, "string", sample_IDs);
+    guidata (h.f, CSGdata);
+    delete (loaddata);
   ## CSV data filename
   elseif (strcmpi (filename([end-3:end]), ".csv"))
     [sample_IDs, CSGdata] = get_CSV_data (filename);
     if (! isempty (sample_IDs))
-      ## Set UI background colour
+      ## Update UI
       h.text_S = uicontrol (h.f, "style", "text", ...
                                  "string", "Available samples",...
                                  "backgroundcolor", [0.8, 0.8, 0.8], ...
@@ -260,24 +281,27 @@ function run_savedata_CSG (savedata, dummy1, dummy2, h, classifier)
   ## Select file
   filename = uiputfile ({"*.csv", "CSV"}, ...
                         "Select filename for storing classifcation results");
-  ## Check if file already exists (if not, create one with header only)
-  if (! exist (filename))
-    cell2csv (filename, results_header);
-  else
-    ## Check file and rewrite it if it is not an estimate_sex results file
-    results = csv2cell (filename);
-    if (size (results, 2) != 7)
-      results = results_header;
+  ## Check if file was actually selected
+  if (filename != 0)
+    ## Check if file already exists (if not, create one with header only)
+    if (! exist (filename))
+      cell2csv (filename, results_header);
+    else
+      ## Check file and rewrite it if it is not an estimate_sex results file
+      results = csv2cell (filename);
+      if (size (results, 2) != 7)
+        results = results_header;
+      endif
     endif
+    ## Append new entries at the end of CSV file
+    r_idx = 0;
+    for c_idx = DFs
+      r_idx += 1;
+      results(end+1,:) = {sample_ID, bone, side, method, c_idx, ...
+                          sample_sex{r_idx}, sample_pb(r_idx)};
+    endfor
+    cell2csv (filename, results);
   endif
-  ## Append new entries at the end of CSV file
-  r_idx = 0;
-  for c_idx = DFs
-    r_idx += 1;
-    results(end+1,:) = {sample_ID, bone, side, method, c_idx, ...
-                        sample_sex{r_idx}, sample_pb(r_idx)};
-  endfor
-  cell2csv (filename, results);
 endfunction
 
 ## Estimate sex
@@ -378,7 +402,11 @@ function [method, sample_idx, sample_ID, ...
   ## Get selected sample
   sample_str = get(h.sample, "string");
   sample_idx = get(h.sample, "value");
-  sample_ID = sample_str{sample_idx};
+  if (iscellstr (sample_str))
+    sample_ID = sample_str{sample_idx};
+  else
+    sample_ID = sample_str;
+  endif
   ## Get selected bone
   bone_str = get(h.bone_type, "string");
   bone_idx = get(h.bone_type, "value");
