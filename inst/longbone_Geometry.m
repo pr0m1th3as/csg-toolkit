@@ -118,7 +118,7 @@
 ## contains the relevant ratios at columns (1, [1,4,7,10,13]).
 ## @end multitable
 ##
-## @qcode{[@var{GEOM}, @var{SMoA}, @var{bone}] =} longbone_Geometry (@dots{})}
+## @qcode{[@var{GEOM}, @var{SMoA}, @var{bone}] = longbone_Geometry (@dots{})}
 ## may also return up to three output arguments.  @var{GEOM} and @var{SMoA} are
 ## @math{5x1} structure arrays containing the cross-sectrional geometric
 ## properties and the second moments of area, respectively.  Each element of the
