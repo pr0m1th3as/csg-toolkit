@@ -1,4 +1,4 @@
-rmpath (fullfile (fileparts (canonicalize_file_name ...
-                             (mfilename ("fullpath"))), "classifiers"));
+addpath (fullfile (fileparts (canonicalize_file_name ...
+                              (mfilename ("fullpath"))), "classifiers"));
 
 warning ("off", "Octave:data-file-in-path")
