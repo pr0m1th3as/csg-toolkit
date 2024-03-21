@@ -57,7 +57,7 @@ CSG-Toolkit-1.3.1  Release Date: 2024-01-30  Release Manager: Andreas Bertsatos
 CSG-Toolkit-1.3.2  Release Date: 2024-03-21  Release Manager: Andreas Bertsatos
 ===============================================================================
 
-* Added new function for estimating sex: estimate_sex.
+* estimate_sex: new GUI function for estimating sex.
 * Updated 'longbone_Geometry' to return GEOM and SMoA structures as well as
-  the type of bone, which if not defined by the user it can be automatically
-  identified by the 'longbone_Registration' function.
+  the type of bone automatically identified by the 'longbone_Registration'
+  function so it can be utilized by newly introduced 'estimate_sex' function.
