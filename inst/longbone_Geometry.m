@@ -626,7 +626,7 @@ function [varargout] = longbone_Geometry (varargin)
     csvwrite (filename, polygon3D);
   elseif (nargout == 1)
     varargout{1} = CS_Geometry;
-  else (nargout == 2)
+  elseif (nargout == 2)
     varargout{1} = CS_Geometry;
     varargout{2} = SMoA;
   else
