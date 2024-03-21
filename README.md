@@ -17,7 +17,7 @@ with 3D models. You can find its documentation at
 The CSG Toolkit is compatible with later versions of `Octave >= v7.2.0` and depends
 on the `io >= 2.6.4` package.
 
-To download and install the latest version (1.3.1), type:
+To download and install the latest version (1.3.2), type:
 
  `pkg install -forge csg-toolkit`
 
@@ -63,6 +63,10 @@ with the `visualize_CrossSections` function, which utilizes the output results o
 either `longbone_Analysis` stored in relevant CSV files, or the return structures
 of the `longbone_Geometry` function and the generated CSV files from the
 `longbone_CustomGeometry` function.
+
+The latest release (1.3.2) introduced a GUI utility for biological sex estimation.
+Type `help estimate_sex` to find out how to utilize CSG properties for biological
+profiling from the long bones. More functionality comming soon!
 
 ## Citation
 
