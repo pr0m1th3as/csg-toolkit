@@ -16,16 +16,7 @@ this program; if not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <iostream>
-#include <iomanip>
-#include <string>
-#include <fstream>
-#include <vector>
-#include <algorithm>
-#include <iterator>
-#include <cmath>
-#include <bits/stdc++.h>
 #include <octave/oct.h>
-#include <octave/parse.h>
 
 using namespace std;
 
