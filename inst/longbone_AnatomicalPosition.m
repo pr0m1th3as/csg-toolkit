@@ -64,6 +64,35 @@ function [varargout] = longbone_AnatomicalPosition (varargin)
     v = v - meshBarycenter (v, f);
   endfor
 
+  ## Compute anatomical plane normals
+  [TransPlane_normal, ~] = anatomicalNormals (v, f);
+
+  ## Rotate longtitudinal axis to [0,0,1]
+  v_rot = meshRotation (v, TransPlane_normal, [0,0,1]);
+  if (normals)
+    vn_rot = meshRotation (vn, TransPlane_normal, [0,0,1]);
+  endif
+
+  ## Compute anatomical plane normals
+  [~, CorPlane_normal] = anatomicalNormals (v_rot, f);
+
+  ## Rotate anteroposterior axis to [1,0,0]
+  v_rot = meshRotation (v_rot, CorPlane_normal, [1,0,0]);
+  if (normals)
+    vn_rot = meshRotation (vn_rot, CorPlane_normal, [1,0,0]);
+  endif
+
+  ## Return arguments
+  varargout{1} = v_rot;
+  varargout{2} = f;
+  if (normals)
+    varargout{3} = vn_rot;
+    varargout{4} = fn;
+  endif
+
+endfunction
+
+function [TransPlane_normal, CorPlane_normal] = anatomicalNormals (v, f)
   ## Identify longbone and register initial orientation
   [bone, MLA_points] = longbone_Registration (v, f);
 
@@ -304,42 +333,4 @@ function [varargout] = longbone_AnatomicalPosition (varargin)
       endif
     endfor
   endif
-
-  ## Rotate longtitudinal axis to [0,0,1]
-  v_rot = meshRotation (v, TransPlane_normal, [0,0,1]);
-  if (normals)
-    vn_rot = meshRotation (vn, TransPlane_normal, [0,0,1]);
-  endif
-
-  ## Register initial orientation once again
-  [~, MLA_points] = longbone_Registration (v, f);
-  ## Calculate coronal plane normal
-  if (! strcmpi (bone, "Ulna"))         # for humerus, femur, and tibia
-    MLA_vector = MLA_points(1,:) - MLA_points(2,:);
-    CorPlane_normal = cross ([0,0,1], MLA_vector);
-    CorPlane_normal = CorPlane_normal ./ sqrt (sum (CorPlane_normal .^ 2));
-  else                                  # for ulna
-    C5_MLA = MLA_points(1,:) - [0,0,-1];
-    C5_C1 = [0,0,1] - [0,0,-1];
-    point_proj = [0,0,1] + (dot (C5_MLA, C5_C1) / dot (C5_C1, C5_C1)) * C5_C1;
-    ## Calculate the coronal plane unit vector by normalizing the vector from
-    ## midpoint_proj to MLA_midpoint
-    CorPlane_normal = MLA_points(1,:) - point_proj;
-    CorPlane_normal = CorPlane_normal ./ sqrt (sum (CorPlane_normal .^ 2));
-  endif
-
-  ## Rotate anteroposterior axis to [1,0,0]
-  v_rot = meshRotation (v_rot, CorPlane_normal, [1,0,0]);
-  if (normals)
-    vn_rot = meshRotation (vn_rot, CorPlane_normal, [1,0,0]);
-  endif
-
-  ## Return arguments
-  varargout{1} = v_rot;
-  varargout{2} = f;
-  if (normals)
-    varargout{3} = vn_rot;
-    varargout{4} = fn;
-  endif
-
 endfunction
