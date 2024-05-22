@@ -1,5 +1,5 @@
 clear -f readObj writeObj longbone_maxDistance longbone_Registration
-clear -f meshArea meshBarycenter meshSection
+clear -f meshArea meshBarycenter meshRotation meshSection
 
 rmpath (fullfile (fileparts (canonicalize_file_name ...
                              (mfilename ("fullpath"))), "classifiers"));
