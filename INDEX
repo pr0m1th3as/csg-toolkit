@@ -1,6 +1,9 @@
 csg-toolkit >> CSG Toolkit
+Class
+  LongBone
 CSG
   longbone_Analysis
+  longbone_AnatomicalPosition
   longbone_CustomGeometry
   longbone_FragmentGeometry
   longbone_Geometry
@@ -11,6 +14,7 @@ mesh3D
   longbone_Scaling
   meshArea
   meshBarycenter
+  meshRotation
   meshSection
   read_MeshlabPoints
   write_MeshlabPoints
