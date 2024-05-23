@@ -133,23 +133,17 @@ filename when file already exists.\n\
   bool info = false;
   bool over = false;
   // Parse optional arguments "info" and "overwrite"
-  if (args(nargin - 1).is_string())
+  while (args(nargin - 1).is_string() && args(nargin - 2).is_string())
   {
-    string ParamName = "info";
-    if (args(nargin - 1).string_value() == ParamName)
+    if (args(nargin - 1).string_value() == "info")
     {
       info = true;
-      nargin--;
     }
-  }
-  if (args(nargin - 1).is_string())
-  {
-    string ParamName = "overwrite";
-    if (args(nargin - 1).string_value() == ParamName)
+    if (args(nargin - 1).string_value() == "overwrite")
     {
       over = true;
-      nargin--;
     }
+    nargin--;
   }
   // count the number of input arguments and store their values
   // into the appropriate variables
