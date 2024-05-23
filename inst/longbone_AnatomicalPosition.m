@@ -92,6 +92,7 @@ function [varargout] = longbone_AnatomicalPosition (varargin)
       varargout{2} = vn_rot;
     else
       varargout{2} = [];
+    endif
   endif
 
 endfunction
