@@ -37,6 +37,39 @@ struct TCoord
       double u, v  ;
 };
 
+// Function for asking user to overwrite existing file
+string checkFilename (string filename)
+{
+  bool filename_exists = ifstream(filename.c_str()).good();
+  if (filename_exists)
+  {
+    cout << "Filename already exists.\n";
+    cout << "Do you want to replace? (yes or no)\n";
+    string yes_or_no;
+    getline(cin, yes_or_no);
+    while (yes_or_no.compare("yes") && yes_or_no.compare("no"))
+    {
+      cout << "Please answer yes or no! ";
+      getline(cin, yes_or_no);
+    }
+    if (yes_or_no.compare("yes"))
+    {
+      string newfilename;
+      cout << "Please enter new filename: ";
+      getline(cin, newfilename);
+      // check for file extension and append .obj if not present
+      string extension = ".obj";
+      if (newfilename.compare(newfilename.length() - extension.length(),
+          extension.length(), extension) != 0)
+      {
+        newfilename.append(extension);
+      }
+      filename = newfilename.c_str();
+    }
+  }
+  return filename;
+}
+
 
 DEFUN_DLD (writeObj, args, nargout,
           "-*- texinfo -*-\n\
@@ -44,12 +77,15 @@ DEFUN_DLD (writeObj, args, nargout,
  @deftypefnx {csg-toolkit} {} writeObj (@var{v}, @var{f}, @var{vt}, @var{ft}, @var{filename})\n\
  @deftypefnx {csg-toolkit} {} writeObj (@var{v}, @var{f}, @var{vn}, @var{fn}, @var{filename})\n\
  @deftypefnx {csg-toolkit} {} writeObj (@var{v}, @var{f}, @var{vt}, @var{ft}, @var{vn}, @var{fn}, @var{filename})\n\
+ @deftypefnx {csg-toolkit} {} writeObj (@dots{}, @qcode{\"info\"})\n\
+ @deftypefnx {csg-toolkit} {} writeObj (@dots{}, @qcode{\"overwrite\"})\n\
+ @deftypefnx {csg-toolkit} {@var{filename} =} writeObj (@dots{})\n\
 \n\
 \n\
 This function saves a triangular 3D Mesh in a Wavefront OBJ file format \
 according to its elements provided as input arguments.\n\
 \n\
-The function will only take 3, 5 or 7 input arguments.  The last argument \
+The function typically takes 3, 5 or 7 input arguments.  The last argument \
 should be a char string referring to the filename of the OBJ file, whereas the \
 first 2, 4, or 6 input arguments should be 2-dimensional matrices containing \
 the elements of the triangular mesh in the following order:\n\
@@ -74,19 +110,51 @@ coordinates, where @math{N} is the number of normals.\n\
 @var{fn} must be an @math{Nx3} matrix with the indices of each corresponding \
 face normal.\n\
 \n\
-If 5 input arguments are provided, the function will determine whether there \
+When 5 input arguments are provided, the function will determine whether there \
 is a texture coordinates matrix or a vertex normals matrix by the size of the \
 second dimension of the matrix provided as the third input argument. \
+\n\
+The function can also take one or two additional optional arguments added \
+after the aforementioned syntaxes to control its behavior.  \
+Use @qcode{\"info\"} as an optional input argument to display information \
+about the saved 3D mesh.  Use @qcode{\"overwrite\"} to overwrite existing file \
+without asking back the user for confirmation.\n\
+\n\
+The function can also return an output argument with the filename used for \
+saving the mesh.  This can be useful when prompting the user for a new \
+filename when file already exists.\n\
 \n\
 \n\
 @seealso{readObj, renameObj} \n\
 @end deftypefn")
 {
-
+  int nargin = args.length();
+  // Add default options
+  bool info = false;
+  bool over = false;
+  // Parse optional arguments "info" and "overwrite"
+  if (args(nargin - 1).is_string())
+  {
+    string ParamName = "info";
+    if (args(nargin - 1).string_value() == ParamName)
+    {
+      info = true;
+      nargin--;
+    }
+  }
+  if (args(nargin - 1).is_string())
+  {
+    string ParamName = "overwrite";
+    if (args(nargin - 1).string_value() == ParamName)
+    {
+      over = true;
+      nargin--;
+    }
+  }
   // count the number of input arguments and store their values
   // into the appropriate variables
   // check for invalid number of input arguments
-  if (args.length() != 3 && args.length() != 5 && args.length() != 7)
+  if (nargin != 3 && nargin != 5 && nargin != 7)
   {
     cout << "Invalid number of input arguments.\n";
     return octave_value_list();
@@ -99,13 +167,13 @@ second dimension of the matrix provided as the third input argument. \
   ////
   ////
   // check for last argument being a string
-  if (args.length() == 3 && !args(2).is_string())
+  if (nargin == 3 && ! args(2).is_string())
   {
     cout << "Third input argument should be a string.\n";
     return octave_value_list();
   }
   // check for first two arguments being real matrices
-  if (!args(0).is_matrix_type() || !args(1).is_matrix_type())
+  if (! args(0).is_matrix_type() || ! args(1).is_matrix_type())
   {
     cout << "The first two arguments should be real matrices.\n";
     return octave_value_list();
@@ -113,7 +181,7 @@ second dimension of the matrix provided as the third input argument. \
   // considering two input arguments for vertices and faces respcectively and
   // and a third argument as string for filename under which the vertices and
   // will be saved
-  if (args.length() == 3 && args(2).is_string())
+  if (nargin == 3 && args(2).is_string())
   {
     // store vertices, faces and filename
     Matrix V = args(0).array_value();
@@ -148,36 +216,13 @@ second dimension of the matrix provided as the third input argument. \
       return octave_value_list();
     }
     // check if filename exists
-    bool filename_exists = ifstream(filename.c_str()).good();
-    if (filename_exists)
+    if (! over)
     {
-      cout << "Filename already exists.\n";
-      cout << "Do you want to replace? (yes or no)\n";
-      string yes_or_no;
-      getline(cin, yes_or_no);
-      while (yes_or_no.compare("yes") && yes_or_no.compare("no"))
-      {
-        cout << "Please answer yes or no! ";
-        getline(cin, yes_or_no);
-      }
-      if (yes_or_no.compare("yes"))
-      {
-        string newfilename;
-        cout << "Please enter new filename: ";
-        getline(cin, newfilename);
-        // check for file extension and append .obj if not present
-        string extension = ".obj";
-        if (newfilename.compare(newfilename.length() - extension.length(),
-            extension.length(), extension) != 0)
-        {
-          newfilename.append(extension);
-        }
-        filename = newfilename.c_str();
-      }
+      filename = checkFilename (filename);
     }
     // open file
     ofstream outputFile(filename.c_str());
-    if (!outputFile.is_open())
+    if (! outputFile.is_open())
     {
       cout << "Error opening " << filename.c_str() << "for write\n";
       return octave_value_list();
@@ -189,7 +234,7 @@ second dimension of the matrix provided as the third input argument. \
       outputFile << "#\n# Object " << filename.c_str() << "\n#\n";
       outputFile << "# Vertices: " << V_rows << "\n";
       outputFile << "# Faces: " << F_rows << "\n#\n#\n\n";
-      cout << "Writing to file... ";
+      if (info) { cout << "Writing to file... "; }
       // write vertices to file
       if (V_columns == 3) // coordinates only
       {
@@ -228,13 +273,16 @@ second dimension of the matrix provided as the third input argument. \
       }
       // close file
       outputFile.close();
-      cout << "done!\n";
+      if (info) { cout << "done!\n"; }
     }
-    cout << "Mesh filename is " << filename.c_str() << "\n";
-    cout << "Mesh has " << V_rows << " vertices.\n";
-    cout << "Mesh has " << F_rows << " faces.\n";
+    if (info)
+    {
+      cout << "Mesh filename is " << filename.c_str() << "\n";
+      cout << "Mesh has " << V_rows << " vertices.\n";
+      cout << "Mesh has " << F_rows << " faces.\n";
+    }
     // if output argument is requested return the filename
-    if(nargout == 1)
+    if (nargout == 1)
     {
       return octave_value_list(filename.c_str());
     }
@@ -248,14 +296,14 @@ second dimension of the matrix provided as the third input argument. \
   ////
   ////
   // check for last argument being a string
-  if (args.length() == 5 && !args(4).is_string())
+  if (nargin == 5 && ! args(4).is_string())
   {
     cout << "Fifth input argument should be a string.\n";
     return octave_value_list();
   }
   // check for first four arguments being real matrices
-  if (!args(0).is_matrix_type() || !args(1).is_matrix_type() ||
-      !args(2).is_matrix_type() || !args(3).is_matrix_type())
+  if (! args(0).is_matrix_type() || ! args(1).is_matrix_type() ||
+      ! args(2).is_matrix_type() || ! args(3).is_matrix_type())
   {
     cout << "The first four arguments should be real matrices.\n";
     return octave_value_list();
@@ -268,7 +316,7 @@ second dimension of the matrix provided as the third input argument. \
   //
   // check for 5 input arguments with the third argument having two coordinates
   // present, namely u, v, and the last argument being a string
-  if (args.length() == 5 && args(2).columns() == 2 && args(4).is_string())
+  if (nargin == 5 && args(2).columns() == 2 && args(4).is_string())
   {
     // store vertices, faces and filename
     Matrix V = args(0).array_value();
@@ -322,36 +370,13 @@ second dimension of the matrix provided as the third input argument. \
       return octave_value_list();
     }
     // check if filename exists
-    bool filename_exists = ifstream(filename.c_str()).good();
-    if (filename_exists)
+    if (! over)
     {
-      cout << "Filename already exists.\n";
-      cout << "Do you want to replace? (yes or no)\n";
-      string yes_or_no;
-      getline(cin, yes_or_no);
-      while (yes_or_no.compare("yes") && yes_or_no.compare("no"))
-      {
-        cout << "Please answer yes or no! ";
-        getline(cin, yes_or_no);
-      }
-      if (yes_or_no.compare("yes"))
-      {
-        string newfilename;
-        cout << "Please enter new filename: ";
-        getline(cin, newfilename);
-        // check for file extension and append .obj if not present
-        string extension = ".obj";
-        if (newfilename.compare(newfilename.length() - extension.length(),
-            extension.length(), extension) != 0)
-        {
-          newfilename.append(extension);
-        }
-        filename = newfilename.c_str();
-      }
+      filename = checkFilename (filename);
     }
     // open file
     ofstream outputFile(filename.c_str());
-    if (!outputFile.is_open())
+    if (! outputFile.is_open())
     {
       cout << "Error opening " << filename.c_str() << "for write\n";
       return octave_value_list();
@@ -366,7 +391,7 @@ second dimension of the matrix provided as the third input argument. \
       int i = filename.length() - 3;
       string mtlfilename = filename.c_str();
       outputFile << "mtllib ./" << mtlfilename.replace(i,3, "mtl") << "\n\n";
-      cout << "Writing to file... ";
+      if (info) { cout << "Writing to file... "; }
       // write vertices to file
       if (V_columns == 3) // coordinates only
       {
@@ -417,13 +442,16 @@ second dimension of the matrix provided as the third input argument. \
       }
       // close file
       outputFile.close();
-      cout << "done!\n";
+      if (info) { cout << "done!\n"; }
     }
-    cout << "Mesh filename is " << filename.c_str() << "\n";
-    cout << "Mesh has " << V_rows << " vertices.\n";
-    cout << "Mesh has " << F_rows << " faces.\n";
+    if (info)
+    {
+      cout << "Mesh filename is " << filename.c_str() << "\n";
+      cout << "Mesh has " << V_rows << " vertices.\n";
+      cout << "Mesh has " << F_rows << " faces.\n";
+    }
     // if output argument is requested return the filename
-    if(nargout == 1)
+    if (nargout == 1)
     {
       return octave_value_list(filename.c_str());
     }
@@ -432,7 +460,7 @@ second dimension of the matrix provided as the third input argument. \
   //
   // check for 5 input arguments with the third argument having three coordinates
   // present, namely x, y, z, and the last argument being a string
-  if (args.length() == 5 && args(2).columns() == 3 && args(4).is_string())
+  if (nargin == 5 && args(2).columns() == 3 && args(4).is_string())
   {
     // store vertices, faces and filename
     Matrix V = args(0).array_value();
@@ -486,36 +514,13 @@ second dimension of the matrix provided as the third input argument. \
       return octave_value_list();
     }
     // check if filename exists
-    bool filename_exists = ifstream(filename.c_str()).good();
-    if (filename_exists)
+    if (! over)
     {
-      cout << "Filename already exists.\n";
-      cout << "Do you want to replace? (yes or no)\n";
-      string yes_or_no;
-      getline(cin, yes_or_no);
-      while (yes_or_no.compare("yes") && yes_or_no.compare("no"))
-      {
-        cout << "Please answer yes or no! ";
-        getline(cin, yes_or_no);
-      }
-      if (yes_or_no.compare("yes"))
-      {
-        string newfilename;
-        cout << "Please enter new filename: ";
-        getline(cin, newfilename);
-        // check for file extension and append .obj if not present
-        string extension = ".obj";
-        if (newfilename.compare(newfilename.length() - extension.length(),
-            extension.length(), extension) != 0)
-        {
-          newfilename.append(extension);
-        }
-        filename = newfilename.c_str();
-      }
+      filename = checkFilename (filename);
     }
     // open file
     ofstream outputFile(filename.c_str());
-    if (!outputFile.is_open())
+    if (! outputFile.is_open())
     {
       cout << "Error opening " << filename.c_str() << "for write\n";
       return octave_value_list();
@@ -527,7 +532,7 @@ second dimension of the matrix provided as the third input argument. \
       outputFile << "#\n# Object " << filename.c_str() << "\n#\n";
       outputFile << "# Vertices: " << V_rows << "\n";
       outputFile << "# Faces: " << F_rows << "\n#\n#\n\n";
-      cout << "Writing to file... ";
+      if (info) { cout << "Writing to file... "; }
       // write vertices to file
       if (V_columns == 3) // coordinates only
       {
@@ -579,13 +584,16 @@ second dimension of the matrix provided as the third input argument. \
       }
       // close file
       outputFile.close();
-      cout << "done!\n";
+      if (info) { cout << "done!\n"; }
     }
-    std::cout << "Mesh filename is " << filename.c_str() << "\n";
-    std::cout << "Mesh has " << V_rows << " vertices.\n";
-    std::cout << "Mesh has " << F_rows << " faces.\n";
+    if (info)
+    {
+      cout << "Mesh filename is " << filename.c_str() << "\n";
+      cout << "Mesh has " << V_rows << " vertices.\n";
+      cout << "Mesh has " << F_rows << " faces.\n";
+    }
     // if output argument is requested return the filename
-    if(nargout == 1)
+    if (nargout == 1)
     {
       return octave_value_list(filename.c_str());
     }
@@ -599,15 +607,15 @@ second dimension of the matrix provided as the third input argument. \
   ////
   ////
   // check for last argument being a string
-  if (args.length() == 7 && !args(6).is_string())
+  if (nargin == 7 && ! args(6).is_string())
   {
     cout << "Seventh input argument should be a string.\n";
     return octave_value_list();
   }
   // check for first six arguments being real matrices
-  if (!args(0).is_matrix_type() || !args(1).is_matrix_type() ||
-      !args(2).is_matrix_type() || !args(3).is_matrix_type() ||
-      !args(4).is_matrix_type() || !args(5).is_matrix_type())
+  if (! args(0).is_matrix_type() || ! args(1).is_matrix_type() ||
+      ! args(2).is_matrix_type() || ! args(3).is_matrix_type() ||
+      ! args(4).is_matrix_type() || ! args(5).is_matrix_type())
   {
     cout << "The first six arguments should be real matrices.\n";
     return octave_value_list();
@@ -693,36 +701,13 @@ second dimension of the matrix provided as the third input argument. \
     return octave_value_list();
   }
   // check if filename exists
-  bool filename_exists = std::ifstream(filename.c_str()).good();
-  if (filename_exists)
+  if (! over)
   {
-    cout << "Filename already exists.\n";
-    cout << "Do you want to replace? (yes or no)\n";
-    string yes_or_no;
-    getline(cin, yes_or_no);
-    while (yes_or_no.compare("yes") && yes_or_no.compare("no"))
-    {
-      cout << "Please answer yes or no! ";
-      getline(cin, yes_or_no);
-    }
-    if (yes_or_no.compare("yes"))
-    {
-      string newfilename;
-      cout << "Please enter new filename: ";
-      getline(cin, newfilename);
-      // check for file extension and append .obj if not present
-      string extension = ".obj";
-      if (newfilename.compare(newfilename.length() - extension.length(),
-          extension.length(), extension) != 0)
-      {
-        newfilename.append(extension);
-      }
-      filename = newfilename.c_str();
-    }
+    filename = checkFilename (filename);
   }
   // open file
   ofstream outputFile(filename.c_str());
-  if (!outputFile.is_open())
+  if (! outputFile.is_open())
   {
     cout << "Error opening " << filename.c_str() << "for write\n";
     return octave_value_list();
@@ -737,7 +722,7 @@ second dimension of the matrix provided as the third input argument. \
     int i = filename.length() - 3;
     string mtlfilename = filename.c_str();
     outputFile << "mtllib ./" << mtlfilename.replace(i,3, "mtl") << "\n\n";
-    cout << "Writing to file... ";
+    if (info) { cout << "Writing to file... "; }
     // write vertices to file
     if (V_columns == 3) // coordinates only
     {
@@ -802,13 +787,16 @@ second dimension of the matrix provided as the third input argument. \
     }
     // close file
     outputFile.close();
-    cout << "done!\n";
+    if (info) { cout << "done!\n"; }
   }
-  cout << "Mesh filename is " << filename.c_str() << "\n";
-  cout << "Mesh has " << V_rows << " vertices.\n";
-  cout << "Mesh has " << F_rows << " faces.\n";
+    if (info)
+    {
+      cout << "Mesh filename is " << filename.c_str() << "\n";
+      cout << "Mesh has " << V_rows << " vertices.\n";
+      cout << "Mesh has " << F_rows << " faces.\n";
+    }
   // if output argument is requested return the filename
-  if(nargout == 1)
+  if (nargout == 1)
   {
     return octave_value_list(filename.c_str());
   }
