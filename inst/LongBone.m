@@ -73,16 +73,20 @@ classdef LongBone
 
   methods (Access = public)
 
-    function LBM = identifyBone (this)
+    function [varargout] = identifyBone (this)
       ## Identify bone
       bone = longbone_Registration (this.Vertices, this.Faces);
-      if (strcmp (bone, "Undetermined"))
-        name = inputname (1);
-        warning ("identifyBone: 3D mesh in %s is not a valid long bone.", name);
+      name = inputname (1);
+      if (nargout == 0)
+        fprintf ("The 3D mesh stored in '%s' is a %s.\n", name, bone);
+      else
+        if (strcmp (bone, "Undetermined"))
+          warning ("identifyBone: 3D mesh in '%s' is undetermined.", name);
+        endif
+        ## Append bone info
+        LBM = this;
+        LBM.bone = bone;
       endif
-      ## Append bone info
-      LBM = this;
-      LBM.bone = bone;
     endfunction
 
     function LBM = anatomicalPosition (this)
@@ -140,8 +144,25 @@ classdef LongBone
       LBM = this;
     endfunction
 
-    function writeObj (this)
-      ## Add default options
+    function writeObj (this, varargin)
+      ## Parse optional arguments
+      info = "i";
+      over = "o";
+      while (numel (varargin) > 0)
+        if (! ischar (varargin{1}))
+          error ("writeObj: optional args must be character vectors.");
+        endif
+        switch (tolower (varargin{1}))
+          case "info"
+            info = "info";
+          case "overwrite"
+            over = "overwrite";
+          otherwise
+            error ("writeObj: unrecognized optional argument.");
+        endswitch
+        varargin(1) = [];
+      endwhile
+      ## Check 3D mesh contents
       if (isempty (this.Normals))
         normals = false;
       else
@@ -155,16 +176,17 @@ classdef LongBone
       filename = this.obj_filename;
       ## Write to file
       if (! (normals || texture))
-        writeObj (this.Vertices, this.Faces, filename);
+        writeObj (this.Vertices, this.Faces, filename, info, over);
       elseif (normals && ! texture)
         writeObj (this.Vertices, this.Faces, ...
-                  this.Normals, this.FaceNormals, filename);
+                  this.Normals, this.FaceNormals, filename, info, over);
       elseif (! normals && texture)
         writeObj (this.Vertices, this.Faces, ...
-                  this.TextureCoords, this.TextureFaces, filename);
+                  this.TextureCoords, this.TextureFaces, filename, info, over);
       else
-        writeObj (this.Vertices, this.Faces, this.TextureCoords, ...
-                  this.TextureFaces, this.Normals, this.FaceNormals, filename);
+        writeObj (this.Vertices, this.Faces, ...
+                  this.TextureCoords, this.TextureFaces, ...
+                  this.Normals, this.FaceNormals, filename, info, over);
       endif
       ## Save material library file and texture image
       if (texture)
