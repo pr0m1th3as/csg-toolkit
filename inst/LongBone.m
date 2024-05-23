@@ -92,16 +92,13 @@ classdef LongBone
     function LBM = anatomicalPosition (this)
       LBM = this;
       if (isempty (this.Normals))
-        [V, F] = longbone_AnatomicalPosition (this.Vertices, this.Faces);
+        V = longbone_AnatomicalPosition (this.Vertices, this.Faces);
         LBM.Vertices = V;
-        LBM.Faces = F;
       else
-        [V, F, VN, FN] = longbone_AnatomicalPosition  (this.Vertices, ...
-                         this.Faces, this.Normals, this.FaceNormals);
+        [V, VN] = longbone_AnatomicalPosition (this.Vertices, ...
+                                               this.Faces, this.Normals);
         LBM.Vertices = V;
-        LBM.Faces = F;
         LBM.Normals = VN;
-        LBM.FaceNormals = FN;
       endif
     endfunction
 
@@ -197,7 +194,7 @@ classdef LongBone
 
   endmethods
 
-  methods (Static, Hidden)
+  methods (Static, Access = public)
 
     function LBM = readObj (obj_name, varargin)
       ## Check input arguments
