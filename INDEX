@@ -3,6 +3,7 @@ Class
   LongBone
 CSG
   longbone_Analysis
+  longbone_AnatomicalNormals
   longbone_AnatomicalPosition
   longbone_CustomGeometry
   longbone_FragmentGeometry
