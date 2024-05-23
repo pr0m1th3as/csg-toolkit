@@ -35,7 +35,7 @@
 function [varargout] = longbone_AnatomicalPosition (varargin)
 
   ## Check input output
-  if (nargin < 2 || nargin > 3))
+  if (nargin < 2 || nargin > 3)
     print_usage;
   endif
 
