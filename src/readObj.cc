@@ -96,6 +96,9 @@ single argument, then the last output argument is used for returning the \
 @code{readObj} handles explicitly triangular mesh objects.  If the OBJ file \
 does not contain a proper triangular mesh, then an error message is returned. \
 \n\
+You can use @qcode{\"info\"} as a second input argument to display information \
+about the loaded mesh when output arguments are requested.\n\
+\n\
 \n\
 @seealso{writeObj, renameObj} \n\
 @end deftypefn")
