@@ -1,4 +1,4 @@
-## Copyright (C) 2018-2024 Andreas Bertsatos <abertsatos@biol.uoa.gr>
+## Copyright (C) 2018-2025 Andreas Bertsatos <abertsatos@biol.uoa.gr>
 ##
 ## This program is free software; you can redistribute it and/or modify it under
 ## the terms of the GNU General Public License as published by the Free Software
@@ -18,7 +18,7 @@
 ## @deftypefnx {csg-toolkit} {} longbone_Geometry (@var{filename}, @var{bones})
 ## @deftypefnx {csg-toolkit} {} longbone_Geometry (@var{folder}, @var{filename})
 ## @deftypefnx {csg-toolkit} {} longbone_Geometry (@var{folder}, @var{filename}, @var{bones})
-## @deftypefnx {csg-toolkit} {[@var{GEOM}, @var{SMoA}, @var{bone}] =} longbone_Geometry (@dots{})
+## @deftypefnx {csg-toolkit} {[@var{GEOM}, @var{SMoA}, @var{bone}, @var{EXTRA}, @var{data}] =} longbone_Geometry (@dots{})
 ##
 ## This function analyzes the cross-sectional geometry of an intact humerus,
 ## ulna, femur, or tibia bone at 20%, 35%, 50%, 65% and 80% along the bone's
@@ -37,18 +37,25 @@
 ##
 ## @var{bones} must be cell array of strings specifying one or more long bones
 ## that should be analyzed.  @code{longbone_Geometry} will only analyze the 3D
-## model if it matches one of the bones named in @var{bones}.
-## Valid options are:
+## model if it matches one of the bones named in @var{bones}, unless the
+## @qcode{'Force'} option is also selected, in which case the user must specify
+## a single bone such as in @code{@{'Force', 'Humerus'@}}.  Valid options are:
 ##
 ## @enumerate
-## @item @qcode{"Humerus"}
-## @item @qcode{"Ulna"}
-## @item @qcode{"Femur"}
-## @item @qcode{"Tibia"}
-## @item @qcode{"All"}
+## @item @qcode{'Humerus'}
+## @item @qcode{'Ulna'}
+## @item @qcode{'Femur'}
+## @item @qcode{'Tibia'}
+## @item @qcode{'All'}
+## @item @qcode{'Force'}
 ## @end enumerate
 ##
-## If the user want to define the initial alignment points, this can be done
+## Note: When @qcode{'Force'} is included, initial alignment points are also
+## required and it is the user's responsibility to ensure the appropriate bone
+## is being analyzed.  This option is provided so that damaged or heaviliy
+## deformed bones, which may turn out as undefined, can be analyzed.
+##
+## If the user wants to define the initial alignment points, this can be done
 ## with a side-car Meshlab PickedPoints file with the same base filename and in
 ## same directory as the 3D model.  In such case, @code{longbone_Geometry} skips
 ## the automatic initial point registration and uses the first two points in the
@@ -66,7 +73,7 @@
 ## @end enumerate
 ##
 ## Note: The function automatically optimizes the local extremal points of the
-## mediolateral axis based on the initial points and subsequently use the
+## mediolateral axis based on the initial points and subsequently uses the
 ## optimized coronal plane orientation for computing the second moments of area.
 ## However, the initial alignment point for ulna is not optimized.  The
 ## optimized alignment points are appended in the existing MPP file or saved in
@@ -76,7 +83,7 @@
 ## stores all geometric properties in CSV files as described in the following
 ## section.  Each OBJ file must explicitly contain a single 3D bone model.
 ##
-## Assuming a 3D model named @qcode{"bone_ID.obj"}, the following files are
+## Assuming a 3D model named @qcode{'bone_ID.obj'}, the following files are
 ## generated:
 ##
 ## @multitable @columnfractions .33 .02 .65
@@ -118,31 +125,73 @@
 ## contains the relevant ratios at columns (1, [1,4,7,10,13]).
 ## @end multitable
 ##
-## @qcode{[@var{GEOM}, @var{SMoA}, @var{bone}] = longbone_Geometry (@dots{})}
-## may also return up to three output arguments.  @var{GEOM} and @var{SMoA} are
-## @math{5x1} structure arrays containing the cross-sectrional geometric
-## properties and the second moments of area, respectively.  Each element of the
-## structure arrays corresponds to 20%, 35%, 50%, 65%, and 80% cross sections.
-## For more information about the contents of the returned structure arrays, see
-## @code{simple_polygon3D}.  When @code{longbone_Geometry} is called with output
-## arguments, then no CSV files are generated.
+## @qcode{[@var{GEOM}, @var{SMoA}, @var{bone}, @var{EXTRA}, @var{data}] =
+## longbone_Geometry (@dots{})} may also return up to five output arguments.
+## @var{GEOM} and @var{SMoA} are @math{5x1} structure arrays containing the
+## cross-sectrional geometric properties and the second moments of area,
+## respectively.  Each element of the structure arrays corresponds to 20%, 35%,
+## 50%, 65%, and 80% cross sections.  For more information about the contents of
+## the returned structure arrays, see @code{simple_polygon3D}.  @var{bone} is a
+## character vector containing the name of the bone as inferred by the
+## @code{longbone_Registration} function.  If a 3D model is not recognized, then
+## @var{bone} is returned as @qcode{'undefined'}, unless the @qcode{'Force'} has
+## been opted by the user.
+##
+## @var{EXTRA} is an additional scalar structure with the following fields:
+##
+## @enumerate
+## @item @qcode{maxDistance}
+## @item @qcode{maxd_V1}
+## @item @qcode{maxd_V2}
+## @item @qcode{MLA_opt_point_A}
+## @item @qcode{MLA_opt_point_B}
+## @item @qcode{diaphyseal_bending}
+## @item @qcode{angle_20_35}
+## @item @qcode{angle_35_50}
+## @item @qcode{angle_50_65}
+## @item @qcode{angle_65_80}
+## @item @qcode{ArPerIndex20}
+## @item @qcode{ArPerIndex35}
+## @item @qcode{ArPerIndex50}
+## @item @qcode{ArPerIndex65}
+## @item @qcode{ArPerIndex80}
+## @end enumerate
+##
+## @qcode{maxDistance} refers to the bone's maximum distance measurement, as
+## defined by the 3D points in @qcode{maxd_V1} and @qcode{maxd_V2}.  Optimized
+## mediolateral axis points are returned in the @qcode{MLA_opt_point_*} fields.
+## @qcode{diaphyseal_bending} contains the sum of dihedral angles (in degrees)
+## between each pair of consecutive cross-sectional planes, which are also
+## returned in the @qcode{angle_$$_$$} fields.  @qcode{ArPerIndex$$} the
+## Area-Perimeter Index for each consecutive cross section.
+##
+## @var{data} is a numeric row vector containing all the measurements computed
+## by the @code{longbone_Geometry} in tabular form to facilitate further
+## processing.  Use the @code{longbone_Measurements} function to obtain a cell
+## array of character vectors with the definitions of the measurements in
+## @var{data}.
+##
+## When @code{longbone_Geometry} is called with output arguments, then no CSV
+## files are generated.  When called with more than three output arguments, then
+## saving the optimized alignment points to an existing or new MPP file is also
+## skipped.
 ##
 ## @seealso{longbone_CustomGeometry, longbone_FragmentGeometry,
-## visualize_CrossSections, simple_polygon3D}
+## longbone_Measurements, longbone_Registration, simple_polygon3D}
 ## @end deftypefn
 
 function [varargout] = longbone_Geometry (varargin)
 
   ## Check input output
-  if (nargin < 1 || nargin > 3 || nargout > 3)
+  if (nargin < 1 || nargin > 3 || nargout > 5)
     print_usage;
   endif
 
   ## Only 1 arg: filename
   if (nargin == 1 && ischar (varargin{1}))
-    folder = "";
+    folder = '';
     filename = varargin{1};
-    bone = {"All"};
+    bone = {'All'};
   elseif (nargin == 1)
     error ("longbone_Geometry: FILENAME must be a string.");
   endif
@@ -151,9 +200,9 @@ function [varargout] = longbone_Geometry (varargin)
   if (nargin == 2 && ischar (varargin{1}) && ischar (varargin{2}))
     folder = varargin{1};
     filename = varargin{2};
-    bone = {"All"};
+    bone = {'All'};
   elseif (nargin == 2 && ischar (varargin{1}) && iscellstr (varargin{2}))
-    folder = "";
+    folder = '';
     filename = varargin{1};
     bone = varargin{2};
   elseif (nargin == 2)
@@ -165,9 +214,9 @@ function [varargout] = longbone_Geometry (varargin)
     endif
     if (ischar (varargin{1}) && ! (ischar (varargin{2}) ||
                                    iscellstr (varargin{2})))
-      error (strcat (["longbone_Geometry: second argument must be either"], ...
-                     [" a string for FILENAME or a cell array of strings"], ...
-                     [" for selected BONES."]));
+      error (strcat ("longbone_Geometry: second argument must be either", ...
+                     " a string for FILENAME or a cell array of strings", ...
+                     " for selected BONES."));
     endif
   endif
 
@@ -190,9 +239,29 @@ function [varargout] = longbone_Geometry (varargin)
   endif
 
   ## Check filename has a valid .obj extension
-  if (! (strcmpi (filename([end - 3:end]), ".obj")))
+  if (! (strcmpi (filename([end - 3:end]), '.obj')))
     error ("longbone_Geometry: 3D model must be in OBJ file format.");
   endif
+
+  ## Check bone contains valid options
+  valid_names = {'Humerus', 'Ulna', 'Femur', 'Tibia', 'All', 'Force'};
+  fcn =  @(x) any (strcmpi (x, valid_names));
+  if (! all (cellfun (fcn, bone)))
+    error ("longbone_Geometry: invalid bone selection.");
+  endif
+  if (any (strcmpi (bone, 'Force')))
+    do_force = true;
+    if (numel (bone) != 2 || any (strcmpi (bone, 'All')))
+      error (strcat ("longbone_Geometry: only one bone name can", ...
+                     " be defined when using the 'Force' option."));
+    endif
+    bone(strcmpi (bone, 'Force')) = [];
+  else
+    do_force = false;
+  endif
+
+  ## Prepare return list
+  varargout = cell (1, nargout);
 
   ## Load vertices and faces of triangular mesh from obj file
   [v,f] = readObj (fullfile (folder, filename));
@@ -212,42 +281,52 @@ function [varargout] = longbone_Geometry (varargin)
     MLA_points(:,1) = [];
     find_bone = true;
     register = false;
-  else
+  elseif (! do_force)
     [bonesel, MLA_points] = longbone_Registration (v, f);
     find_bone = false;
     register = true;
+  else
+    error (strcat ("longbone_Geometry: cannot use 'Force' option if", ...
+                   " a side-car Meshlab PP file is not be available."));
   endif
 
   ## Find bone if necessary
-  if (find_bone)
+  if (find_bone && ! do_force)
     bonesel = longbone_Registration (v, f);
   endif
 
   ## Check bone selection
-  if (any (strcmpi (bone, "All")))
-    bone = bonesel;
-  else
-    if (numel (bone) == 1 && ! strcmpi (bone, bonesel))
-      printf ("Model %s is not a %s\n", filename, bone{1});
-      return;
+  if (! do_force)
+    if (any (strcmpi (bone, "All")))
+      bone = bonesel;
+    else
+      if (numel (bone) == 1 && ! strcmpi (bone, bonesel))
+        printf ("Model %s is not a %s.\n", filename, bone{1});
+        varargout{3} = bonesel;
+        return;
+      endif
+      if (numel (bone) == 2 && ! (any (strcmpi (bone, bonesel))))
+        printf ("Model %s is neither a %s nor a %s.\n", ...
+               filename, bone{1}, bone{2});
+        varargout{3} = bonesel;
+        return;
+      endif
+      if (numel (bone) == 3 && ! (any (strcmpi (bone, bonesel))))
+        printf ("Model %s is not a %s, a %s or a %s.\n", ...
+                filename, bone{1}, bone{2}, bone{3});
+        varargout{3} = bonesel;
+        return;
+      endif
+      bone = bonesel;
     endif
-    if (numel (bone) == 2 && ! (any (strcmpi (bone, bonesel))))
-      printf ("Model %s is neither a %s nor a %s\n", ...
-             filename, bone{1}, bone{2});
-      return;
-    endif
-    if (numel (bone) == 3 && ! (any (strcmpi (bone, bonesel))))
-      printf ("Model %s is not a %s, a %s or a %s\n", ...
-              filename, bone{1}, bone{2}, bone{3});
-      return;
-    endif
-    bone = bonesel;
   endif
 
   ## Check valid bone selection
-  if (! (strcmpi (bone, "Humerus") || strcmpi (bone, "Ulna") ||
-         strcmpi (bone, "Femur") || strcmpi (bone, "Tibia")))
-    printf ("Bone should be either a Humerus, an Ulna, a Femur, or a Tibia\n");
+  if (! (strcmpi (bone, 'Humerus') || strcmpi (bone, 'Ulna') ||
+         strcmpi (bone, 'Femur') || strcmpi (bone, 'Tibia')))
+    printf ("Bone should be either a Humerus, an Ulna, a Femur, or a Tibia.\n");
+    printf ("3D model in %s is undefined.\n", filename);
+    varargout{3} = bonesel;
     return;
   endif
 
@@ -278,41 +357,41 @@ function [varargout] = longbone_Geometry (varargin)
   plane_5 = meshSection (v, f, point_5, normal);
 
   ## Calculate centroid and area for each cross section
-  CS_Geometry(1) = simple_polygon3D (plane_1, normal);
-  CS_Geometry(2) = simple_polygon3D (plane_2, normal);
-  CS_Geometry(3) = simple_polygon3D (plane_3, normal);
-  CS_Geometry(4) = simple_polygon3D (plane_4, normal);
-  CS_Geometry(5) = simple_polygon3D (plane_5, normal);
+  GEOM(1) = simple_polygon3D (plane_1, normal);
+  GEOM(2) = simple_polygon3D (plane_2, normal);
+  GEOM(3) = simple_polygon3D (plane_3, normal);
+  GEOM(4) = simple_polygon3D (plane_4, normal);
+  GEOM(5) = simple_polygon3D (plane_5, normal);
 
   ## Store the centroids of the initial cross-sectional areas
-  Centroid_1 = CS_Geometry(1).Centroid;
-  Centroid_2 = CS_Geometry(2).Centroid;
-  Centroid_3 = CS_Geometry(3).Centroid;
-  Centroid_4 = CS_Geometry(4).Centroid;
-  Centroid_5 = CS_Geometry(5).Centroid;
+  Centroid_1 = GEOM(1).Centroid;
+  Centroid_2 = GEOM(2).Centroid;
+  Centroid_3 = GEOM(3).Centroid;
+  Centroid_4 = GEOM(4).Centroid;
+  Centroid_5 = GEOM(5).Centroid;
 
   ## Check the centroids' locations from proximal (20%) to distal (80%) and
   ## if required reverse their order to comply with this standard.
   proximal = distancePoints (Centroid_1, MLA_points(1,:));
   distal = distancePoints (Centroid_5, MLA_points(1,:));
-  if ((strcmpi (bone, "Humerus") || strcmpi (bone, "Femur")) &&
+  if ((strcmpi (bone, 'Humerus') || strcmpi (bone, 'Femur')) &&
       (proximal < distal))
-    Centroid_1 = CS_Geometry(5).Centroid;
-    Centroid_2 = CS_Geometry(4).Centroid;
-    Centroid_3 = CS_Geometry(3).Centroid;
-    Centroid_4 = CS_Geometry(2).Centroid;
-    Centroid_5 = CS_Geometry(1).Centroid;
-  elseif ((strcmpi (bone, "Tibia") || strcmpi (bone, "Ulna")) &&
+    Centroid_1 = GEOM(5).Centroid;
+    Centroid_2 = GEOM(4).Centroid;
+    Centroid_3 = GEOM(3).Centroid;
+    Centroid_4 = GEOM(2).Centroid;
+    Centroid_5 = GEOM(1).Centroid;
+  elseif ((strcmpi (bone, 'Tibia') || strcmpi (bone, 'Ulna')) &&
           (proximal > distal))
-    Centroid_1 = CS_Geometry(5).Centroid;
-    Centroid_2 = CS_Geometry(4).Centroid;
-    Centroid_3 = CS_Geometry(3).Centroid;
-    Centroid_4 = CS_Geometry(2).Centroid;
-    Centroid_5 = CS_Geometry(1).Centroid;
+    Centroid_1 = GEOM(5).Centroid;
+    Centroid_2 = GEOM(4).Centroid;
+    Centroid_3 = GEOM(3).Centroid;
+    Centroid_4 = GEOM(2).Centroid;
+    Centroid_5 = GEOM(1).Centroid;
   endif
 
   ## Calculate normals of anatomical planes
-  if (! strcmpi (bone, "Ulna"))         # for humerus, femur, and tibia
+  if (! strcmpi (bone, 'Ulna'))         # for humerus, femur, and tibia
     ## Calculate the mediolateral axis vector
     MLA_vector = MLA_points(1,:) - MLA_points(2,:);
     ## Calculate longitudinal axis vector
@@ -347,7 +426,7 @@ function [varargout] = longbone_Geometry (varargin)
   ## the normal so that it points to the front
 
   ## HUMERUS
-  if (strcmpi (bone, "Humerus"))
+  if (strcmpi (bone, 'Humerus'))
     MLP1_C5 = Centroid_5 - MLA_points(1,:);
     if (sum (MLP1_C5 .* CorPlane_normal) > 0)   ## MLA_points should be in front
       CorPlane_normal = CorPlane_normal * -1;
@@ -402,7 +481,7 @@ function [varargout] = longbone_Geometry (varargin)
     endfor
 
   ## FEMUR
-  elseif (strcmpi (bone, "Femur"))
+  elseif (strcmpi (bone, 'Femur'))
     MLP1_C5 = Centroid_5 - MLA_points(1,:);
     if (sum (MLP1_C5 .* CorPlane_normal) < 0)     ## MLA_points should be behind
       CorPlane_normal = CorPlane_normal * -1;
@@ -457,7 +536,7 @@ function [varargout] = longbone_Geometry (varargin)
     endfor
 
   ## TIBIA
-  elseif (strcmpi (bone, "Tibia"))
+  elseif (strcmpi (bone, 'Tibia'))
     MLP1_C1 = Centroid_1 - MLA_points(1,:);
     if (sum (MLP1_C1 .* CorPlane_normal) < 0)     ## MLA_points should be behind
       CorPlane_normal = CorPlane_normal * -1;
@@ -513,7 +592,7 @@ function [varargout] = longbone_Geometry (varargin)
   endif
 
   ## Print information about alignment points
-  if (! strcmpi (bone, "Ulna"))         # for humerus, femur, and tibia
+  if (! strcmpi (bone, 'Ulna'))         # for humerus, femur, and tibia
     if (! register)
       ## Print initial user defined MLA_points
       printf ("\nUser defined MLA points A and B are:\n");
@@ -553,7 +632,9 @@ function [varargout] = longbone_Geometry (varargin)
 
   ## Save user defined and optimized MLA point back to the Meshlab Point file
   MLP = [MLA_points([1:2],:); MLA_opt_point_A; MLA_opt_point_B];
-  write_MeshlabPoints (fullfile (folder, filenamePP), filename, MLP);
+  if (nargout < 4)
+    write_MeshlabPoints (fullfile (folder, filenamePP), filename, MLP);
+  endif
 
   ## Calculate new normals for each final cross section at 20, 35, 50, 65, 80%
   ## All normals should be pointing upwards, i.e. from distal towards proximal
@@ -571,15 +652,15 @@ function [varargout] = longbone_Geometry (varargin)
   section_5 = meshSection (v, f, Centroid_5, n5);
 
   ## Recalculate CSG properties for each cross section
-  [CS_Geometry(1), SMoA(1), polyline(1)] = simple_polygon3D (section_1, n1, ...
+  [GEOM(1), SMoA(1), polyline(1)] = simple_polygon3D (section_1, n1, ...
                                                              CorPlane_normal);
-  [CS_Geometry(2), SMoA(2), polyline(2)] = simple_polygon3D (section_2, n2, ...
+  [GEOM(2), SMoA(2), polyline(2)] = simple_polygon3D (section_2, n2, ...
                                                              CorPlane_normal);
-  [CS_Geometry(3), SMoA(3), polyline(3)] = simple_polygon3D (section_3, n3, ...
+  [GEOM(3), SMoA(3), polyline(3)] = simple_polygon3D (section_3, n3, ...
                                                              CorPlane_normal);
-  [CS_Geometry(4), SMoA(4), polyline(4)] = simple_polygon3D (section_4, n4, ...
+  [GEOM(4), SMoA(4), polyline(4)] = simple_polygon3D (section_4, n4, ...
                                                              CorPlane_normal);
-  [CS_Geometry(5), SMoA(5), polyline(5)] = simple_polygon3D (section_5, n5, ...
+  [GEOM(5), SMoA(5), polyline(5)] = simple_polygon3D (section_5, n5, ...
                                                              CorPlane_normal);
 
   ## Arrange to matrices for csv files
@@ -590,14 +671,11 @@ function [varargout] = longbone_Geometry (varargin)
     printf (strcat (["\nCross section at %d%% has an area of %f mm^2,"], ...
                     [" perimeter of %f mm \n and centroid coordinates"], ...
                     [" are: x:%f y:%f z:%f\n"]), ...
-            cs(i), ...
-            CS_Geometry(i).Area, ...
-            CS_Geometry(i).Perimeter, ...
-            CS_Geometry(i).Centroid);
+            cs(i), GEOM(i).Area, GEOM(i).Perimeter, GEOM(i).Centroid);
 
     ## Arrange to matrices for csv files
-    geometry(i,:) = [cs(i), CS_Geometry(i).Area, CS_Geometry(i).Perimeter, ...
-                     CS_Geometry(i).Centroid, ns(i,:), CorPlane_normal];
+    geometry(i,:) = [cs(i), GEOM(i).Area, GEOM(i).Perimeter, ...
+                     GEOM(i).Centroid, ns(i,:), CorPlane_normal];
     inertia(i,:) = [cs(i), SMoA(i).Ix, SMoA(i).Iy, SMoA(i).Ixy, ...
                     SMoA(i).Imin, SMoA(i).Imax, SMoA(i).theta];
     polygon2D(1,i*2-1) = cs(i) / 100;
@@ -608,31 +686,92 @@ function [varargout] = longbone_Geometry (varargin)
                                                             polyline(i).poly3D;
   endfor
 
+  ## Compute dihedral angles and their total sum and append them into
+  ## a structure along with maxDistance, maxd_V1, maxd_V2, and optimized
+  ## points MLA_opt_point_A and MLA_opt_point_B
+  if (nargout > 3)
+    extra.maxDistance = maxDistance;
+    extra.maxd_V1 = maxd_V1;
+    extra.maxd_V2 = maxd_V2;
+    extra.MLA_opt_point_A = MLA_opt_point_A;
+    extra.MLA_opt_point_B = MLA_opt_point_B;
+    extra.diaphyseal_bending = 0;
+    extra.angle_20_35 = atan2d (norm (cross (n1, n2)), dot (n1, n2));
+    extra.diaphyseal_bending += extra.angle_20_35;
+    extra.angle_35_50 = atan2d (norm (cross (n2, n3)), dot (n2, n3));
+    extra.diaphyseal_bending += extra.angle_35_50;
+    extra.angle_50_65 = atan2d (norm (cross (n3, n4)), dot (n3, n4));
+    extra.diaphyseal_bending += extra.angle_50_65;
+    extra.angle_65_80 = atan2d (norm (cross (n4, n5)), dot (n4, n5));
+    extra.diaphyseal_bending += extra.angle_65_80;
+    extra.ArPerIndex20 = ((GEOM(1).Area) * 4 * pi) ./ ((GEOM(1).Perimeter) .^ 2);
+    extra.ArPerIndex35 = ((GEOM(2).Area) * 4 * pi) ./ ((GEOM(2).Perimeter) .^ 2);
+    extra.ArPerIndex50 = ((GEOM(3).Area) * 4 * pi) ./ ((GEOM(3).Perimeter) .^ 2);
+    extra.ArPerIndex65 = ((GEOM(4).Area) * 4 * pi) ./ ((GEOM(4).Perimeter) .^ 2);
+    extra.ArPerIndex80 = ((GEOM(5).Area) * 4 * pi) ./ ((GEOM(5).Perimeter) .^ 2);
+  endif
+
+  ## Aggregate measurements in numeric arrays
+  if (nargout > 4)
+    data = [maxDistance, ...
+            GEOM(1).Area, GEOM(1).Perimeter, extra.ArPerIndex20, SMoA(1).Ix, ...
+            SMoA(1).Iy, SMoA(1).Ixy, SMoA(1).Ix/SMoA(1).Iy, SMoA(1).Imin, ...
+            SMoA(1).Imax, SMoA(1).Imax/SMoA(1).Imin, SMoA(1).theta, ...
+            extra.angle_20_35, ...
+            GEOM(2).Area, GEOM(2).Perimeter, extra.ArPerIndex35, SMoA(2).Ix, ...
+            SMoA(2).Iy, SMoA(2).Ixy, SMoA(2).Ix/SMoA(2).Iy, SMoA(2).Imin, ...
+            SMoA(2).Imax, SMoA(2).Imax/SMoA(2).Imin, SMoA(2).theta, ...
+            extra.angle_35_50, ...
+            GEOM(3).Area, GEOM(3).Perimeter, extra.ArPerIndex50, SMoA(3).Ix, ...
+            SMoA(3).Iy, SMoA(3).Ixy, SMoA(3).Ix/SMoA(3).Iy, SMoA(3).Imin, ...
+            SMoA(3).Imax, SMoA(3).Imax/SMoA(3).Imin, SMoA(3).theta, ...
+            extra.angle_50_65, ...
+            GEOM(4).Area, GEOM(4).Perimeter, extra.ArPerIndex65, SMoA(4).Ix, ...
+            SMoA(4).Iy, SMoA(4).Ixy, SMoA(4).Ix/SMoA(4).Iy, SMoA(4).Imin, ...
+            SMoA(4).Imax, SMoA(4).Imax/SMoA(4).Imin, SMoA(4).theta, ...
+            extra.angle_65_80, ...
+            GEOM(5).Area, GEOM(5).Perimeter, extra.ArPerIndex80, SMoA(5).Ix, ...
+            SMoA(5).Iy, SMoA(5).Ixy, SMoA(5).Ix/SMoA(5).Iy, SMoA(5).Imin, ...
+            SMoA(5).Imax, SMoA(5).Imax/SMoA(5).Imin, SMoA(5).theta, ...
+            extra.diaphyseal_bending];
+  endif
+
   if (nargout == 0)
     ## Save to files
-    starting = "Dgeometry-";
+    starting = 'Dgeometry-';
     name = filename([1:length(filename) - 4]);
     endfile = ".csv";
     filename = strcat (starting, name, endfile);
     csvwrite (filename, geometry);
-    starting = "Dinertia-";
+    starting = 'Dinertia-';
     filename = strcat (starting, name, endfile);
     csvwrite (filename, inertia);
-    starting = "Dpolyline2D-";
+    starting = 'Dpolyline2D-';
     filename = strcat (starting, name, endfile);
     csvwrite (filename, polygon2D);
-    starting = "Dpolyline3D-";
+    starting = 'Dpolyline3D-';
     filename = strcat (starting, name, endfile);
     csvwrite (filename, polygon3D);
   elseif (nargout == 1)
-    varargout{1} = CS_Geometry;
+    varargout{1} = GEOM;
   elseif (nargout == 2)
-    varargout{1} = CS_Geometry;
+    varargout{1} = GEOM;
     varargout{2} = SMoA;
-  else
-    varargout{1} = CS_Geometry;
+  elseif (nargout == 3)
+    varargout{1} = GEOM;
     varargout{2} = SMoA;
     varargout{3} = bone;
+  elseif (nargout == 4)
+    varargout{1} = GEOM;
+    varargout{2} = SMoA;
+    varargout{3} = bone;
+    varargout{4} = extra;
+  elseif (nargout == 5)
+    varargout{1} = GEOM;
+    varargout{2} = SMoA;
+    varargout{3} = bone;
+    varargout{4} = extra;
+    varargout{5} = data;
   endif
 
 endfunction
