@@ -28,8 +28,8 @@
 ## in @var{filename} provided that it conforms to the Wavefront OBJ file format
 ## and it is a pure tringular mesh.  The function will automatically determine
 ## the type of long bone in @var{filename} and register the required initial
-## alignment points according to the bone type. The 3D model is assumed to be in
-## @math{mm} units and present in the working directory.
+## alignment points according to the bone type.  The 3D model is assumed to be
+## in @math{mm} units and present in the working directory.
 ##
 ## @var{folder}, which must be a char string, defines the relative or absolute
 ## path to the directory containing the 3D model in @var{filename}.  When
