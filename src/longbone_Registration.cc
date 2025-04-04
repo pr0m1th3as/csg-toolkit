@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2021-2024 Andreas Bertsatos <abertsatos@biol.uoa.gr>
+Copyright (C) 2021-2025 Andreas Bertsatos <abertsatos@biol.uoa.gr>
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -552,6 +552,10 @@ vector<Vector3> sliceMesh(vector<Mesh> Mesh3D, Vector3 point, Vector3 normal)
 			}
 		}
 	}
+  if (iPoints.size() < 3)
+  {
+    return iPoints;
+  }
   // remove duplicate intersected points
   vector<Vector3> uPoints;
 	for(int i = 0; i < iPoints.size() - 1; ++i)
@@ -570,7 +574,7 @@ vector<Vector3> sliceMesh(vector<Mesh> Mesh3D, Vector3 point, Vector3 normal)
 	}
 	bool duplicate_found = false;
 	int i = 0;
-	while(!duplicate_found)
+	while(!duplicate_found && i < iPoints.size())
 	{
 		for(int j = i + 1; j < iPoints.size(); ++j)
 		{
@@ -676,9 +680,11 @@ vector<Contour> calculateMooreNeighbor(vector<vector<Raster>> rasterMatrix)
   Pixel b;                            //backtrack of current boundary pixel
   // find an active pixel by starting the search from the top middle of image
   int mid = rasterMatrix[0].size() / 2;
-  Pixel p = {0, mid};
+  Pixel p = {-1, mid};
   bool pixel_found = false;
-  while(!pixel_found)
+  // threshold to break the while loop (just in case of degenerate 3d mesh)
+  int max_rows = rasterMatrix.size();
+  while(! pixel_found && p.row < max_rows)
   {
     p.row++;
     if(rasterMatrix[p.row][p.col].pixel)  //check for active pixels
@@ -687,6 +693,10 @@ vector<Contour> calculateMooreNeighbor(vector<vector<Raster>> rasterMatrix)
       b.row = p.row;
       pixel_found = true;
     }
+  }
+  if (p.row == max_rows)
+  {
+    return boundaryPixels;
   }
   vector<int> pointers = rasterMatrix[p.row][p.col].pointer;
   Contour valid_pixel = {p.row, p.col, direction, pointers};
@@ -697,12 +707,15 @@ vector<Contour> calculateMooreNeighbor(vector<vector<Raster>> rasterMatrix)
   int max_it = rasterMatrix.size() * rasterMatrix[0].size();
   while(contour_open && it < max_it)
   {
-    //inverse direction for the next search
+    // inverse direction for the next search
     int dir = boundaryPixels[it].direction + 4;
     // start from initial searching direction based on the previous valid pixel
     Pixel c;                          //current pixel under consideration
     bool dir_found = false;
-    while(!dir_found)
+    // threshold to break the while loop (just in case of degenerate 3d mesh)
+    int dir_it = 0;
+    int max_dir_it = 8;
+    while(! dir_found && dir_it < max_dir_it)
     {
       if(rasterMatrix[p.row + Mp.row[(dir+1)%8]][p.col + Mp.col[(dir+1)%8]].pixel)
       //next pixel found!
@@ -722,6 +735,11 @@ vector<Contour> calculateMooreNeighbor(vector<vector<Raster>> rasterMatrix)
         boundaryPixels.push_back(valid_pixel);
       }
       dir++;
+      dir_it++;
+    }
+    if (dir_it == max_dir_it)
+    {
+      it = max_it;
     }
     // check if the contour has been closed. This test is initialized after
     // the second loop. in order to compare that the closing pixel with the
@@ -761,6 +779,11 @@ vector<Contour> calculateMooreNeighbor(vector<vector<Raster>> rasterMatrix)
       }
     }
     it++;
+  }
+  if (it == max_it)
+  {
+    vector<Contour> nullBoundaryPixels;
+    return nullBoundaryPixels;
   }
   return boundaryPixels;
 }
@@ -1281,12 +1304,12 @@ bone's name in @var{bone} and if a second argument is present it returms the \
   // check number of input and output arguments
   if(args.length() != 2)
   {
-    cout << "Invalid number of input arguments.\n";
+    cout << "longbone_Registration: invalid number of input arguments.\n";
     return octave_value_list();
   }
   if(nargout < 1 && nargout > 2)
   {
-    cout << "Invalid number of output arguments.\n";
+    cout << "longbone_Registration: invalid number of output arguments.\n";
     return octave_value_list();
   }
   // store vertices and faces in Mesh data structure
@@ -1339,6 +1362,19 @@ bone's name in @var{bone} and if a second argument is present it returms the \
   vector<Vector3> cs_plane_1a = sliceMesh(Mesh3D, section_P1a, maxDn);
   vector<Vector3> cs_plane_2 = sliceMesh(Mesh3D, section_P2, maxDn);
   vector<Vector3> cs_plane_2a = sliceMesh(Mesh3D, section_P2a, maxDn);
+  if (cs_plane_1.size() < 3 || cs_plane_1a.size() < 3 ||
+      cs_plane_2.size() < 3 || cs_plane_2a.size() < 3)
+  {
+    cout << "Unable to compute cross sections.";
+    cout << " Check 3D mesh for remote isolated artifacts.\n";
+    octave_value_list retval;
+    retval(0) = "Undetermined";
+    if (nargout == 2)
+    {
+      retval(1) = nan;
+    }
+    return octave_value(retval);
+  }
   // calculate each cross-section's centroid
   Vector3 cs_centroid_1 = centroidPolygon3D(cs_plane_1, maxDn);
   Vector3 cs_centroid_1a = centroidPolygon3D(cs_plane_1a, maxDn);
@@ -1408,7 +1444,7 @@ bone's name in @var{bone} and if a second argument is present it returms the \
   // rotate model so that 80% cross-sectional normal aligns with x axis
   // note: the nearest epiphysis lies on the positive side of x axis
   Cloud3D_2 = rotatePoints3D(Cloud3D_2, rotAxis2, theta_2_x);
-  // project the epiphysis near the 20% centroid onto the Y-Z plane
+  // project the epiphysis near the 80% centroid onto the Y-Z plane
   // keep points only on the positive side of x axis to be projected
   vector<Vector3> epCloud_2;
   for(int i = 0; i < Cloud3D_2.size(); i++)
@@ -1428,12 +1464,34 @@ bone's name in @var{bone} and if a second argument is present it returms the \
   // process 2D projections to get the respective polylines and normalized EFDs
   vector<vector<Raster>> rasterMatrix1 = rasterizeCloud2D(ZYproj_1);
   vector<Contour> boundaryPixels1 = calculateMooreNeighbor(rasterMatrix1);
+  // just in case something went wrong (degenerate 3d mesh)
+  if (boundaryPixels1.size() == 0)
+  {
+    octave_value_list retval;
+    retval(0) = "Undetermined";
+    if (nargout == 2)
+    {
+      retval(1) = nan;
+    }
+    return octave_value(retval);
+  }
   vector<Vector2> polyline2D_1 = extract2Dpolyline(boundaryPixels1, ZYproj_1);
   vector<FCCode> FreemanCCode1 = extractFreemanChainCode(boundaryPixels1);
   vector<EFDcoef> EFDs_1 = calculaleEFD(FreemanCCode1);
   vector<EFDcoef> nEFD_1 = normalizeEFD(EFDs_1);
   vector<vector<Raster>> rasterMatrix2 = rasterizeCloud2D(ZYproj_2);
   vector<Contour> boundaryPixels2 = calculateMooreNeighbor(rasterMatrix2);
+  // just in case something went wrong (degenerate 3d mesh)
+  if (boundaryPixels2.size() == 0)
+  {
+    octave_value_list retval;
+    retval(0) = "Undetermined";
+    if (nargout == 2)
+    {
+      retval(1) = nan;
+    }
+    return octave_value(retval);
+  }
   vector<Vector2> polyline2D_2 = extract2Dpolyline(boundaryPixels2, ZYproj_2);
   vector<FCCode> FreemanCCode2 = extractFreemanChainCode(boundaryPixels2);
   vector<EFDcoef> EFDs_2 = calculaleEFD(FreemanCCode2);
@@ -1443,6 +1501,13 @@ bone's name in @var{bone} and if a second argument is present it returms the \
   Polygon GEOM_2 = simplePolygon2D(polyline2D_2);
   // classify long bone and proximal distal epiphysis
   classifyBone(nEFD_1, nEFD_2, GEOM_1, GEOM_2);
+  // if only one output argument is requested, no need to do further workspace
+  if (nargout == 1)
+  {
+    octave_value_list retval;
+    retval(0) = global::bone;
+    return octave_value(retval);
+  }
   // if global::epiphysis == 1 then distal Femur, proximal Tibia, distal
   // Humerus, and proximal Ulna epiphyses are stored in designated _1 variables
   //
