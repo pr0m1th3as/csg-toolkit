@@ -31,15 +31,16 @@
 ## alignment points according to the bone type.  The 3D model is assumed to be
 ## in @math{mm} units and present in the working directory.
 ##
-## @var{folder}, which must be a char string, defines the relative or absolute
-## path to the directory containing the 3D model in @var{filename}.  When
-## omitted, the current working directory is assumed.
+## @var{folder}, which must be a character vector, defines the relative or
+## absolute path to the directory containing the 3D model in @var{filename}.
+## When omitted, the current working directory is assumed.
 ##
-## @var{bones} must be cell array of strings specifying one or more long bones
-## that should be analyzed.  @code{longbone_Geometry} will only analyze the 3D
-## model if it matches one of the bones named in @var{bones}, unless the
-## @qcode{'Force'} option is also selected, in which case the user must specify
-## a single bone such as in @code{@{'Force', 'Humerus'@}}.  Valid options are:
+## @var{bones} must be cell array of character vectors specifying one or more
+## long bones that should be analyzed.  @code{longbone_Geometry} will only
+## analyze the 3D model if it matches one of the bones named in @var{bones},
+## unless the @qcode{'Force'} option is also selected, in which case the user
+## must specify a single bone such as in @code{@{'Force', 'Humerus'@}}.  Valid
+## options are:
 ##
 ## @enumerate
 ## @item @qcode{'Humerus'}
