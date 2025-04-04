@@ -8,6 +8,7 @@ CSG
   longbone_CustomGeometry
   longbone_FragmentGeometry
   longbone_Geometry
+  longbone_Measurements
   longbone_Registration
   simple_polygon3D
 mesh3D
