@@ -22,7 +22,7 @@ classdef LongBone
     TextureCoords = [];
     TextureFaces = [];
     Normals = [];
-    FaceNormals = []
+    VNFaces = [];
     MaterialLib = [];
     TextureImage = [];
     obj_filename = "";
@@ -53,7 +53,7 @@ classdef LongBone
         this.Normals = varargin{6};
       endif
       if (nargin > 6)
-        this.FaceNormals = varargin{7};
+        this.VNFaces = varargin{7};
       endif
       if (nargin > 7)
         this.MaterialLib = varargin{8};
@@ -176,14 +176,14 @@ classdef LongBone
         writeObj (this.Vertices, this.Faces, filename, info, over);
       elseif (normals && ! texture)
         writeObj (this.Vertices, this.Faces, ...
-                  this.Normals, this.FaceNormals, filename, info, over);
+                  this.Normals, this.VNFaces, filename, info, over);
       elseif (! normals && texture)
         writeObj (this.Vertices, this.Faces, ...
                   this.TextureCoords, this.TextureFaces, filename, info, over);
       else
         writeObj (this.Vertices, this.Faces, ...
                   this.TextureCoords, this.TextureFaces, ...
-                  this.Normals, this.FaceNormals, filename, info, over);
+                  this.Normals, this.VNFaces, filename, info, over);
       endif
       ## Save material library file and texture image
       if (texture)

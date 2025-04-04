@@ -121,8 +121,8 @@
 ## is not available in @var{CS_Geometry} and the fields @qcode{Ixy}, @qcode{Iy},
 ## @qcode{theta} are missing from @var{SMoA}.
 ##
-## @seealso{inspect_CSG, longbone_Analysis, longbone_CustomGeometry,
-## longbone_FragmentGeometry}
+## @seealso{inspect_CSG, longbone_Analysis, longbone_Geometry,
+## longbone_CustomGeometry, longbone_FragmentGeometry}
 ## @end deftypefn
 
 function [varargout] = visualize_CrossSections (bone_id, varargin)
