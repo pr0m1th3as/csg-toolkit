@@ -27,4 +27,4 @@ Plot
   inspect_CSG
   visualize_CrossSections
 Utilities
-  estimate_sex
+  longbone_Sex
