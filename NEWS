@@ -1,7 +1,7 @@
 Summary of important user-visible changes for releases of the csg-toolkit package
-===============================================================================
-CSG-Toolkit-1.2.1  Release Date: 2021-04-18  Release Manager: Andreas Bertsatos
-===============================================================================
+================================================================================
+CSG-Toolkit-1.2.1     Release Date: 2021-04-18     Maintainer: Andreas Bertsatos
+================================================================================
 
 ** First official resease.
 
@@ -10,9 +10,9 @@ A GNU Octave package for analyzing diaphyseal cross sectional geometry.
 The present package is based on the long-bone-diaphyseal-CSG-Toolkit and has
 been created to simplify its installation and usage from within GNU Octave.
 
-===============================================================================
-CSG-Toolkit-1.2.2  Release Date: 2022-06-05  Release Manager: Andreas Bertsatos
-===============================================================================
+================================================================================
+CSG-Toolkit-1.2.2     Release Date: 2022-06-05     Maintainer: Andreas Bertsatos
+================================================================================
 
 * Removed dependency of matgeom and statistics packages.
 * longbone_maxDistance has been ported to C++ to speed up processing time.
@@ -29,16 +29,16 @@ capabilities of the 'longbone_CustomGeometry' function.
 Type 'help visualize_CrossSections' for more info.
 * Updated help files to texinfo format.
 
-===============================================================================
-CSG-Toolkit-1.2.3  Release Date: 2022-06-06  Release Manager: Andreas Bertsatos
-===============================================================================
+================================================================================
+CSG-Toolkit-1.2.3     Release Date: 2022-06-06     Maintainer: Andreas Bertsatos
+================================================================================
 
 * Moved the package sources to a new separate repository from the original
   'long-bone-diaphyseal-CSG-Toolkit', which is maintained for reference only.
 
-===============================================================================
-CSG-Toolkit-1.3.0  Release Date: 2023-04-02  Release Manager: Andreas Bertsatos
-===============================================================================
+================================================================================
+CSG-Toolkit-1.3.0     Release Date: 2023-04-02     Maintainer: Andreas Bertsatos
+================================================================================
 
 * Restructured scripts into functions: inspect_CSG, longbone_Analysis.
 * Added new function for fragments: longbone_FragmentGeometry
@@ -47,24 +47,24 @@ properties to CSV files.
 * longbone_Analysis can handle batch processing for all Geometry functions.
 * Added GitHub Pages documentation.
 
-===============================================================================
-CSG-Toolkit-1.3.1  Release Date: 2024-01-30  Release Manager: Andreas Bertsatos
-===============================================================================
+================================================================================
+CSG-Toolkit-1.3.1     Release Date: 2024-01-30     Maintainer: Andreas Bertsatos
+================================================================================
 
 * Bug Fix in longbone_Scaling.
 
-===============================================================================
-CSG-Toolkit-1.3.2  Release Date: 2024-03-21  Release Manager: Andreas Bertsatos
-===============================================================================
+================================================================================
+CSG-Toolkit-1.3.2     Release Date: 2024-03-21     Maintainer: Andreas Bertsatos
+================================================================================
 
 * estimate_sex: new GUI function for estimating sex.
 * Updated 'longbone_Geometry' to return GEOM and SMoA structures as well as
   the type of bone automatically identified by the 'longbone_Registration'
   function so it can be utilized by newly introduced 'estimate_sex' function.
 
-===============================================================================
-CSG-Toolkit-1.4.0  Release Date: 2025-04-13  Release Manager: Andreas Bertsatos
-===============================================================================
+================================================================================
+CSG-Toolkit-1.4.0     Release Date: 2025-04-13     Maintainer: Andreas Bertsatos
+================================================================================
 
 * estimate_sex: deprecated function.
 * LongBone: new classdef as to be utilized as a container for long bone 3D mesh.
