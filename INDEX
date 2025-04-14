@@ -1,6 +1,6 @@
 csg-toolkit >> CSG Toolkit
-Class
-  LongBone
+Biological Profiling
+  longbone_Sex
 CSG
   longbone_Analysis
   longbone_AnatomicalNormals
@@ -27,4 +27,5 @@ Plot
   inspect_CSG
   visualize_CrossSections
 Utilities
-  longbone_Sex
+  LongBone
+
