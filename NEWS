@@ -67,6 +67,10 @@ CSG-Toolkit-1.4.0     Release Date: 2025-04-13     Maintainer: Andreas Bertsatos
 ================================================================================
 
 * estimate_sex: deprecated function.
+* longbone_AnatomicalNormals: new function for computing anatomical normals.
+* longbone_AnatomicalPosition: new function to reorient a longbone mesh into its
+  anatomical position.
+* meshRotation: new function for manipulating mesh.
 * LongBone: new classdef as to be utilized as a container for long bone 3D mesh.
 * longbone_Measurements: new function for getting measurement names in the order
   they appear in the new DATA output argument of 'longbone_Geometry' function.
