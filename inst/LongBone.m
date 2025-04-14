@@ -14,6 +14,12 @@
 ## this program; if not, see <http://www.gnu.org/licenses/>.
 
 classdef LongBone
+  ## -*- texinfo -*-
+  ## @deftp {Class} LongBone
+  ##
+  ## Class for manipulating 3-D triangular meshes of human long bones.
+  ##
+  ## @end deftp
 
   properties (GetAccess = public)
     Vertices = [];
