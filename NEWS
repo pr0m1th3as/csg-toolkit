@@ -72,7 +72,7 @@ CSG-Toolkit-1.4.0     Release Date: 2025-04-13     Maintainer: Andreas Bertsatos
   anatomical position.
 * meshRotation: new function for manipulating mesh.
 * LongBone: new classdef as to be utilized as a container for long bone 3D mesh.
-* longbone_Measurements: new function for getting measurement names in the order
+* longbone_Measurements: new function returning measurement names in the order
   they appear in the new DATA output argument of 'longbone_Geometry' function.
 * Updated 'longbone_Geometry' to return EXTRA structure containing various
   information previously available only when exported to the CSV files and DATA
