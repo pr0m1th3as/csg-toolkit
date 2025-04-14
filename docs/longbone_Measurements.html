@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>CSG Toolkit: readObj</title>
+    <title>CSG Toolkit: longbone_Measurements</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
@@ -62,9 +62,9 @@
             <div class="collapse navbar-collapse" id="navbarNav">
               <ul class="navbar-nav">
                 <li class="nav-item">
-                  <a class="nav-link" href="index.html#mesh3D">
+                  <a class="nav-link" href="index.html#CSG">
                     <i class="fas fa-list-alt"></i>
-                    mesh3D
+                    CSG
                   </a>
                 </li>
                 <li class="nav-item">
@@ -105,7 +105,7 @@
 				</div>
 			</div>
 			<div class="row">
-				<input id="togList2" type="checkbox">
+				<input id="togList2" type="checkbox" checked>
 				<label for="togList2">
 					<span><h6>CSG</h6></span>
 					<span><h6>CSG</h6></span>
@@ -118,7 +118,7 @@
 					<li><a href="longbone_CustomGeometry.html" class="text-decoration-none font-monospace"><small>longbone_CustomGeometry</small></a></li>
 					<li><a href="longbone_FragmentGeometry.html" class="text-decoration-none font-monospace"><small>longbone_FragmentGeometry</small></a></li>
 					<li><a href="longbone_Geometry.html" class="text-decoration-none font-monospace"><small>longbone_Geometry</small></a></li>
-					<li><a href="longbone_Measurements.html" class="text-decoration-none font-monospace"><small>longbone_Measurements</small></a></li>
+					<li><a href="longbone_Measurements.html" class="text-decoration-none font-monospace fw-bolder"><small>longbone_Measurements</small></a></li>
 					<li><a href="longbone_Registration.html" class="text-decoration-none font-monospace"><small>longbone_Registration</small></a></li>
 					<li><a href="simple_polygon3D.html" class="text-decoration-none font-monospace"><small>simple_polygon3D</small></a></li>
 				</ul>
@@ -150,7 +150,7 @@
 				</div>
 			</div>
 			<div class="row">
-				<input id="togList5" type="checkbox" checked>
+				<input id="togList5" type="checkbox">
 				<label for="togList5">
 					<span><h6>mesh3D</h6></span>
 					<span><h6>mesh3D</h6></span>
@@ -165,7 +165,7 @@
 					<li><a href="meshSection.html" class="text-decoration-none font-monospace"><small>meshSection</small></a></li>
 					<li><a href="read_MeshlabPoints.html" class="text-decoration-none font-monospace"><small>read_MeshlabPoints</small></a></li>
 					<li><a href="write_MeshlabPoints.html" class="text-decoration-none font-monospace"><small>write_MeshlabPoints</small></a></li>
-					<li><a href="readObj.html" class="text-decoration-none font-monospace fw-bolder"><small>readObj</small></a></li>
+					<li><a href="readObj.html" class="text-decoration-none font-monospace"><small>readObj</small></a></li>
 					<li><a href="renameObj.html" class="text-decoration-none font-monospace"><small>renameObj</small></a></li>
 					<li><a href="writeObj.html" class="text-decoration-none font-monospace"><small>writeObj</small></a></li>
 				</ul>
@@ -178,53 +178,28 @@
             <div class="card-header card-header-mod">
               <div class="row d-flex flex-wrap align-items-center">
                 <h3 class="d-inline-block mr-2">
-                Function&nbsp;Reference: <b><code>readObj</code></b>
+                Function&nbsp;Reference: <b><code>longbone_Measurements</code></b>
                 </h3>
               </div>
             </div>
             <div class="card-body">
 <dl>
-<dt><u>csg-toolkit:</u> [<var>varargout</var>] = <b>readObj</b><i> (<var>filename</var>)</i></dt>
-<dt><u>csg-toolkit:</u> [<var>varargout</var>] = <b>readObj</b><i> (<var>filename</var>, <code>&quot;info&quot;</code>)</i></dt>
-<dt><u>csg-toolkit:</u> <var>v</var> = <b>readObj</b><i> (&hellip;)</i></dt>
-<dt><u>csg-toolkit:</u> [<var>v</var>, <var>f</var>] = <b>readObj</b><i> (&hellip;)</i></dt>
-<dt><u>csg-toolkit:</u> [<var>v</var>, <var>f</var>, <var>mtl</var>] = <b>readObj</b><i> (&hellip;)</i></dt>
-<dt><u>csg-toolkit:</u> [<var>v</var>, <var>f</var>, <var>vt</var>, <var>ft</var>] = <b>readObj</b><i> (&hellip;)</i></dt>
-<dt><u>csg-toolkit:</u> [<var>v</var>, <var>f</var>, <var>vt</var>, <var>ft</var>, <var>mtl</var>] = <b>readObj</b><i> (&hellip;)</i></dt>
-<dt><u>csg-toolkit:</u> [<var>v</var>, <var>f</var>, <var>vn</var>, <var>fn</var>] = <b>readObj</b><i> (&hellip;)</i></dt>
-<dt><u>csg-toolkit:</u> [<var>v</var>, <var>f</var>, <var>vn</var>, <var>fn</var>, <var>mtl</var>] = <b>readObj</b><i> (&hellip;)</i></dt>
-<dt><u>csg-toolkit:</u> [<var>v</var>, <var>f</var>, <var>vt</var>, <var>ft</var>, <var>vn</var>, <var>fn</var>] = <b>readObj</b><i> (&hellip;)</i></dt>
-<dt><u>csg-toolkit:</u> [<var>v</var>, <var>f</var>, <var>vt</var>, <var>ft</var>, <var>vn</var>, <var>fn</var>, <var>mtl</var>] = <b>readObj</b><i> (&hellip;)</i></dt>
+<dt><u>csg-toolkit:</u> <var>measurements</var> = <b>longbone_Measurements</b><i> ()</i></dt>
 </dl>
 
-
-<p>This function reads a triangular 3D Mesh from Wavefront OBJ file and returns its elements into a variable number of output arguments. 
+<p> Measurement names of long bone geometry data.
 </p>
 <div class="ms-5">
-<p>When called with no output arguments <code>readObj</code> displays info of the mesh. If called with a single output argument then only the vertices are returned. If only two output arguments are given then only the vertices and the faces of the mesh are returned.  If four arguments are given, then vertex normals and face normals or texture coordinates and texture faces are returned, depending on which are present.  If both sets are present, then <code>readObj</code> returns only the texture coordinates and their corresponding faces.  If six output arguments are given then all elements are returned as numerical array in the following order:
+<p> <code><var>measurements</var> = longbone_Measurements ()</code> returns a cell array of
+ character vectors with the names of the longbone measurements in the same
+ order as they appear in the <var>DATA</var> output argument returned by the
+ <code>longbone_Geometry</code> function.
 </p>
-<p><var>v</var> is an <math>N&times;3</math> matrix with <var>x</var>,<var>y</var>,<var>z</var> point coordinates, where <math>N</math> is the number of vertices.  If RGB color information is available, then it is an <math>N&times;6</math> matrix including <var>r</var>,<var>g</var>,<var>b</var> values for each vertex.
-</p>
-<p><var>f</var> is an <math>M&times;3</math> matrix with the indices of each corresponding vertex, where <math>M</math> is the number of faces.
-</p>
-<p><var>vt</var> is an <math>N&times;2</math> matrix, where <math>N</math> is the number of texture coordinates.
-</p>
-<p><var>ft</var> is an <math>M&times;3</math> matrix with the indices of each corresponding texture coordinates.
-</p>
-<p><var>vn</var> is an <math>N&times;3</math> matrix with <var>x</var>,<var>y</var>,<var>z</var> normal coordinates, where <math>N</math> is the number of normals.
-</p>
-<p><var>fn</var> is an <math>N&times;3</math> matrix with the indices of each corresponding face normal.
-</p>
-<p>If odd number of output arguments are provided, except for the case of a single argument, then the last output argument is used for returning the <code>.mtl</code> filename, where material parameters are stored.  Note that <code>readObj</code> handles explicitly triangular mesh objects.  If the OBJ file does not contain a proper triangular mesh, then an error message is returned. 
-You can use <code>&quot;info&quot;</code> as a second input argument to display information about the loaded mesh when output arguments are requested.
-</p>
-
-<p><strong>See also: </strong>
-  <a href="writeObj.html">writeObj</a>, 
-  <a href="renameObj.html">renameObj</a>
+<p> <strong>See also: </strong>
+  <a href="longbone_Geometry.html">longbone_Geometry</a>
 </p>
 <p><strong>Source Code: </strong>
-  <a href="https://github.com/pr0m1th3as/csg-toolkit/tree/main/src/readObj.cc">readObj</a>
+  <a href="https://github.com/pr0m1th3as/csg-toolkit/tree/main/inst/longbone_Measurements.m">longbone_Measurements</a>
 </div>
 
             </div>

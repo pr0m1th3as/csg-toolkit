@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>CSG Toolkit: readObj</title>
+    <title>CSG Toolkit: meshRotation</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
@@ -161,11 +161,11 @@
 					<li><a href="longbone_Scaling.html" class="text-decoration-none font-monospace"><small>longbone_Scaling</small></a></li>
 					<li><a href="meshArea.html" class="text-decoration-none font-monospace"><small>meshArea</small></a></li>
 					<li><a href="meshBarycenter.html" class="text-decoration-none font-monospace"><small>meshBarycenter</small></a></li>
-					<li><a href="meshRotation.html" class="text-decoration-none font-monospace"><small>meshRotation</small></a></li>
+					<li><a href="meshRotation.html" class="text-decoration-none font-monospace fw-bolder"><small>meshRotation</small></a></li>
 					<li><a href="meshSection.html" class="text-decoration-none font-monospace"><small>meshSection</small></a></li>
 					<li><a href="read_MeshlabPoints.html" class="text-decoration-none font-monospace"><small>read_MeshlabPoints</small></a></li>
 					<li><a href="write_MeshlabPoints.html" class="text-decoration-none font-monospace"><small>write_MeshlabPoints</small></a></li>
-					<li><a href="readObj.html" class="text-decoration-none font-monospace fw-bolder"><small>readObj</small></a></li>
+					<li><a href="readObj.html" class="text-decoration-none font-monospace"><small>readObj</small></a></li>
 					<li><a href="renameObj.html" class="text-decoration-none font-monospace"><small>renameObj</small></a></li>
 					<li><a href="writeObj.html" class="text-decoration-none font-monospace"><small>writeObj</small></a></li>
 				</ul>
@@ -178,53 +178,28 @@
             <div class="card-header card-header-mod">
               <div class="row d-flex flex-wrap align-items-center">
                 <h3 class="d-inline-block mr-2">
-                Function&nbsp;Reference: <b><code>readObj</code></b>
+                Function&nbsp;Reference: <b><code>meshRotation</code></b>
                 </h3>
               </div>
             </div>
             <div class="card-body">
 <dl>
-<dt><u>csg-toolkit:</u> [<var>varargout</var>] = <b>readObj</b><i> (<var>filename</var>)</i></dt>
-<dt><u>csg-toolkit:</u> [<var>varargout</var>] = <b>readObj</b><i> (<var>filename</var>, <code>&quot;info&quot;</code>)</i></dt>
-<dt><u>csg-toolkit:</u> <var>v</var> = <b>readObj</b><i> (&hellip;)</i></dt>
-<dt><u>csg-toolkit:</u> [<var>v</var>, <var>f</var>] = <b>readObj</b><i> (&hellip;)</i></dt>
-<dt><u>csg-toolkit:</u> [<var>v</var>, <var>f</var>, <var>mtl</var>] = <b>readObj</b><i> (&hellip;)</i></dt>
-<dt><u>csg-toolkit:</u> [<var>v</var>, <var>f</var>, <var>vt</var>, <var>ft</var>] = <b>readObj</b><i> (&hellip;)</i></dt>
-<dt><u>csg-toolkit:</u> [<var>v</var>, <var>f</var>, <var>vt</var>, <var>ft</var>, <var>mtl</var>] = <b>readObj</b><i> (&hellip;)</i></dt>
-<dt><u>csg-toolkit:</u> [<var>v</var>, <var>f</var>, <var>vn</var>, <var>fn</var>] = <b>readObj</b><i> (&hellip;)</i></dt>
-<dt><u>csg-toolkit:</u> [<var>v</var>, <var>f</var>, <var>vn</var>, <var>fn</var>, <var>mtl</var>] = <b>readObj</b><i> (&hellip;)</i></dt>
-<dt><u>csg-toolkit:</u> [<var>v</var>, <var>f</var>, <var>vt</var>, <var>ft</var>, <var>vn</var>, <var>fn</var>] = <b>readObj</b><i> (&hellip;)</i></dt>
-<dt><u>csg-toolkit:</u> [<var>v</var>, <var>f</var>, <var>vt</var>, <var>ft</var>, <var>vn</var>, <var>fn</var>, <var>mtl</var>] = <b>readObj</b><i> (&hellip;)</i></dt>
+<dt><u>csg-toolkit:</u> [<var>bone</var>, <var>Points</var>] = <b>meshRotation</b><i> (<var>v</var>, <var>n1</var>, <var>n2</var>)</i></dt>
 </dl>
 
 
-<p>This function reads a triangular 3D Mesh from Wavefront OBJ file and returns its elements into a variable number of output arguments. 
+<p>Rotate a 3D mesh. 
 </p>
 <div class="ms-5">
-<p>When called with no output arguments <code>readObj</code> displays info of the mesh. If called with a single output argument then only the vertices are returned. If only two output arguments are given then only the vertices and the faces of the mesh are returned.  If four arguments are given, then vertex normals and face normals or texture coordinates and texture faces are returned, depending on which are present.  If both sets are present, then <code>readObj</code> returns only the texture coordinates and their corresponding faces.  If six output arguments are given then all elements are returned as numerical array in the following order:
+<p>This function rotates an arbitrary number of points in R3 given in <var>v</var> according to the dihedral angle between a source normal <var>n1</var> and a target normal <var>n2</var>.  The pivot of rotation is the origin of the cartesian coordinates and the axis of rotation is the perpendicular to the source and target normals. 
 </p>
-<p><var>v</var> is an <math>N&times;3</math> matrix with <var>x</var>,<var>y</var>,<var>z</var> point coordinates, where <math>N</math> is the number of vertices.  If RGB color information is available, then it is an <math>N&times;6</math> matrix including <var>r</var>,<var>g</var>,<var>b</var> values for each vertex.
-</p>
-<p><var>f</var> is an <math>M&times;3</math> matrix with the indices of each corresponding vertex, where <math>M</math> is the number of faces.
-</p>
-<p><var>vt</var> is an <math>N&times;2</math> matrix, where <math>N</math> is the number of texture coordinates.
-</p>
-<p><var>ft</var> is an <math>M&times;3</math> matrix with the indices of each corresponding texture coordinates.
-</p>
-<p><var>vn</var> is an <math>N&times;3</math> matrix with <var>x</var>,<var>y</var>,<var>z</var> normal coordinates, where <math>N</math> is the number of normals.
-</p>
-<p><var>fn</var> is an <math>N&times;3</math> matrix with the indices of each corresponding face normal.
-</p>
-<p>If odd number of output arguments are provided, except for the case of a single argument, then the last output argument is used for returning the <code>.mtl</code> filename, where material parameters are stored.  Note that <code>readObj</code> handles explicitly triangular mesh objects.  If the OBJ file does not contain a proper triangular mesh, then an error message is returned. 
-You can use <code>&quot;info&quot;</code> as a second input argument to display information about the loaded mesh when output arguments are requested.
-</p>
-
 <p><strong>See also: </strong>
-  <a href="writeObj.html">writeObj</a>, 
-  <a href="renameObj.html">renameObj</a>
+  <a href="meshArea.html">meshArea</a>, 
+  <a href="meshBarycenter.html">meshBarycenter</a>, 
+  <a href="meshSection.html">meshSection</a>
 </p>
 <p><strong>Source Code: </strong>
-  <a href="https://github.com/pr0m1th3as/csg-toolkit/tree/main/src/readObj.cc">readObj</a>
+  <a href="https://github.com/pr0m1th3as/csg-toolkit/tree/main/src/meshRotation.cc">meshRotation</a>
 </div>
 
             </div>

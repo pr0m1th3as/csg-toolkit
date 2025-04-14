@@ -10,13 +10,40 @@
     <script type="text/javascript" async
       src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
     </script>
+    <script type="text/javascript">
+      window.addEventListener("load", () => {
+        for (let i of document.querySelectorAll(".collapse ul")) {
+          let tog = document.createElement("div");
+          tog.innerHTML = i.previousSibling.textContent;
+          tog.className = "toggle";
+          tog.onclick = () => tog.classList.toggle("show");
+          i.parentElement.removeChild(i.previousSibling);
+          i.parentElement.insertBefore(tog, i);
+        }
+      });
+    </script>
     <style>
+    h6:hover {
+      color: gray;
+    }
     var {
       font-style: italics;
       font-weight: bold;
     }
     td {
       vertical-align: top;
+    }
+    [id^="togList"],                        /* HIDE CHECKBOX */
+    [id^="togList"] ~ .list,                /* HIDE LIST */
+    [id^="togList"] + label  span + span,   /* HIDE "Collapse" */
+    [id^="togList"]:checked + label span{   /* HIDE "Expand" (IF CHECKED) */
+      display:none;
+    }
+    [id^="togList"]:checked + label span + span{
+      display:inline-block;                 /* SHOW "Collapse" (IF CHECKED) */
+    }
+    [id^="togList"]:checked ~ .list{
+      display:block;                        /* SHOW LIST (IF CHECKED) */
     }
     </style>
   </head>
@@ -59,17 +86,103 @@
       </div>
     </div>
     <div class="container-xl my-4">
-      <div class="card rounded">
-        <div class="card-header card-header-mod">
-          <div class="row d-flex flex-wrap align-items-center">
-            <div class="col-sm-3 col-md-5 mb-2 mb-sm-0">
-              <h3 class="d-inline-block mr-2">
-              Function&nbsp;Reference: <b><code>longbone_FragmentGeometry</code></b>
-              </h3>
-            </div>
+      <div class="row flex-nowrap" style="min-height:0">
+        <div class="col-md-2 bg-light" style="overflow-y: scroll; width: 250px;">
+          <div class="p-2" style="text-align: center;">
+            <h3>Categories &</h3>
+            <h4 style="color: blue">Functions List</h4>
           </div>
-        </div>
-        <div class="card-body">
+			<div class="row">
+				<input id="togList1" type="checkbox">
+				<label for="togList1">
+					<span><h6>Biological Profiling</h6></span>
+					<span><h6>Biological Profiling</h6></span>
+				</label>
+				<div class="list">
+				<ul style="list-style-type: none; padding-left: 20px;">
+					<li><a href="longbone_Sex.html" class="text-decoration-none font-monospace"><small>longbone_Sex</small></a></li>
+				</ul>
+				</div>
+			</div>
+			<div class="row">
+				<input id="togList2" type="checkbox" checked>
+				<label for="togList2">
+					<span><h6>CSG</h6></span>
+					<span><h6>CSG</h6></span>
+				</label>
+				<div class="list">
+				<ul style="list-style-type: none; padding-left: 20px;">
+					<li><a href="longbone_Analysis.html" class="text-decoration-none font-monospace"><small>longbone_Analysis</small></a></li>
+					<li><a href="longbone_AnatomicalNormals.html" class="text-decoration-none font-monospace"><small>longbone_AnatomicalNormals</small></a></li>
+					<li><a href="longbone_AnatomicalPosition.html" class="text-decoration-none font-monospace"><small>longbone_AnatomicalPosition</small></a></li>
+					<li><a href="longbone_CustomGeometry.html" class="text-decoration-none font-monospace"><small>longbone_CustomGeometry</small></a></li>
+					<li><a href="longbone_FragmentGeometry.html" class="text-decoration-none font-monospace fw-bolder"><small>longbone_FragmentGeometry</small></a></li>
+					<li><a href="longbone_Geometry.html" class="text-decoration-none font-monospace"><small>longbone_Geometry</small></a></li>
+					<li><a href="longbone_Measurements.html" class="text-decoration-none font-monospace"><small>longbone_Measurements</small></a></li>
+					<li><a href="longbone_Registration.html" class="text-decoration-none font-monospace"><small>longbone_Registration</small></a></li>
+					<li><a href="simple_polygon3D.html" class="text-decoration-none font-monospace"><small>simple_polygon3D</small></a></li>
+				</ul>
+				</div>
+			</div>
+			<div class="row">
+				<input id="togList3" type="checkbox">
+				<label for="togList3">
+					<span><h6>Plot</h6></span>
+					<span><h6>Plot</h6></span>
+				</label>
+				<div class="list">
+				<ul style="list-style-type: none; padding-left: 20px;">
+					<li><a href="inspect_CSG.html" class="text-decoration-none font-monospace"><small>inspect_CSG</small></a></li>
+					<li><a href="visualize_CrossSections.html" class="text-decoration-none font-monospace"><small>visualize_CrossSections</small></a></li>
+				</ul>
+				</div>
+			</div>
+			<div class="row">
+				<input id="togList4" type="checkbox">
+				<label for="togList4">
+					<span><h6>Utilities</h6></span>
+					<span><h6>Utilities</h6></span>
+				</label>
+				<div class="list">
+				<ul style="list-style-type: none; padding-left: 20px;">
+					<li><a href="LongBone.html" class="text-decoration-none font-monospace"><small>LongBone</small></a></li>
+				</ul>
+				</div>
+			</div>
+			<div class="row">
+				<input id="togList5" type="checkbox">
+				<label for="togList5">
+					<span><h6>mesh3D</h6></span>
+					<span><h6>mesh3D</h6></span>
+				</label>
+				<div class="list">
+				<ul style="list-style-type: none; padding-left: 20px;">
+					<li><a href="longbone_maxDistance.html" class="text-decoration-none font-monospace"><small>longbone_maxDistance</small></a></li>
+					<li><a href="longbone_Scaling.html" class="text-decoration-none font-monospace"><small>longbone_Scaling</small></a></li>
+					<li><a href="meshArea.html" class="text-decoration-none font-monospace"><small>meshArea</small></a></li>
+					<li><a href="meshBarycenter.html" class="text-decoration-none font-monospace"><small>meshBarycenter</small></a></li>
+					<li><a href="meshRotation.html" class="text-decoration-none font-monospace"><small>meshRotation</small></a></li>
+					<li><a href="meshSection.html" class="text-decoration-none font-monospace"><small>meshSection</small></a></li>
+					<li><a href="read_MeshlabPoints.html" class="text-decoration-none font-monospace"><small>read_MeshlabPoints</small></a></li>
+					<li><a href="write_MeshlabPoints.html" class="text-decoration-none font-monospace"><small>write_MeshlabPoints</small></a></li>
+					<li><a href="readObj.html" class="text-decoration-none font-monospace"><small>readObj</small></a></li>
+					<li><a href="renameObj.html" class="text-decoration-none font-monospace"><small>renameObj</small></a></li>
+					<li><a href="writeObj.html" class="text-decoration-none font-monospace"><small>writeObj</small></a></li>
+				</ul>
+				</div>
+			</div>
+
+			  </div>
+			  <div class="col-md-10">
+          <div class="card rounded">
+            <div class="card-header card-header-mod">
+              <div class="row d-flex flex-wrap align-items-center">
+                <h3 class="d-inline-block mr-2">
+                Function&nbsp;Reference: <b><code>longbone_FragmentGeometry</code></b>
+                </h3>
+              </div>
+            </div>
+            <div class="card-body">
 <dl>
 <dt><u>csg-toolkit:</u> <b>longbone_FragmentGeometry</b><i> (<var>filename</var>, <var>points</var>)</i></dt>
 <dt><u>csg-toolkit:</u> <b>longbone_FragmentGeometry</b><i> (<var>folder</var>, <var>filename</var>, <var>points</var>)</i></dt>
@@ -143,6 +256,8 @@
   <a href="https://github.com/pr0m1th3as/csg-toolkit/tree/main/inst/longbone_FragmentGeometry.m">longbone_FragmentGeometry</a>
 </div>
 
+            </div>
+          </div>
         </div>
       </div>
     </div>
