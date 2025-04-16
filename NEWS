@@ -63,7 +63,7 @@ CSG-Toolkit-1.3.2     Release Date: 2024-03-21     Maintainer: Andreas Bertsatos
   function so it can be utilized by newly introduced 'estimate_sex' function.
 
 ================================================================================
-CSG-Toolkit-1.4.0     Release Date: 2025-04-13     Maintainer: Andreas Bertsatos
+CSG-Toolkit-1.4.0     Release Date: 2025-04-16     Maintainer: Andreas Bertsatos
 ================================================================================
 
 * estimate_sex: deprecated function.
