@@ -2,22 +2,21 @@
 
 ## A GNU Octave package for analyzing long bone diaphyseal cross sectional geometry
 
-The present package is based on the long-bone-diaphyseal-CSG-Toolkit and has
-been created to simplify its installation and usage from within GNU Octave. It
-is based on novel and robust algorithms for calculating the cross-sectional
-geometric properties of the diaphyses of humerus, ulna, femur, and tibia bones
-represented as a triangular mesh in a Wavefront OBJ 3D model file format.
+The present package is based on the [long-bone-diaphyseal-CSG-Toolkit](https://github.com/pr0m1th3as/long-bone-diaphyseal-CSG-Toolkit)
+and has been created to simplify its installation and usage from within GNU Octave. Itis based on novel and robust algorithms for
+calculating the cross-sectional geometric properties of the diaphyses of humerus, ulna, femur, and tibia bones represented as a
+triangular mesh in a Wavefront OBJ 3D model file format.
 
-This package provides numerous functions for analyzing CSG properties and working
-with 3D models. You can find its documentation at
+This package provides numerous functions for analyzing CSG properties and working with 3D models. You can find its documentation at
 [https://pr0m1th3as.github.io/csg-toolkit/](https://pr0m1th3as.github.io/csg-toolkit/).
 
 ## Installation
 
-The CSG Toolkit is compatible with later versions of `Octave >= v7.2.0` and depends
-on the `io >= 2.6.4` package.
+The CSG Toolkit is compatible with later versions of [`Octave >= v9.1.0`](https://octave.org/) and depends on the 
+[`io >= 2.6.4`](https://gnu-octave.github.io/packages/io/), [`statistics >=1.7.4`](https://gnu-octave.github.io/packages/statistics/),
+and [`datatypes >=1.0.1`](https://github.com/pr0m1th3as/datatypes/) packages.
 
-To download and install the latest version (1.3.2), type:
+To download and install the latest version, type:
 
  `pkg install -forge csg-toolkit`
 
@@ -64,19 +63,9 @@ either `longbone_Analysis` stored in relevant CSV files, or the return structure
 of the `longbone_Geometry` function and the generated CSV files from the
 `longbone_CustomGeometry` function.
 
-The latest release (1.3.2) introduced a GUI utility for biological sex estimation.
-Type `help estimate_sex` to find out how to utilize CSG properties for biological
+You may also use the CSG Toolkit for biological sex estimation.
+Type `help longbone_Sex` to find out how to utilize CSG properties for biological
 profiling from the long bones. More functionality comming soon!
-
-## Citation
-
-If you find this package usefull for your research, please include the following citations:
-
-Bertsatos A, Chovalopoulou M-E. 2019. A novel method for analyzing long bone diaphyseal 
-cross-sectional geometry. A GNU Octave CSG Toolkit. Forensic Science International 297: 65–71. 
-https://doi.org/10.1016/j.forsciint.2019.01.041
-
-Bertsatos A, Garoufi N, Koliaraki M, Chovalopoulou M-E. 2023. Paving new ways in forensic contexts with virtual osteology applications: csg-toolkit – a 3D osteology package for cross-sectional geometry analysis. Annals of 3D Printed Medicine, 9, 100094. https://doi.org/10.1016/j.stlm.2022.100094
 
 ## Testing Datasets
 
@@ -90,3 +79,18 @@ and may be used with the CSG Toolkit for demonstrating its operation.
 An additional dataset comprising eight bilateral bones (humerus, ulna, femur, and
 tibia) is also available at https://doi.org/10.5281/zenodo.6614647 for testing and
 demostration purposes.
+
+## Citation
+
+If you find this package usefull for your research, please include the following citations:
+
+Bertsatos A, Garoufi N, Koliaraki M, Chovalopoulou M-E. 2023. Paving new ways in forensic contexts with virtual osteology applications: csg-toolkit – a 3D osteology package for cross-sectional geometry analysis. Annals of 3D Printed Medicine, 9, 100094. https://doi.org/10.1016/j.stlm.2022.100094
+
+Bertsatos A, Chovalopoulou M-E. 2019. A novel method for analyzing long bone diaphyseal 
+cross-sectional geometry. A GNU Octave CSG Toolkit. Forensic Science International 297: 65–71. 
+https://doi.org/10.1016/j.forsciint.2019.01.041
+
+## Acknowledgements
+
+Partial deveopment of the **csg-toolkit** package has been the research output of my [RECONSTRUCT](https://www.physicalanthropology.gr/reconstruct.php) project,
+which has received funding from the European Union’s Horizon 2020 research and innovation programme under the Marie Sklodowska-Curie Grant agreement No 101104702.
