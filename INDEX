@@ -1,7 +1,5 @@
 csg-toolkit >> CSG Toolkit
-Biological Profiling
-  longbone_Sex
-CSG
+CSG Analysis
   longbone_Analysis
   longbone_AnatomicalNormals
   longbone_AnatomicalPosition
@@ -11,7 +9,7 @@ CSG
   longbone_Measurements
   longbone_Registration
   simple_polygon3D
-mesh3D
+Mesh Operations
   longbone_maxDistance
   longbone_Scaling
   meshArea
@@ -23,9 +21,10 @@ mesh3D
   readObj
   renameObj
   writeObj
-Plot
-  inspect_CSG
-  visualize_CrossSections
 Utilities
   LongBone
+  longbone_Sex
+Visualization
+  inspect_CSG
+  visualize_CrossSections
 
