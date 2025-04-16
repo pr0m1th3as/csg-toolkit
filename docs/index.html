@@ -98,33 +98,15 @@
         <div class="card-body">
            <p>Select Category:
              <select name="cat" onchange="location = this.options[this.selectedIndex].value;">
-             <option value="#Biological Profiling">Biological Profiling</option>
-             <option value="#CSG">CSG</option>
-             <option value="#mesh3D">mesh3D</option>
-             <option value="#Plot">Plot</option>
+             <option value="#CSG Analysis">CSG Analysis</option>
+             <option value="#Mesh Operations">Mesh Operations</option>
              <option value="#Utilities">Utilities</option>
+             <option value="#Visualization">Visualization</option>
              </select>
            <p>
 
            <h3 class="category">
-             <a name="Biological Profiling">Biological Profiling</a>
-           </h3>
-           <table class="table table-striped">
-             <tbody>
-               <tr>
-                 <td>
-                   <b><code>
-                   <a href="longbone_Sex.html">longbone_Sex</a>
-                   </code></b>
-                 </td>
-                 <td>This function analyzes the geometry of an intact humerus, ulna, femur,
-or tibia bone using the 'longbone_Geometry' function and estimates the
-biological sex of the individual the bone belongs to.</td>
-               </tr>
-             </tbody>
-           </table>
-           <h3 class="category">
-             <a name="CSG">CSG</a>
+             <a name="CSG Analysis">CSG Analysis</a>
            </h3>
            <table class="table table-striped">
              <tbody>
@@ -212,7 +194,7 @@ area.</td>
              </tbody>
            </table>
            <h3 class="category">
-             <a name="mesh3D">mesh3D</a>
+             <a name="Mesh Operations">Mesh Operations</a>
            </h3>
            <table class="table table-striped">
              <tbody>
@@ -313,7 +295,32 @@ according to its elements provided as input arguments.</td>
              </tbody>
            </table>
            <h3 class="category">
-             <a name="Plot">Plot</a>
+             <a name="Utilities">Utilities</a>
+           </h3>
+           <table class="table table-striped">
+             <tbody>
+               <tr>
+                 <td>
+                   <b><code>
+                   <a href="LongBone.html">LongBone</a>
+                   </code></b>
+                 </td>
+                 <td>Class for manipulating 3-D triangular meshes of human long bones.</td>
+               </tr>
+               <tr>
+                 <td>
+                   <b><code>
+                   <a href="longbone_Sex.html">longbone_Sex</a>
+                   </code></b>
+                 </td>
+                 <td>This function analyzes the geometry of an intact humerus, ulna, femur,
+or tibia bone using the 'longbone_Geometry' function and estimates the
+biological sex of the individual the bone belongs to.</td>
+               </tr>
+             </tbody>
+           </table>
+           <h3 class="category">
+             <a name="Visualization">Visualization</a>
            </h3>
            <table class="table table-striped">
              <tbody>
@@ -333,21 +340,6 @@ according to its elements provided as input arguments.</td>
                  </td>
                  <td>Plot cross sectional contours and their CSG properties for a given
 sample.</td>
-               </tr>
-             </tbody>
-           </table>
-           <h3 class="category">
-             <a name="Utilities">Utilities</a>
-           </h3>
-           <table class="table table-striped">
-             <tbody>
-               <tr>
-                 <td>
-                   <b><code>
-                   <a href="LongBone.html">LongBone</a>
-                   </code></b>
-                 </td>
-                 <td>Class for manipulating 3-D triangular meshes of human long bones.</td>
                </tr>
              </tbody>
            </table>
