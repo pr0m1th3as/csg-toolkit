@@ -264,6 +264,8 @@ function [varargout] = visualize_CrossSections (bone_id, varargin)
     xlabel ('Frontal axis (mm)','FontSize', 10);
     ylabel ('Sagital axis (mm)','FontSize', 10);
     grid ("on");
+    xlim ("padded");
+    ylim ("padded");
     if (notF)
       legend (["Perimeter = ", num2str(CS_Geometry(i).Perimeter,'%5.1f'), ...
                " mm", ...
