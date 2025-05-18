@@ -29,9 +29,9 @@
 ## lead to degenerate closed polygons representing the computed diaphyseal cross
 ## sections and as a result to incorrect values of CSG properties.
 ##
-## The input argument @var{EXTRA} can also be any structure with the following
-## fields, as long as they contain equivalent values to those returned by
-## @code{longbone_Geometry}.
+## The input argument @var{EXTRA} can also be any scalar structure or a
+## structure array with the following fields, as long as they contain equivalent
+## values to those returned by @code{longbone_Geometry}.
 ##
 ## @enumerate
 ## @item @qcode{filename}
@@ -44,12 +44,27 @@
 ##
 ## Use the @code{plot_CrossSections} function to visualize the cross sections of
 ## the large collection of long bones from European populations provided by the
-## @qcode{csg-dataset} package.
+## @qcode{csg-dataset} package.  When @var{EXTRA} is a structure array, then
+## each element is plotted in consecutive order.
 ##
 ## @seealso{longbone_Geometry, visualize_CrossSections}
 ## @end deftypefn
 
 function h = plot_CrossSections (EXTRA)
+
+  ## Check input
+  if (nargin != 1)
+    print_usage;
+  endif
+  if (! isstruct (EXTRA))
+    error ("plot_CrossSections: input argument must be a structure.");
+  endif
+  if (! isfield (EXTRA, 'filename')  || ! isfield (EXTRA, 'poly2D_20') ||
+      ! isfield (EXTRA, 'poly2D_35') || ! isfield (EXTRA, 'poly2D_50') ||
+      ! isfield (EXTRA, 'poly2D_65') || ! isfield (EXTRA, 'poly2D_80'))
+    error ("plot_CrossSections: input argument is missing required fields.");
+  endif
+
   ## Open new figure
   figure ("numbertitle", "off", "menubar", "none", "position", [400 0 1600 400]);
   ## Process all samples
