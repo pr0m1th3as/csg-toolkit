@@ -26,5 +26,6 @@ Utilities
   longbone_Sex
 Visualization
   inspect_CSG
+  plot_CrossSections
   visualize_CrossSections
 
