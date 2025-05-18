@@ -141,7 +141,7 @@
 ## @var{EXTRA} is an additional scalar structure with the following fields:
 ##
 ## @enumerate
-## @item @qcode{Filename}
+## @item @qcode{filename}
 ## @item @qcode{maxDistance}
 ## @item @qcode{maxd_V1}
 ## @item @qcode{maxd_V2}
@@ -715,7 +715,7 @@ function [varargout] = longbone_Geometry (varargin)
   ## a structure along with maxDistance, maxd_V1, maxd_V2, and optimized
   ## points MLA_opt_point_A and MLA_opt_point_B
   if (nargout > 3)
-    extra.Filename = filename;
+    extra.filename = filename;
     extra.maxDistance = maxDistance;
     extra.maxd_V1 = maxd_V1;
     extra.maxd_V2 = maxd_V2;
