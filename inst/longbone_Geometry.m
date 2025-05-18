@@ -141,6 +141,7 @@
 ## @var{EXTRA} is an additional scalar structure with the following fields:
 ##
 ## @enumerate
+## @item @qcode{Filename}
 ## @item @qcode{maxDistance}
 ## @item @qcode{maxd_V1}
 ## @item @qcode{maxd_V2}
@@ -156,6 +157,11 @@
 ## @item @qcode{ArPerIndex50}
 ## @item @qcode{ArPerIndex65}
 ## @item @qcode{ArPerIndex80}
+## @item @qcode{poly2D_20}
+## @item @qcode{poly2D_35}
+## @item @qcode{poly2D_50}
+## @item @qcode{poly2D_65}
+## @item @qcode{poly2D_80}
 ## @end enumerate
 ##
 ## @qcode{maxDistance} refers to the bone's maximum distance measurement, as
@@ -664,33 +670,52 @@ function [varargout] = longbone_Geometry (varargin)
   [GEOM(5), SMoA(5), polyline(5)] = simple_polygon3D (section_5, n5, ...
                                                              CorPlane_normal);
 
-  ## Arrange to matrices for csv files
+  ## Print results for cross sectional areas
   cs = [20, 35, 50, 65, 80];
-  ns = [n1; n2; n3; n4; n5];
+  msg = strcat (["\n   Cross section at %d%% has area"], ...
+                [" of %f mm^2 and perimeter of %f mm \n"]);
   for i = 1:5
-    ## Print results for centroids and cross sectional areas
-    printf (strcat (["\nCross section at %d%% has an area of %f mm^2,"], ...
-                    [" perimeter of %f mm \n and centroid coordinates"], ...
-                    [" are: x:%f y:%f z:%f\n"]), ...
-            cs(i), GEOM(i).Area, GEOM(i).Perimeter, GEOM(i).Centroid);
-
-    ## Arrange to matrices for csv files
-    geometry(i,:) = [cs(i), GEOM(i).Area, GEOM(i).Perimeter, ...
-                     GEOM(i).Centroid, ns(i,:), CorPlane_normal];
-    inertia(i,:) = [cs(i), SMoA(i).Ix, SMoA(i).Iy, SMoA(i).Ixy, ...
-                    SMoA(i).Imin, SMoA(i).Imax, SMoA(i).theta];
-    polygon2D(1,i*2-1) = cs(i) / 100;
-    polygon2D([2:length(polyline(i).poly2D)+1],[i*2-1:i*2]) = ...
-                                                            polyline(i).poly2D;
-    polygon3D(1,i*3-2) = cs(i) / 100;
-    polygon3D([2:length(polyline(i).poly3D)+1],[i*3-2:i*3]) = ...
-                                                            polyline(i).poly3D;
+    printf (msg, cs(i), GEOM(i).Area, GEOM(i).Perimeter);
   endfor
+
+  ## Arrange to matrices for csv files
+  if (nargout == 0)
+    ns = [n1; n2; n3; n4; n5];
+    for i = 1:5
+      geometry(i,:) = [cs(i), GEOM(i).Area, GEOM(i).Perimeter, ...
+                       GEOM(i).Centroid, ns(i,:), CorPlane_normal];
+      inertia(i,:) = [cs(i), SMoA(i).Ix, SMoA(i).Iy, SMoA(i).Ixy, ...
+                      SMoA(i).Imin, SMoA(i).Imax, SMoA(i).theta];
+      polygon2D(1,i*2-1) = cs(i) / 100;
+      polygon2D([2:length(polyline(i).poly2D)+1],[i*2-1:i*2]) = ...
+                                                              polyline(i).poly2D;
+      polygon3D(1,i*3-2) = cs(i) / 100;
+      polygon3D([2:length(polyline(i).poly3D)+1],[i*3-2:i*3]) = ...
+                                                              polyline(i).poly3D;
+    endfor
+    ## Save to files
+    starting = 'Dgeometry-';
+    name = filename([1:length(filename) - 4]);
+    endfile = ".csv";
+    filename = strcat (starting, name, endfile);
+    csvwrite (filename, geometry);
+    starting = 'Dinertia-';
+    filename = strcat (starting, name, endfile);
+    csvwrite (filename, inertia);
+    starting = 'Dpolyline2D-';
+    filename = strcat (starting, name, endfile);
+    csvwrite (filename, polygon2D);
+    starting = 'Dpolyline3D-';
+    filename = strcat (starting, name, endfile);
+    csvwrite (filename, polygon3D);
+    return;
+  endif
 
   ## Compute dihedral angles and their total sum and append them into
   ## a structure along with maxDistance, maxd_V1, maxd_V2, and optimized
   ## points MLA_opt_point_A and MLA_opt_point_B
   if (nargout > 3)
+    extra.Filename = filename;
     extra.maxDistance = maxDistance;
     extra.maxd_V1 = maxd_V1;
     extra.maxd_V2 = maxd_V2;
@@ -710,6 +735,11 @@ function [varargout] = longbone_Geometry (varargin)
     extra.ArPerIndex50 = ((GEOM(3).Area) * 4 * pi) ./ ((GEOM(3).Perimeter) .^ 2);
     extra.ArPerIndex65 = ((GEOM(4).Area) * 4 * pi) ./ ((GEOM(4).Perimeter) .^ 2);
     extra.ArPerIndex80 = ((GEOM(5).Area) * 4 * pi) ./ ((GEOM(5).Perimeter) .^ 2);
+    extra.poly2D_20 = polyline(1).poly2D;
+    extra.poly2D_35 = polyline(2).poly2D;
+    extra.poly2D_50 = polyline(3).poly2D;
+    extra.poly2D_65 = polyline(4).poly2D;
+    extra.poly2D_80 = polyline(5).poly2D;
   endif
 
   ## Aggregate measurements in numeric arrays
@@ -737,23 +767,7 @@ function [varargout] = longbone_Geometry (varargin)
             extra.diaphyseal_bending];
   endif
 
-  if (nargout == 0)
-    ## Save to files
-    starting = 'Dgeometry-';
-    name = filename([1:length(filename) - 4]);
-    endfile = ".csv";
-    filename = strcat (starting, name, endfile);
-    csvwrite (filename, geometry);
-    starting = 'Dinertia-';
-    filename = strcat (starting, name, endfile);
-    csvwrite (filename, inertia);
-    starting = 'Dpolyline2D-';
-    filename = strcat (starting, name, endfile);
-    csvwrite (filename, polygon2D);
-    starting = 'Dpolyline3D-';
-    filename = strcat (starting, name, endfile);
-    csvwrite (filename, polygon3D);
-  elseif (nargout == 1)
+  if (nargout == 1)
     varargout{1} = GEOM;
   elseif (nargout == 2)
     varargout{1} = GEOM;
