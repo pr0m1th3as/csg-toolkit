@@ -83,3 +83,24 @@ CSG-Toolkit-1.4.0     Release Date: 2025-04-16     Maintainer: Andreas Bertsatos
 * longbone_Sex: new function for estimating sex based on several European
   skeletal reference collections.
 * added dependency on 'statistics' and 'datatypes' packages.
+
+================================================================================
+CSG-Toolkit-1.4.1     Release Date: 2025-05-18     Maintainer: Andreas Bertsatos
+================================================================================
+
+* plot_CrossSections: new function for for plotting cross sectional contours in
+  a single figure with data obtained directly from the 'longbone_Geometry'
+  function via the EXTRA output argument.
+* Updated 'longbone_Geometry' to return cross sectional 2D polygons and 3D model
+  filename in the EXTRA structure.
+* Updated 'visualize_CrossSections' to pad plots so that cross sectional
+  contours are more visually appealing.  This change also affects the
+  'inspect_CSG' function.
+
+================================================================================
+CSG-Toolkit-1.4.2     Release Date: 2025-05-20     Maintainer: Andreas Bertsatos
+================================================================================
+
+* Updated 'longbone_Sex' to utilize the newly trained classifiers based on the
+  dataset available through the 'csg-dataset' package.  Improved classification
+  performance and more refined posterior probability estimates.
