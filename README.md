@@ -92,4 +92,4 @@ https://doi.org/10.1016/j.forsciint.2019.01.041
 
 ## Acknowledgements
 
-Release [1.4.0](https://github.com/pr0m1th3as/csg-toolkit/releases/tag/v1.4.0) of the **csg-toolkit** package has incorporated part of the research output of my [RECONSTRUCT](https://www.physicalanthropology.gr/reconstruct.php) project, which has received funding from the European Union’s Horizon 2020 research and innovation programme under the Marie Sklodowska-Curie Grant agreement No 101104702.
+Major release [1.4.0](https://github.com/pr0m1th3as/csg-toolkit/releases/tag/v1.4.0) and subsequent minor releases `(1.4.*)` of the **csg-toolkit** package have incorporated part of the research output of my [RECONSTRUCT](https://www.physicalanthropology.gr/reconstruct.php) project, which has received funding from the European Union’s Horizon 2020 research and innovation programme under the Marie Sklodowska-Curie Grant agreement No 101104702.
