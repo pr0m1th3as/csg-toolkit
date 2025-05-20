@@ -125,25 +125,25 @@ function [varargout] = longbone_Sex (varargin)
     X = DATA(idx);
     Z = (X - mu) ./ sigma;
     measurements = measurements(idx);
-    prob = [0.95, 0.62, 0.86, 0.90, NaN];
+    prob = {[1, 0.98, 0.91, 0.89], 0.68, 0.65, [1, 1, 0.78, 0.67], NaN};
   elseif (strcmpi (BONE, 'Humerus'))
     [idx, mu, sigma, Mlo, Mhi, Flo, Fhi] = load_descriptives ('Humerus');
     X = DATA(idx);
     Z = (X - mu) ./ sigma;
     measurements = measurements(idx);
-    prob = [0.97, 0.69, 0.82, 0.90, NaN];
+    prob = {[0.97, 0.96, 0.94, 0.91], 0.55, 0.39, [0.96, 0.5, 0.5, 0.5], NaN};
   elseif (strcmpi (BONE, 'Tibia'))
     [idx, mu, sigma, Mlo, Mhi, Flo, Fhi] = load_descriptives ('Tibia');
     X = DATA(idx);
     Z = (X - mu) ./ sigma;
     measurements = measurements(idx);
-    prob = [0.94, 0.51, 0.52, 0.95, NaN];
+    prob = {[0.99, 0.95, 0.93, 0.86], 0.76, 0.58, [1, 0.67, 0.67, 0.67], NaN};
   elseif (strcmpi (BONE, 'Ulna'))
     [idx, mu, sigma, Mlo, Mhi, Flo, Fhi] = load_descriptives ('Ulna');
     X = DATA(idx);
     Z = (X - mu) ./ sigma;
     measurements = measurements(idx);
-    prob = [0.97, 0.55, 0.60, 0.96, NaN];
+    prob = {[0.99, 0.98, 0.92, 0.78], 0.63, 0.55, [0.95, 0.67, 0.67, 0.67], NaN};
   else
     sex = categorical (0, [1, 2], {'Male', 'Female'}); # <undefined>
     vars = {};
@@ -216,31 +216,37 @@ function [varargout] = longbone_Sex (varargin)
       grp = 1;
       idx = find (odd_cols == 1);
       vars = resolve_idx (idx, measurements);
+      idx = find_prob_idx (vars);
     elseif (f10s && s(1) < s(2))
       sex = categorical (2, [1, 2], {'Male', 'Female'}); # Female
       grp = 1;
       idx = find (evencols == 1);
       vars = resolve_idx (idx, measurements);
+      idx = find_prob_idx (vars);
     elseif (strcmpi (BONE, 'Femur') && sum (m09) > sum (f09))
       sex = categorical (1, [1, 2], {'Male', 'Female'}); # Male
       grp = 2;
       idx = find (odd_cols >= 0.9 & odd_cols < 1);
       vars = resolve_idx (idx, measurements);
+      idx = 1;
     elseif (strcmpi (BONE, 'Femur') && sum (m09) < sum (f09))
       sex = categorical (2, [1, 2], {'Male', 'Female'}); # Female
       grp = 2;
       idx = find (evencols >= 0.9 & evencols < 1);
       vars = resolve_idx (idx, measurements);
+      idx = 1;
     elseif (! strcmpi (BONE, 'Femur') && (m09s && ! f09s && s(1) > s(2)))
       sex = categorical (1, [1, 2], {'Male', 'Female'}); # Male
       grp = 2;
       idx = find (odd_cols >= 0.9 & odd_cols < 1);
       vars = resolve_idx (idx, measurements);
+      idx = 1;
     elseif (! strcmpi (BONE, 'Femur') && (! m09s && f09s && s(1) < s(2)))
       sex = categorical (2, [1, 2], {'Male', 'Female'}); # Female
       grp = 2;
       idx = find (evencols >= 0.9 & evencols < 1);
       vars = resolve_idx (idx, measurements);
+      idx = 1;
     else
       s = round (s * 100) / 100;
       gap = s(2) - s(1) < 0.25 & s(2) - s(1) >= 0;
@@ -271,6 +277,7 @@ function [varargout] = longbone_Sex (varargin)
         grp = 5;
         vars = {};
       endif
+      idx = 1;
     endif
     outliers = {};
 
@@ -287,24 +294,28 @@ function [varargout] = longbone_Sex (varargin)
       sex = categorical (1, [1, 2], {'Male', 'Female'}); # Male
       grp = 4;
       vars = measurements(find (m09));
+      idx = find_prob_idx (vars);
       outliers = measurements(m09  & (X < Mlo | X > Mhi));
     elseif (sum (m09) < sum (f09))
       sex = categorical (2, [1, 2], {'Male', 'Female'}); # Female
       grp = 4;
       vars = measurements(find (f09));
+      idx = find_prob_idx (vars);
       outliers = measurements(f09 & (X < Flo | X > Fhi));
     else
       sex = categorical (0, [1, 2], {'Male', 'Female'}); # <undefined>
       grp = 5;
       vars = {};
+      idx = 1;
       outliers = {};
     endif
   endif
 
   ## Prepare output
   if (nargout == 1 || nargout == 0)
+    prob = prob{grp}(idx);
     varNames = {'Name', 'Bone', 'Sex', 'Prob', 'Typical', 'Used', 'Outliers'};
-    T = table ({filename}, {BONE}, sex, prob(grp), rep, {vars}, {outliers}, ...
+    T = table ({filename}, {BONE}, sex, prob, rep, {vars}, {outliers}, ...
                'VariableNames', varNames);
     varargout{1} = T;
     return;
@@ -342,5 +353,18 @@ function used = resolve_idx (idx, measurements)
       idx(1) = 4;
     endif
     used = [used, measurements(unique (floor ((idx - 2) / 2)))];
+  endif
+endfunction
+
+function idx = find_prob_idx (vars)
+  nvars = length (vars);
+  if (nvars <= 8)
+    idx = 4;
+  elseif (nvars <= 16)
+    idx = 3;
+  elseif (nvars <= 24)
+    idx = 2;
+  elseif (nvars <= 32)
+    idx = 1;
   endif
 endfunction
