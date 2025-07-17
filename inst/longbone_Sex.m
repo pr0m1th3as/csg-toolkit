@@ -121,25 +121,25 @@ function [varargout] = longbone_Sex (varargin)
 
   ## Select variables for sex estimation
   if (strcmpi (BONE, 'Femur'))
-    [idx, mu, sigma, Mlo, Mhi, Flo, Fhi] = load_descriptives ('Femur');
+    [idx, mu, sigma, Mlo, Mhi, Flo, Fhi] = load_descriptives ('Femur', 'sex');
     X = DATA(idx);
     Z = (X - mu) ./ sigma;
     measurements = measurements(idx);
     prob = {[1, 0.98, 0.94, 0.95], 0.62, 0.75, [1, 1, 0.8, 0.67], NaN};
   elseif (strcmpi (BONE, 'Humerus'))
-    [idx, mu, sigma, Mlo, Mhi, Flo, Fhi] = load_descriptives ('Humerus');
+    [idx, mu, sigma, Mlo, Mhi, Flo, Fhi] = load_descriptives ('Humerus', 'sex');
     X = DATA(idx);
     Z = (X - mu) ./ sigma;
     measurements = measurements(idx);
     prob = {[0.97, 0.96, 0.95, 0.97], 0.67, 0.56, [0.96, 0.63, 0.63, 0.63], NaN};
   elseif (strcmpi (BONE, 'Tibia'))
-    [idx, mu, sigma, Mlo, Mhi, Flo, Fhi] = load_descriptives ('Tibia');
+    [idx, mu, sigma, Mlo, Mhi, Flo, Fhi] = load_descriptives ('Tibia', 'sex');
     X = DATA(idx);
     Z = (X - mu) ./ sigma;
     measurements = measurements(idx);
     prob = {[0.99, 0.95, 0.92, 0.94], 0.49, 0.65, [1, 0.67, 0.67, 0.67], NaN};
   elseif (strcmpi (BONE, 'Ulna'))
-    [idx, mu, sigma, Mlo, Mhi, Flo, Fhi] = load_descriptives ('Ulna');
+    [idx, mu, sigma, Mlo, Mhi, Flo, Fhi] = load_descriptives ('Ulna', 'sex');
     X = DATA(idx);
     Z = (X - mu) ./ sigma;
     measurements = measurements(idx);
