@@ -162,6 +162,7 @@
 ## @item @qcode{poly2D_50}
 ## @item @qcode{poly2D_65}
 ## @item @qcode{poly2D_80}
+## @item @qcode{side}
 ## @end enumerate
 ##
 ## @qcode{maxDistance} refers to the bone's maximum distance measurement, as
@@ -740,6 +741,41 @@ function [varargout] = longbone_Geometry (varargin)
     extra.poly2D_50 = polyline(3).poly2D;
     extra.poly2D_65 = polyline(4).poly2D;
     extra.poly2D_80 = polyline(5).poly2D;
+    ## Find side according to cross-sectional geometry at 20%, 50%, or 80%
+    cs20 = polyline(1).poly2D;
+    cs50 = polyline(3).poly2D;
+    cs80 = polyline(5).poly2D;
+    if (strcmpi (bone, 'Femur'))
+      if (min (cs80(:,1)) + max (cs80) > 0)
+        extra.side = 'left';
+      else
+        extra.side = 'right';
+      endif
+    elseif (strcmpi (bone, 'Humerus'))
+      [~, minidx] = min (cs80(:,1));
+      [~, maxidx] = max (cs80(:,1));
+      if (cs80(minidx,2) < cs80(maxidx,2))
+        extra.side = 'left';
+      else
+        extra.side = 'right';
+      endif
+    elseif (strcmpi (bone, 'Tibia'))
+      [~, minidx] = min (cs20(:,1));
+      [~, maxidx] = max (cs20(:,1));
+      if (cs20(minidx,2) > cs20(maxidx,2))
+        extra.side = 'left';
+      else
+        extra.side = 'right';
+      endif
+    elseif (strcmpi (bone, 'Ulna'))
+      dist = sqrt (sumsq (cs50, 2));
+      [~, maxidx] = max (dist);
+      if (cs50(maxidx,1) < 0)
+        extra.side = 'left';
+      else
+        extra.side = 'right';
+      endif
+    endif
   endif
 
   ## Aggregate measurements in numeric arrays
