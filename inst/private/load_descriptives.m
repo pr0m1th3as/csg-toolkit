@@ -60,9 +60,9 @@
 ## @end deftypefn
 
 function [varargout] = load_descriptives (bone, type)
+  folder = mfilename ('fullpath')(1:end-17);
   if (strcmpi (type, 'sex'))
-    D = load (fullfile (canonicalize_file_name (mfilename ('fullpath')), ...
-                        'descriptives_sex.mat'));
+    D = load (fullfile (folder, 'descriptives_sex.mat'));
     if (strcmpi (bone, 'Femur'))
       varargout{1} = D.Fvars(:,1)';
       varargout{2} = D.Fvars(:,2)';
@@ -97,8 +97,7 @@ function [varargout] = load_descriptives (bone, type)
       varargout{7} = D.Uvars(:,7)';
     endif
   elseif (strcmpi (type, 'pair'))
-    D = load (fullfile (canonicalize_file_name (mfilename ('fullpath')), ...
-                        'descriptives_pair.mat'));
+    D = load (fullfile (folder, 'descriptives_pair.mat'));
     if (strcmpi (bone, 'Femur'))
       varargout{1} = D.Fvars(1,:);
       varargout{2} = D.Fvars(2,:);

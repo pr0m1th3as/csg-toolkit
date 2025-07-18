@@ -21,7 +21,7 @@
 
 function models = load_classifiers (bone)
   models = cell (65,1);
-  folder = canonicalize_file_name (mfilename ('fullpath'));
+  folder = mfilename ('fullpath')(1:end-16);
   if (strcmpi (bone, "Femur"))
     for i = 1:65
       name = fullfile (folder, sprintf ("F%02d.mat", i));
