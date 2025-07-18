@@ -23,6 +23,7 @@ Mesh Operations
   writeObj
 Utilities
   LongBone
+  longbone_Pair
   longbone_Sex
 Visualization
   inspect_CSG
