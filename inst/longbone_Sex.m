@@ -102,7 +102,8 @@
 ## samples.
 ## @end itemize
 ##
-## @seealso{longbone_CustomGeometry, longbone_Registration}
+## @seealso{longbone_Pair, longbone_Geometry, longbone_Measurements,
+## longbone_Registration}
 ## @end deftypefn
 
 function [varargout] = longbone_Sex (varargin)
