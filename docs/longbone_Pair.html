@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>CSG Toolkit: LongBone</title>
+    <title>CSG Toolkit: longbone_Pair</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
@@ -142,8 +142,8 @@
 				</label>
 				<div class="list">
 				<ul style="list-style-type: none; padding-left: 20px;">
-					<li><a href="LongBone.html" class="text-decoration-none font-monospace fw-bolder"><small>LongBone</small></a></li>
-					<li><a href="longbone_Pair.html" class="text-decoration-none font-monospace"><small>longbone_Pair</small></a></li>
+					<li><a href="LongBone.html" class="text-decoration-none font-monospace"><small>LongBone</small></a></li>
+					<li><a href="longbone_Pair.html" class="text-decoration-none font-monospace fw-bolder"><small>longbone_Pair</small></a></li>
 					<li><a href="longbone_Sex.html" class="text-decoration-none font-monospace"><small>longbone_Sex</small></a></li>
 				</ul>
 				</div>
@@ -169,23 +169,122 @@
             <div class="card-header card-header-mod">
               <div class="row d-flex flex-wrap align-items-center">
                 <h3 class="d-inline-block mr-2">
-                Function&nbsp;Reference: <b><code>LongBone</code></b>
+                Function&nbsp;Reference: <b><code>longbone_Pair</code></b>
                 </h3>
               </div>
             </div>
             <div class="card-body">
 <dl>
-<dt><u>Class:</u> <b>LongBone</b></dt>
+<dt><u>csg-toolkit:</u> <var>sorted</var> = <b>longbone_Pair</b><i> (<var>DATA</var>, <var>BONE</var>)</i></dt>
+<dt><u>csg-toolkit:</u> <var>sorted</var> = <b>longbone_Pair</b><i> (<var>folder</var>, <var>BONE</var>)</i></dt>
+<dt><u>csg-toolkit:</u> [<var>sorted</var>, <var>stats</var>, <var>unsorted</var>] = <b>longbone_Pair</b><i> (&hellip;)</i></dt>
 </dl>
 
-<p> Class for manipulating 3-D triangular meshes of human long bones.
+<p> This function analyzes the geometry of intact humerus, ulna, femur, or
+ tibia bones and matches the bilateral elements that belong to the same
+ individual.
 </p>
 <div class="ms-5">
+<p> <code><var>sorted</var> = longbone_Pair (<var>DATA</var>, <var>BONE</var>)</code> will analyze the
+ measurements in <var>DATA</var> for a specific long bone specified in <var>BONE</var>
+ and it will sort the skeletal elements by pair-matching bilateral elements
+ that belong to the same individual as well as identify single elements, whose
+ complement is missing.  <var>DATA</var> can be an <math>N&times;62</math> numeric matrix or an
+ <math>N&times;63</math> cell array, with each row corresponding to a skeletal element.
+</p>
+ <ul>
+<li> As a numeric matrix, <var>DATA</var> uses the first column to identify
+ the side of the skeletal element, where left side is specified as <code>1</code>
+ and right side denoted by <code>2</code>, whereas the remaining 61 columns contain
+ the long bone measurements in the same order as returned in the <var>DATA</var>
+ output argument of the <code>longbone_Geometry</code> function.  The names of these
+ measurements can be retrieved by the <code>longbone_Measurements</code> function.
 
+ </li><li> As a cell array, <var>DATA</var> uses the first column to specify the
+ identifier of each skeletal element, the second column holds the numeric
+ value corresponding to side, and the remaining columns hold the measurement
+ data.
+ </li></ul>
+
+<p> The second input argument, <var>BONE</var>, must be a character vector specifying
+ the type of bone under analysis and can take one of following options:
+</p>
+ <ol>
+<li> <code>'Humerus'</code>
+ </li><li> <code>'Ulna'</code>
+ </li><li> <code>'Femur'</code>
+ </li><li> <code>'Tibia'</code>
+ </li></ol>
+
+<p> The matched skeletal elements are returned in the output table <var>sorted</var>,
+ which contains three variables (columns): <code>'Left side'</code>, <code>'Right
+ side'</code> and <code>'Score'</code>.  The first two variables contain the identifiers
+ of the skeletal elements sorted by individual per each row, and the last one
+ holds the cummulative <math>z</math>-score value used for pair-matching (the lower
+ the better) bilateral elements of the same individual.  Single skeletal
+ elements, which are identified by means of elimination, hence their
+ corresponding <math>z</math>-score value is <code>NaN</code>, are reported first at the
+ top rows of the <var>sorted</var> table.  The table contains <code>'RowNames'</code>
+ using the naming convention <code>&quot;Individual 1&quot;, &hellip;, &quot;Individual k&quot;</code>
+ up to the total number of distinct individuals identified in the <var>DATA</var>.
+ When <var>DATA</var> is a numeric matrix, the skeletal element identifiers are
+ automatically assigned as <code>&quot;1&quot;, &quot;2&quot;, &hellip;, &quot;N&quot;</code> with each number
+ corresponding to the row each element is stored in.
+</p>
+<p> When a second output argument is requested, <code>longbone_Pair</code> returns an
+ additional table, <var>stats</var>, with various statistics regarding the results
+ of the pair-matching process specified in the following table variables:
+</p>
+ <ol>
+<li> <code>'Samples'</code> : the number of processed samples, which is
+ equivalent to the number of rows in <var>DATA</var>.
+ </li><li> <code>'Sorted'</code> : the total number of skeletal elements, which have
+ been sorted to distinct individuals.
+ </li><li> <code>'Paired'</code> the number of bilateral paired elements, which have
+ been identified.
+ </li><li> <code>'Single'</code> : the number of single skeletal elements, which have
+ been identified to distinct individuals.
+ </li><li> <code>'Individuals'</code> : the total number of distinct individuals
+ identified in the skeletal assemblage.
+ </li><li> <code>'Unsorted'</code> : the number of skeletal elements, which could not
+ be sorted.
+ </li><li> <code>'Plausible'</code> : the number of plausible pair-matches among the
+ remaining skeletal elements, which were not sorted.
+ </li></ol>
+
+<p> A comprehensive list of the plausible pairs of unsorted elements may be
+ returned as the third output argument, <var>unsorted</var>, which is also a table
+ similar to the one returned for the sorted skeletal elements.  Each plausible
+ pair is accompanied by the respective cummulative <math>z</math>-score value, which
+ may are may not be indicative of which plausible pair is more likely to be a
+ true match.  Keep in mind, that skeletal elements in the plausible pairs list
+ may well be single elements without their bilateral counterpart being present
+ in the data sample.  Also note, that the algorithm utilized by the
+ <code>longbone_Pair</code> function favors precision over recall and thus is
+ optimized for maximizing the ratio of true positives over the sum of true
+ positives and false positives.  It is highly advised, to isolate the unsorted
+ skeletal elements into a new dataset and re-apply the pair-matching analysis
+ on this new smaller subgroup.
+</p>
+<p> As an alternative functionality, <code>longbone_Pair</code> can work directly with
+ 3D models.  <code><var>sorted</var> = longbone_Pair (<var>folder</var>, <var>BONE</var>)</code>
+ will analyze all available bones models of type <var>BONE</var> which are present
+ in the directory specified by <var>folder</var> and return the output as described
+ above.  When <var>folder</var> is specified, <code>longbone_Pair</code> utilizes the
+ <code>longbone_Geometry</code> function to retrieve the <var>DATA</var> from the 3D
+ models as well as identify their side.  Keep in mind that in certain cases
+ the side of ulna bones might be misidentified, thus it is good practice to
+ check the side of each element in the returning tables.  The filenames of the
+ 3D models are used as identifiers for the skeletal elements being analyzed.
+</p>
+<p> <strong>See also: </strong>
+  <a href="longbone_Sex.html">longbone_Sex</a>, 
+  <a href="longbone_Geometry.html">longbone_Geometry</a>, 
+  <a href="longbone_Measurements.html">longbone_Measurements</a>
+</p>
 <p><strong>Source Code: </strong>
-  <a href="https://github.com/pr0m1th3as/csg-toolkit/tree/main/inst/LongBone.m">LongBone</a>
+  <a href="https://github.com/pr0m1th3as/csg-toolkit/tree/main/inst/longbone_Pair.m">longbone_Pair</a>
 </div>
-
 
             </div>
           </div>
