@@ -21,27 +21,28 @@
 
 function models = load_classifiers (bone)
   models = cell (65,1);
+  folder = canonicalize_file_name (mfilename ('fullpath'));
   if (strcmpi (bone, "Femur"))
     for i = 1:65
-      name = fullfile (pwd, "private", sprintf ("F%02d.mat", i));
+      name = fullfile (folder, sprintf ("F%02d.mat", i));
       mdl = loadmodel (name);
       models(i) = {mdl};
     endfor
   elseif (strcmpi (bone, "Humerus"))
     for i = 1:65
-      name = fullfile (pwd, "private", sprintf ("H%02d.mat", i));
+      name = fullfile (folder, sprintf ("H%02d.mat", i));
       mdl = loadmodel (name);
       models(i) = {mdl};
     endfor
   elseif (strcmpi (bone, "Tibia"))
     for i = 1:65
-      name = fullfile (pwd, "private", sprintf ("T%02d.mat", i));
+      name = fullfile (folder, sprintf ("T%02d.mat", i));
       mdl = loadmodel (name);
       models(i) = {mdl};
     endfor
   elseif (strcmpi (bone, "Ulna"))
     for i = 1:65
-      name = fullfile (pwd, "private", sprintf ("U%02d.mat", i));
+      name = fullfile (folder, sprintf ("U%02d.mat", i));
       mdl = loadmodel (name);
       models(i) = {mdl};
     endfor

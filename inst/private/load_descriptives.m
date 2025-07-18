@@ -61,7 +61,8 @@
 
 function [varargout] = load_descriptives (bone, type)
   if (strcmpi (type, 'sex'))
-    D = load (fullfile (pwd, 'private', 'descriptives_sex.mat'));
+    D = load (fullfile (canonicalize_file_name (mfilename ('fullpath')), ...
+                        'descriptives_sex.mat'));
     if (strcmpi (bone, 'Femur'))
       varargout{1} = D.Fvars(:,1)';
       varargout{2} = D.Fvars(:,2)';
@@ -96,7 +97,8 @@ function [varargout] = load_descriptives (bone, type)
       varargout{7} = D.Uvars(:,7)';
     endif
   elseif (strcmpi (type, 'pair'))
-    D = load (fullfile (pwd, 'private', 'descriptives_pair.mat'));
+    D = load (fullfile (canonicalize_file_name (mfilename ('fullpath')), ...
+                        'descriptives_pair.mat'));
     if (strcmpi (bone, 'Femur'))
       varargout{1} = D.Fvars(1,:);
       varargout{2} = D.Fvars(2,:);
