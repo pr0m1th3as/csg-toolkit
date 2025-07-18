@@ -749,7 +749,7 @@ function [varargout] = longbone_Geometry (varargin)
     cs50 = polyline(3).poly2D;
     cs80 = polyline(5).poly2D;
     if (strcmpi (bone, 'Femur'))
-      if (min (cs80(:,1)) + max (cs80) > 0)
+      if (min (cs80(:,1)) + max (cs80(:,1)) > 0)
         extra.side = 'left';
       else
         extra.side = 'right';
