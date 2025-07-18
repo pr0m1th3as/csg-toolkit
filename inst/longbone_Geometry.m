@@ -170,8 +170,11 @@
 ## mediolateral axis points are returned in the @qcode{MLA_opt_point_*} fields.
 ## @qcode{diaphyseal_bending} contains the sum of dihedral angles (in degrees)
 ## between each pair of consecutive cross-sectional planes, which are also
-## returned in the @qcode{angle_$$_$$} fields.  @qcode{ArPerIndex$$} the
-## Area-Perimeter Index for each consecutive cross section.
+## returned in the @qcode{angle_$$_$$} fields.  @qcode{ArPerIndex$$} holds the
+## Area-Perimeter Index for each consecutive cross section.  @qcode{poly2D_$$}
+## contains an @math{Nx2} matrix with the 2D coordinates of each cross section
+## and @qcode{side} is a character vector specifying the side of the bone based
+## on the analysis of the cross-sectional 2D coordinates.
 ##
 ## @var{data} is a numeric row vector containing all the measurements computed
 ## by the @code{longbone_Geometry} in tabular form to facilitate further
