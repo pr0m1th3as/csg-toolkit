@@ -124,6 +124,11 @@ function [varargout] = longbone_Pair (DATA, BONE)
     error ("longbone_Pair: too many output arguments.");
   endif
 
+  ## Check for empty input
+  if (isempty (DATA))
+    error ("longbone_Pair: no DATA or FOLDER.");
+  endif
+
   ## Check bone type
   if (! ismember (BONE, {'Femur', 'Humerus', 'Tibia', 'Ulna'}))
     error ("longbone_Pair: BONE must be a valid bone type.");
@@ -139,8 +144,8 @@ function [varargout] = longbone_Pair (DATA, BONE)
     NAME = {};
     samples = 0;
     files = dir (fullfile (folder, "*.obj"));
-    for i = 1:length (filenames)
-      [~, ~, bone, extra, data] = longbone_Geometry (folder, files(i).name, BONE);
+    for i = 1:length (files)
+      [~, ~, bone, extra, data] = longbone_Geometry (folder, files(i).name, {BONE});
       if (strcmpi (bone, BONE))
         if (strcmpi (extra.side, 'left'))
           side = 1;
@@ -169,6 +174,13 @@ function [varargout] = longbone_Pair (DATA, BONE)
   LNAME = NAME(DATA(:,1) == 1);
   RSIDE = DATA(DATA(:,1) == 2, [false, id]);
   RNAME = NAME(DATA(:,1) == 2);
+
+  ## Handle extreme case (naive user) only one side is present
+  if (isempty (LNAME))
+    error ("longbone_Pair: only right-hand side skeletal elements available.");
+  elseif (isempty (RNAME))
+    error ("longbone_Pair: only left-hand side skeletal elements available.");
+  endif
 
   ## Create a permutation matrix with all possible pairs between left and right
   ## side samples.  First and second columns of the permutation matrix contain
