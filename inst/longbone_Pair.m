@@ -185,37 +185,37 @@ function [varargout] = longbone_Pair (DATA, BONE)
   ## Create a permutation matrix with all possible pairs between left and right
   ## side samples.  First and second columns of the permutation matrix contain
   ## the row (sample) indices to the left and right side variables, respectively.
-	TestDATA = [];
+  TestDATA = [];
   Lvec = abs (LSIDE);
   Rvec = abs (RSIDE);
   R = [1:size(RSIDE, 1)]';
-	for i = 1:size (LSIDE, 1)
+  for i = 1:size (LSIDE, 1)
     L = i * ones (size (R));
-		D = Lvec(i,:) - Rvec;
-	  TestDATA = [TestDATA; L, R, D];
-	endfor
+    D = Lvec(i,:) - Rvec;
+    TestDATA = [TestDATA; L, R, D];
+  endfor
 
   ## Find definite mismatches and exclude them from permutation test matrix
   rejected = [];
-	for var = 1:sum (id)
-		reject_i = find (TestDATA(:,var+2) < lb(id)(var));
-		rejected = [rejected; reject_i];
-		reject_i = find (TestDATA(:,var+2) > ub(id)(var));
-		rejected = [rejected; reject_i];
-	endfor
+  for var = 1:sum (id)
+    reject_i = find (TestDATA(:,var+2) < lb(id)(var));
+    rejected = [rejected; reject_i];
+    reject_i = find (TestDATA(:,var+2) > ub(id)(var));
+    rejected = [rejected; reject_i];
+  endfor
   rejected = unique (rejected);
   ## Keep remaining pairs as plausible matches
 	plausible = TestDATA;
 	plausible(rejected,:) = [];
 
   ## If no plausible matches remain, return the sorted list table
-	if (isempty (plausible))
+  if (isempty (plausible))
     sorted_elements = samples;
     sorted_pairs = 0;
     sorted_by_elimination = sorted_elements;
     individuals = sorted_elements;
-		unsorted_elements = 0;
-		plausible_pairs = 0;
+    unsorted_elements = 0;
+    plausible_pairs = 0;
     L_side = string ([LNAME; num2cell(nan(size (RNAME)))]);
     R_side = string ([num2cell(nan(size (LNAME))); RNAME; ]);
     scores = nan (samples, 1);
@@ -224,7 +224,7 @@ function [varargout] = longbone_Pair (DATA, BONE)
                          'UniformOutput', false);
     varargout{1} = table (L_side, R_side, scores, 'VariableNames', varnames, ...
                          'RowNames', rownames);
-		## Return stats table if requested
+    ## Return stats table if requested
     if (nargout > 1)
       varnames = {'Samples', 'Sorted', 'Paired', 'Single', ...
                   'Individuals', 'Unsorted', 'Plausible'};
@@ -234,94 +234,94 @@ function [varargout] = longbone_Pair (DATA, BONE)
                             'VariableNames', varnames);
     endif
     ## Return an empty matrix for unsorted list
-		if (nargout > 2)
+    if (nargout > 2)
       varnames = {'Left side', 'Right side', 'Score'};
       varargout{3} = table ('Size', [0,3], 'VariableTypes', ...
                            {'string', 'string', 'doublenan'}, ...
-                           'VariableNames', varnames);
-		endif
-		return
-	endif
+                            'VariableNames', varnames);
+    endif
+    return
+  endif
 
   ## Remove plausible matches from initial left and right side lists
   ## of skeletal elements to identify single-sided samples.
-	Lindex = [1:length(LNAME)]';
+  Lindex = [1:length(LNAME)]';
   Rindex = [1:length(RNAME)]';
-	Lindex(ismember (Lindex, unique (plausible(:,1)))) = [];
-	Rindex(ismember (Rindex, unique (plausible(:,2)))) = [];
+  Lindex(ismember (Lindex, unique (plausible(:,1)))) = [];
+  Rindex(ismember (Rindex, unique (plausible(:,2)))) = [];
   sorted = [Lindex, nan(length (Lindex), 2); ...
             nan(length (Rindex), 1), Rindex, nan(length (Rindex), 1)];
-	## Keep number of single elements sorted by elimination
-	sorted_by_elimination = size (sorted, 1);
+  ## Keep number of single elements sorted by elimination
+  sorted_by_elimination = size (sorted, 1);
 
-	## Compute sum of absolute z-scores for each paired sample
+  ## Compute sum of absolute z-scores for each paired sample
   ## in the remaining plausible matches
-	plausible(:,3) = sum (abs ((plausible(:,[3:end]) - mu(id)) ./ sd(id)), 2);
+  plausible(:,3) = sum (abs ((plausible(:,[3:end]) - mu(id)) ./ sd(id)), 2);
   plausible(:,[4:end]) = [];
 
-	## Scan through the remaining plausible cases and cluster the
+  ## Scan through the remaining plausible cases and cluster the
   ## associated pairs into separate subgroups for each side of bones
-	cluster = cluster_pairs (plausible);
+  cluster = cluster_pairs (plausible);
 
-	## Compare the scores of every element with each paired association between
+  ## Compare the scores of every element with each paired association between
   ## both sides and keep the matching pairs as a sorted pair when both sides
   ## exhibit the lowest score on the same matched pair and the score is
   ## progressively below 30
-	[sorted, cluster] = compare_scores_with_threshold (sorted, cluster);
+  [sorted, cluster] = compare_scores_with_threshold (sorted, cluster);
 
-	## Calculate the number of pairs sorted by lowest score below 30
-	sorted_by_threshold = size (sorted, 1) - sorted_by_elimination;
+  ## Calculate the number of pairs sorted by lowest score below 30
+  sorted_by_threshold = size (sorted, 1) - sorted_by_elimination;
 
-	## Scan through any remaining plausible matches (if applicable),
+  ## Scan through any remaining plausible matches (if applicable),
   ## recluster plausible pairs, and compare scores by difference
-	if (! isempty (cluster))
-		s = 0;
-		for c = 1:length (cluster)
-			s += size (cluster(c).left, 1) + size (cluster(c).right, 1);
-		endfor
-		if (s > 0)
-			## Recluster the associated pairs into separate subgroups
-			cluster = recluster_pairs (cluster);
+  if (! isempty (cluster))
+    s = 0;
+    for c = 1:length (cluster)
+      s += size (cluster(c).left, 1) + size (cluster(c).right, 1);
+    endfor
+    if (s > 0)
+      ## Recluster the associated pairs into separate subgroups
+      cluster = recluster_pairs (cluster);
 
-			## In each subgroup compare the scores of every element with each paired
+      ## In each subgroup compare the scores of every element with each paired
       ## association between both sides and keep the matching pairs as a sorted
       ## pair when both sides exhibit the lowest score on the same matched pair
       ## and the score is lower than the second smaller one by at least 5 units
-			[sorted, cluster] = compare_scores_with_difference (sorted, cluster);
+      [sorted, cluster] = compare_scores_with_difference (sorted, cluster);
 
-			## Calculate the number of pairs sorted by lowest score by difference > 5
-			sorted_by_difference = size (sorted,1) - ...
+      ## Calculate the number of pairs sorted by lowest score by difference > 5
+      sorted_by_difference = size (sorted,1) - ...
                              (sorted_by_elimination + sorted_by_threshold);
-			## Calculate the total number of pairs sorted
-			sorted_pairs = sorted_by_threshold + sorted_by_difference;
-		else
-			sorted_pairs = sorted_by_threshold;
-		endif
-	else
-		sorted_pairs = sorted_by_threshold;
-	endif
+      ## Calculate the total number of pairs sorted
+      sorted_pairs = sorted_by_threshold + sorted_by_difference;
+    else
+      sorted_pairs = sorted_by_threshold;
+    endif
+  else
+    sorted_pairs = sorted_by_threshold;
+  endif
 
-	## Any remaining plausible matches are concatenated into unsorted pairs matrix
-	if (! isempty (cluster))
-		unsorted = [];
-		for c = 1:length (cluster)
-			unsorted = [unsorted; cluster(c).left; cluster(c).right];
-		endfor
-		unsorted = unique (unsorted, "rows");
+  ## Any remaining plausible matches are concatenated into unsorted pairs matrix
+  if (! isempty (cluster))
+    unsorted = [];
+    for c = 1:length (cluster)
+      unsorted = [unsorted; cluster(c).left; cluster(c).right];
+    endfor
+    unsorted = unique (unsorted, "rows");
     unsorted_elements = numel (unique (unsorted(:,1))) + ...
                         numel (unique (unsorted(:,2)));
-	else
-		unsorted = [];
+  else
+    unsorted = [];
     unsorted_elements = 0;
-	endif
-	plausible_pairs = size (unsorted, 1);
+  endif
+  plausible_pairs = size (unsorted, 1);
 
-	## Calculate the total number of sorted elements
+  ## Calculate the total number of sorted elements
   ## and distinct individuals identified
-	sorted_elements = sum (sum (isfinite (sorted(:,[1:2]))));
-	individuals = size (sorted, 1);
+  sorted_elements = sum (sum (isfinite (sorted(:,[1:2]))));
+  individuals = size (sorted, 1);
 
-	## Return sorted list table
+  ## Return sorted list table
   L_TF = isfinite (sorted(:,1));
   R_TF = isfinite (sorted(:,2));
   Lindex = LNAME(sorted(:,1)(L_TF));
@@ -336,7 +336,7 @@ function [varargout] = longbone_Pair (DATA, BONE)
   varargout{1} = table (string (L_side), string (R_side), sorted(:,3), ...
                         'VariableNames', varnames, 'RowNames', rownames);
   ## Return stats table if requested
-	if (nargout > 1)
+  if (nargout > 1)
     varnames = {'Samples', 'Sorted', 'Paired', 'Single', ...
                 'Individuals', 'Unsorted', 'Plausible'};
     varargout{2} = table (samples, sorted_elements, sorted_pairs, ...
@@ -344,13 +344,13 @@ function [varargout] = longbone_Pair (DATA, BONE)
                           unsorted_elements, plausible_pairs, ...
                           'VariableNames', varnames);
   endif
-	## Return unsorted list table if requested
-	if (nargout > 2)
+  ## Return unsorted list table if requested
+  if (nargout > 2)
     varnames = {'Left side', 'Right side', 'Score'};
     if (isempty (unsorted))
       varargout{3} = table ('Size', [0,3], 'VariableTypes', ...
-                           {'string', 'string', 'doublenan'}, ...
-                           'VariableNames', varnames);
+                            {'string', 'string', 'doublenan'}, ...
+                            'VariableNames', varnames);
     else
       L_side = LNAME(unsorted(:,1));
       R_side = RNAME(unsorted(:,2));
@@ -358,86 +358,86 @@ function [varargout] = longbone_Pair (DATA, BONE)
       varargout{3} = table (string (L_side), string (R_side), ...
                             scores, 'VariableNames', varnames);
     endif
-	endif
+  endif
 
 endfunction
 
 ## Scan through the list of plausible matches and cluster the
 ## associated pairs into separate subgroups for each side of bones
 function	cluster = cluster_pairs (plausible);
-	savelist = plausible;
-	group = 0;
-	while (! isempty (plausible))
-		group += 1;
+  savelist = plausible;
+  group = 0;
+  while (! isempty (plausible))
+    group += 1;
     cluster(group).left = [];
-		complete = false;
-		## Find a sample with minimum occurence and use it as a seed
-		samples = unique (plausible(:,1));
-		clear nsamples;
-		for s = 1:length (samples)
-			idx = find (plausible(:,1) == samples(s));
-			nsamples(s,:) = [length(idx), samples(s)];
-		endfor
-		nsamples = sortrows (nsamples, 1);
-		idx = find (plausible(:,1) == nsamples(1,2));
-		left_seed(group) = plausible(idx(1),1);
-		right_seed(group) = plausible(idx(1),2);
-		left_samples = left_seed(group);
-		right_samples = [];
-		while (! complete)
-			## Find occurences of right samples according to the left samples
-			for i = 1:length (left_samples)
-				idx = find (plausible(:,1) == left_samples(i));
-				right_samples = [right_samples; plausible(idx,2)];
-				cluster(group).left = [cluster(group).left; plausible(idx,:)];
-				plausible(idx,:) = [];
-			endfor
-			k = 0;
-			## Find occurences of left samples according to the right samples
-			for i = 1:length (right_samples)
-				idx = find (plausible(:,2) == right_samples(i));
-				if (! isempty (idx))
-					left_samples = [left_samples; plausible(idx,1)];
-				else
-					k += 1;
-				endif
-			endfor
-			if (i == k)
-				complete = true;
-			endif
-		endwhile
-	endwhile
-	plausible = savelist;
-	group = 0;
-	while (! isempty (plausible))
-		group += 1;
+    complete = false;
+    ## Find a sample with minimum occurence and use it as a seed
+    samples = unique (plausible(:,1));
+    clear nsamples;
+    for s = 1:length (samples)
+      idx = find (plausible(:,1) == samples(s));
+      nsamples(s,:) = [length(idx), samples(s)];
+    endfor
+    nsamples = sortrows (nsamples, 1);
+    idx = find (plausible(:,1) == nsamples(1,2));
+    left_seed(group) = plausible(idx(1),1);
+    right_seed(group) = plausible(idx(1),2);
+    left_samples = left_seed(group);
+    right_samples = [];
+    while (! complete)
+      ## Find occurences of right samples according to the left samples
+      for i = 1:length (left_samples)
+        idx = find (plausible(:,1) == left_samples(i));
+        right_samples = [right_samples; plausible(idx,2)];
+        cluster(group).left = [cluster(group).left; plausible(idx,:)];
+        plausible(idx,:) = [];
+      endfor
+      k = 0;
+      ## Find occurences of left samples according to the right samples
+      for i = 1:length (right_samples)
+        idx = find (plausible(:,2) == right_samples(i));
+        if (! isempty (idx))
+          left_samples = [left_samples; plausible(idx,1)];
+        else
+          k += 1;
+        endif
+      endfor
+      if (i == k)
+        complete = true;
+      endif
+    endwhile
+  endwhile
+  plausible = savelist;
+  group = 0;
+  while (! isempty (plausible))
+    group += 1;
     cluster(group).right = [];
-		complete = false;
-		right_samples = right_seed(group);
-		left_samples = [];
-		while (! complete)
-			## Find occurences of left samples according to the right samples
-			for i = 1:length (right_samples)
-				idx = find (plausible(:,2) == right_samples(i));
-				left_samples = [left_samples; plausible(idx,1)];
-				cluster(group).right = [cluster(group).right; plausible(idx,:)];
-				plausible(idx,:) = [];
-			endfor
-			k = 0;
-			## Find occurences of right samples according to the left samples
-			for i = 1:length(left_samples)
-				idx = find (plausible(:,1) == left_samples(i));
-				if (! isempty (idx))
-					right_samples = [right_samples; plausible(idx,2)];
-				else
-					k += 1;
-				endif
-			endfor
-			if (i == k)
-				complete = true;
-			endif
-		endwhile
-	endwhile
+    complete = false;
+    right_samples = right_seed(group);
+    left_samples = [];
+    while (! complete)
+      ## Find occurences of left samples according to the right samples
+      for i = 1:length (right_samples)
+        idx = find (plausible(:,2) == right_samples(i));
+        left_samples = [left_samples; plausible(idx,1)];
+        cluster(group).right = [cluster(group).right; plausible(idx,:)];
+        plausible(idx,:) = [];
+      endfor
+      k = 0;
+      ## Find occurences of right samples according to the left samples
+      for i = 1:length(left_samples)
+        idx = find (plausible(:,1) == left_samples(i));
+        if (! isempty (idx))
+          right_samples = [right_samples; plausible(idx,2)];
+        else
+          k += 1;
+        endif
+      endfor
+      if (i == k)
+        complete = true;
+      endif
+    endwhile
+  endwhile
 endfunction
 
 ## In each cluster subgroup compare the scores of every element with each paired
@@ -445,26 +445,26 @@ endfunction
 ## when both sides exhibit the lowest score on the same matched pair and the
 ## score is progressively below 30
 function [sorted, cluster] = compare_scores_with_threshold (sorted, cluster);
-	for range = 20:1:30
-		for c = 1:length (cluster)
-			## Make a list of unique elements
-			left_list = unique (cluster(c).left(:,1));
-			for s = 1:length (left_list)
-				idx = find (cluster(c).left(:,1) == left_list(s));
-				if (length (idx) > 0)
-					left_side = cluster(c).left(idx,:);
-					left_side = sortrows(left_side, 3);
-					right_sample = left_side(1,2);
-					idx = find (cluster(c).right(:,2) == right_sample);
-					right_side = cluster(c).right(idx,:);
-					right_side = sortrows (right_side, 3);
-					score = right_side(1,3);
-					## If elements in first rows (lowest scores) match (have the
+  for range = 20:1:30
+    for c = 1:length (cluster)
+      ## Make a list of unique elements
+      left_list = unique (cluster(c).left(:,1));
+      for s = 1:length (left_list)
+        idx = find (cluster(c).left(:,1) == left_list(s));
+        if (length (idx) > 0)
+          left_side = cluster(c).left(idx,:);
+          left_side = sortrows(left_side, 3);
+          right_sample = left_side(1,2);
+          idx = find (cluster(c).right(:,2) == right_sample);
+          right_side = cluster(c).right(idx,:);
+          right_side = sortrows (right_side, 3);
+          score = right_side(1,3);
+          ## If elements in first rows (lowest scores) match (have the
           ## same sample indices in both left and right subgroups) and
           ## their removal does NOT eliminate other samples from the
           ## same cluster, append the pair in the sorted list and remove
           ## their plausible paired instances
-					if (score < range && left_side(1,1) == right_side(1,1) &&
+          if (score < range && left_side(1,1) == right_side(1,1) &&
                                left_side(1,2) == right_side(1,2))
             ## Left cluster group
             idxL1 = find (cluster(c).left(:,1) == left_side(1,1));
@@ -517,128 +517,128 @@ function [sorted, cluster] = compare_scores_with_threshold (sorted, cluster);
               idx = find (cluster(c).right(:,2) == right_side(1,2));
               cluster(c).right(idx,:) = [];
             endif
-					endif
-				endif
-			endfor
-		endfor
-		## If any subgroup contains an identical single match, consider it a true
+          endif
+        endif
+      endfor
+    endfor
+    ## If any subgroup contains an identical single match, consider it a true
     ## match, append it in the sorted list, and remove it from the cluster
-		for c = length (cluster):-1:1
-			if (size (cluster(c).left, 1) == 1 && size (cluster(c).right, 1) == 1)
-				left_side = cluster(c).left(1,:);
-				right_side = cluster(c).right(1,:);
-				if (left_side(1,1) == right_side(1,1) &&
+    for c = length (cluster):-1:1
+      if (size (cluster(c).left, 1) == 1 && size (cluster(c).right, 1) == 1)
+        left_side = cluster(c).left(1,:);
+        right_side = cluster(c).right(1,:);
+        if (left_side(1,1) == right_side(1,1) &&
             left_side(1,2) == right_side(1,2))
-					sorted = [sorted; left_side(1,:)];
-					cluster(c) = [];
-				endif
+          sorted = [sorted; left_side(1,:)];
+          cluster(c) = [];
+        endif
       elseif (size (cluster(c).left, 1) == 0 && size (cluster(c).right, 1) == 0)
         cluster(c) = [];
-			else
-				index = 0;
-				for s = 1:size (cluster(c).left, 1)
-					left_sample = cluster(c).left(s,1);
-					right_sample = cluster(c).left(s,2);
-					if (sum (cluster(c).left(:,1) == left_sample) == 1 &&
+      else
+        index = 0;
+        for s = 1:size (cluster(c).left, 1)
+          left_sample = cluster(c).left(s,1);
+          right_sample = cluster(c).left(s,2);
+          if (sum (cluster(c).left(:,1) == left_sample) == 1 &&
               sum (cluster(c).left(:,2) == right_sample) == 1)
-						index += 1;
-						sorted = [sorted; cluster(c).left(s,:)];
-						remove(index) = s;
-						## Remove from right cluster as well
-						idx = find (cluster(c).right(:,1) == left_sample);
-						cluster(c).right(idx,:) = [];
-						idx = find (cluster(c).right(:,2) == right_sample);
-						cluster(c).right(idx,:) = [];
-					endif
-				endfor
-				if (exist ("remove", "var"))
-					cluster(c).left(remove,:) = [];
+            index += 1;
+            sorted = [sorted; cluster(c).left(s,:)];
+            remove(index) = s;
+            ## Remove from right cluster as well
+            idx = find (cluster(c).right(:,1) == left_sample);
+            cluster(c).right(idx,:) = [];
+            idx = find (cluster(c).right(:,2) == right_sample);
+            cluster(c).right(idx,:) = [];
+          endif
+        endfor
+        if (exist ("remove", "var"))
+          cluster(c).left(remove,:) = [];
           clear remove;
-				endif
-			endif
-		endfor
-	endfor
+        endif
+      endif
+    endfor
+  endfor
 endfunction
 
 
 ## Scan through the remaining list of plausible matches and re-cluster
 ## the associated pairs into separate subgroups for each side of bones
 function cluster2 = recluster_pairs (cluster)
-	Lgroup = 0;
+  Lgroup = 0;
   Rgroup = 0;
-	for c = 1:length (cluster)
-		plausible = cluster(c).left;
-		while (! isempty (plausible))
-			Lgroup += 1;
+  for c = 1:length (cluster)
+    plausible = cluster(c).left;
+    while (! isempty (plausible))
+      Lgroup += 1;
       cluster2(Lgroup).left = [];
-			complete = false;
-			## Find a sample with minimum occurence and use it as a seed
-			samples = unique (plausible(:,1));
-			clear nsamples;
-			for s = 1:length (samples)
-				idx = find (plausible(:,1) == samples(s));
-				nsamples(s,:) = [length(idx), samples(s)];
-			endfor
-			nsamples = sortrows (nsamples, 1);
-			idx = find (plausible(:,1) == nsamples(1,2));
-			left_seed(Lgroup) = plausible(idx(1),1);
-			right_seed(Lgroup) = plausible(idx(1),2);
-			left_samples = left_seed(Lgroup);
-			right_samples = [];
-			while (! complete)
-				## Find occurences of right samples according to the left samples
-				for i = 1:length (left_samples)
-					idx = find (plausible(:,1) == left_samples(i));
-					right_samples = [right_samples; plausible(idx,2)];
-					cluster2(Lgroup).left = [cluster2(Lgroup).left; plausible(idx,:)];
-					plausible(idx,:) = [];
-				endfor
-				k = 0;
-				## Find occurences of left samples according to the right samples
-				for i = 1:length (right_samples)
-					idx = find (plausible(:,2) == right_samples(i));
-					if (! isempty (idx))
-						left_samples = [left_samples; plausible(idx,1)];
-					else
-						k += 1;
-					endif
-				endfor
-				if (i == k)
-					complete = true;
-				endif
-			endwhile
-		endwhile
-		plausible = cluster(c).right;
-		while (! isempty (plausible))
-			Rgroup += 1;
+      complete = false;
+      ## Find a sample with minimum occurence and use it as a seed
+      samples = unique (plausible(:,1));
+      clear nsamples;
+      for s = 1:length (samples)
+        idx = find (plausible(:,1) == samples(s));
+        nsamples(s,:) = [length(idx), samples(s)];
+      endfor
+      nsamples = sortrows (nsamples, 1);
+      idx = find (plausible(:,1) == nsamples(1,2));
+      left_seed(Lgroup) = plausible(idx(1),1);
+      right_seed(Lgroup) = plausible(idx(1),2);
+      left_samples = left_seed(Lgroup);
+      right_samples = [];
+      while (! complete)
+        ## Find occurences of right samples according to the left samples
+        for i = 1:length (left_samples)
+          idx = find (plausible(:,1) == left_samples(i));
+          right_samples = [right_samples; plausible(idx,2)];
+          cluster2(Lgroup).left = [cluster2(Lgroup).left; plausible(idx,:)];
+          plausible(idx,:) = [];
+        endfor
+        k = 0;
+        ## Find occurences of left samples according to the right samples
+        for i = 1:length (right_samples)
+          idx = find (plausible(:,2) == right_samples(i));
+          if (! isempty (idx))
+            left_samples = [left_samples; plausible(idx,1)];
+          else
+            k += 1;
+          endif
+        endfor
+        if (i == k)
+          complete = true;
+        endif
+      endwhile
+    endwhile
+    plausible = cluster(c).right;
+    while (! isempty (plausible))
+      Rgroup += 1;
       cluster2(Rgroup).right = [];
-			complete = false;
-			right_samples = right_seed(Rgroup);
-			left_samples = [];
-			while (! complete)
-				## Find occurences of left samples according to the right samples
-				for i = 1:length (right_samples)
-					idx = find (plausible(:,2) == right_samples(i));
-					left_samples = [left_samples; plausible(idx,1)];
-					cluster2(Rgroup).right = [cluster2(Rgroup).right; plausible(idx,:)];
-					plausible(idx,:) = [];
-				endfor
-				k = 0;
-				## Find occurences of right samples according to the left samples
-				for i = 1:length (left_samples)
-					idx = find (plausible(:,1) == left_samples(i));
-					if (! isempty (idx))
-						right_samples = [right_samples; plausible(idx,2)];
-					else
-						k += 1;
-					endif
-				endfor
-				if (i == k)
-					complete = true;
-				endif
-			endwhile
-		endwhile
-	endfor
+      complete = false;
+      right_samples = right_seed(Rgroup);
+      left_samples = [];
+      while (! complete)
+        ## Find occurences of left samples according to the right samples
+        for i = 1:length (right_samples)
+          idx = find (plausible(:,2) == right_samples(i));
+          left_samples = [left_samples; plausible(idx,1)];
+          cluster2(Rgroup).right = [cluster2(Rgroup).right; plausible(idx,:)];
+          plausible(idx,:) = [];
+        endfor
+        k = 0;
+        ## Find occurences of right samples according to the left samples
+        for i = 1:length (left_samples)
+          idx = find (plausible(:,1) == left_samples(i));
+          if (! isempty (idx))
+            right_samples = [right_samples; plausible(idx,2)];
+          else
+            k += 1;
+          endif
+        endfor
+        if (i == k)
+          complete = true;
+        endif
+      endwhile
+    endwhile
+  endfor
 endfunction
 
 ## In each cluster subgroup compare the scores of every element with each paired
@@ -646,27 +646,27 @@ endfunction
 ## when both sides exhibit the lowest score on the same matched pair and the
 ## score is lower than the second smaller one by at least 5 units
 function [sorted, cluster] = compare_scores_with_difference (sorted, cluster)
-	for iter = 1:2
-		for c = length (cluster):-1:1
-			## Make a list of unique elements
-			left_list = unique (cluster(c).left(:,1));
-			for s = 1:length (left_list)
-				idxL = find (cluster(c).left(:,1) == left_list(s));
-				idxR = find (cluster(c).right(:,2) == left_list(s));
-				if (length (idxL) > 0 && length (idxR) > 0)
-					left_side = cluster(c).left(idxL,:);
-					right_side = cluster(c).right(idxR,:);
-					## If multiple pairs are present on right side only, use it explicitly
-					if (size (right_side, 1) > 1 && size (left_side, 1) == 1)
-						left_side = sortrows (left_side, 3);
-						right_side = sortrows (right_side, 3);
-						score_diff = abs (right_side(1,3) - right_side(2,3));
+  for iter = 1:2
+    for c = length (cluster):-1:1
+      ## Make a list of unique elements
+      left_list = unique (cluster(c).left(:,1));
+      for s = 1:length (left_list)
+        idxL = find (cluster(c).left(:,1) == left_list(s));
+        idxR = find (cluster(c).right(:,2) == left_list(s));
+        if (length (idxL) > 0 && length (idxR) > 0)
+          left_side = cluster(c).left(idxL,:);
+          right_side = cluster(c).right(idxR,:);
+          ## If multiple pairs are present on right side only, use it explicitly
+          if (size (right_side, 1) > 1 && size (left_side, 1) == 1)
+            left_side = sortrows (left_side, 3);
+            right_side = sortrows (right_side, 3);
+            score_diff = abs (right_side(1,3) - right_side(2,3));
             ## If elements in first rows (lowest scores) match (have the
             ## same sample indices in both left and right subgroups) and
             ## their removal does NOT eliminate other samples from the
             ## same cluster, append the pair in the sorted list and remove
             ## their plausible paired instances
-						if (score_diff > 5 && left_side(1,1) == right_side(1,1)
+            if (score_diff > 5 && left_side(1,1) == right_side(1,1)
                                && left_side(1,2) == right_side(1,2))
               ## Left cluster group
               idxL1 = find (cluster(c).left(:,1) == left_side(1,1));
@@ -718,19 +718,19 @@ function [sorted, cluster] = compare_scores_with_difference (sorted, cluster)
                 cluster(c).right(idx,:) = [];
                 idx = find (cluster(c).right(:,2) == right_side(1,2));
                 cluster(c).right(idx,:) = [];
-						  endif
+              endif
             endif
-					## If multiple pairs are present on left side only, use it explicitly
-					elseif (size (left_side, 1) > 1 && size (right_side, 1) == 1)
-						left_side = sortrows (left_side, 3);
-						right_side = sortrows (right_side, 3);
-						score_diff = abs (left_side(1,3) - left_side(2,3));
+          ## If multiple pairs are present on left side only, use it explicitly
+          elseif (size (left_side, 1) > 1 && size (right_side, 1) == 1)
+            left_side = sortrows (left_side, 3);
+            right_side = sortrows (right_side, 3);
+            score_diff = abs (left_side(1,3) - left_side(2,3));
             ## If elements in first rows (lowest scores) match (have the
             ## same sample indices in both left and right subgroups) and
             ## their removal does NOT eliminate other samples from the
             ## same cluster, append the pair in the sorted list and remove
             ## their plausible paired instances
-						if (score_diff > 5 && left_side(1,1) == right_side(1,1)
+            if (score_diff > 5 && left_side(1,1) == right_side(1,1)
                                && left_side(1,2) == right_side(1,2))
               ## Left cluster group
               idxL1 = find (cluster(c).left(:,1) == left_side(1,1));
@@ -783,21 +783,21 @@ function [sorted, cluster] = compare_scores_with_difference (sorted, cluster)
                 idx = find (cluster(c).right(:,1) == right_side(1,1));
                 cluster(c).right(idx,:) = [];
               endif
-						endif
-					## If multiple pairs are present on both sides,
+            endif
+          ## If multiple pairs are present on both sides,
           ## find the minimum difference from either side
-					elseif (size (left_side, 1) > 1 && size (right_side, 1) > 1)
-						left_side = sortrows (left_side, 3);
-						right_side = sortrows (right_side, 3);
-						score_L = abs (left_side(1,3) - left_side(2,3));
-						score_R = abs (right_side(1,3) - right_side(2,3));
-						score_diff = min ([score_L, score_R]);
+          elseif (size (left_side, 1) > 1 && size (right_side, 1) > 1)
+            left_side = sortrows (left_side, 3);
+            right_side = sortrows (right_side, 3);
+            score_L = abs (left_side(1,3) - left_side(2,3));
+            score_R = abs (right_side(1,3) - right_side(2,3));
+            score_diff = min ([score_L, score_R]);
             ## If elements in first rows (lowest scores) match (have the
             ## same sample indices in both left and right subgroups) and
             ## their removal does NOT eliminate other samples from the
             ## same cluster, append the pair in the sorted list and remove
             ## their plausible paired instances
-						if (score_diff > 5 && left_side(1,1) == right_side(1,1)
+            if (score_diff > 5 && left_side(1,1) == right_side(1,1)
                                && left_side(1,2) == right_side(1,2))
               ## Left cluster group
               idxL1 = find (cluster(c).left(:,1) == left_side(1,1));
@@ -849,23 +849,23 @@ function [sorted, cluster] = compare_scores_with_difference (sorted, cluster)
                 cluster(c).right(idx,:) = [];
                 idx = find (cluster(c).right(:,1) == right_side(1,1));
                 cluster(c).right(idx,:) = [];
-						  endif
-						endif
-					else
-						sorted = [sorted; left_side(1,:)];
-						## Remove sorted elements from the cluster
-						idx = find (cluster(c).left(:,1) == left_side(1,1));
-						cluster(c).left(idx,:) = [];
-						idx = find (cluster(c).left(:,2) == left_side(1,2));
-						cluster(c).left(idx,:) = [];
-						idx = find (cluster(c).right(:,2) == right_side(1,2));
-						cluster(c).right(idx,:) = [];
-						idx = find (cluster(c).right(:,1) == right_side(1,1));
-						cluster(c).right(idx,:) = [];
-					endif
-				endif
-			endfor
-		endfor
-	endfor
+              endif
+            endif
+          else
+            sorted = [sorted; left_side(1,:)];
+            ## Remove sorted elements from the cluster
+            idx = find (cluster(c).left(:,1) == left_side(1,1));
+            cluster(c).left(idx,:) = [];
+            idx = find (cluster(c).left(:,2) == left_side(1,2));
+            cluster(c).left(idx,:) = [];
+            idx = find (cluster(c).right(:,2) == right_side(1,2));
+            cluster(c).right(idx,:) = [];
+            idx = find (cluster(c).right(:,1) == right_side(1,1));
+            cluster(c).right(idx,:) = [];
+          endif
+        endif
+      endfor
+    endfor
+  endfor
 endfunction
 
